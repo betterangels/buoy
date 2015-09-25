@@ -1,0 +1,59 @@
+.wp-admin .modal { top: 40px; }
+#toplevel_page_better-angels_choose-angels .wp-menu-image img {
+    margin: 5px;
+    padding: 0;
+    width: calc(100% - 10px);
+    background: gray;
+    border-radius: 5px;
+}
+
+.dashboard_page_better-angels_activate-alert #wpbody-content,
+.dashboard_page_better-angels_incident-chat #wpbody-content {
+    height: calc(100vh - 32px); /* 32px is height of WP's fixed-position toolbar */
+}
+.dashboard_page_better-angels_activate-alert #activate-msg-btn-submit,
+.dashboard_page_better-angels_activate-alert #activate-btn-submit {
+    background: #d43f3a;
+    margin: 10px 0;
+    width: calc(100% - 10px);
+}
+.dashboard_page_better-angels_activate-alert #activate-msg-btn-submit {
+    height: 25%;
+}
+.dashboard_page_better-angels_activate-alert #activate-btn-submit {
+    height: 75%;
+}
+.dashboard_page_better-angels_activate-alert #activate-btn-submit img,
+.dashboard_page_better-angels_activate-alert #activate-msg-btn-submit img {
+    max-height: calc(100% - 32px);
+}
+.dashboard_page_better-angels_activate-alert #crisis-message {
+    height: 50vh;
+    width: 100%;
+}
+.dashboard_page_better-angels_activate-alert #emergency-message-modal .btn-success {
+    width: 100%;
+}
+
+.dashboard_page_better-angels_incident-chat #alert-map { margin-bottom: 0; }
+.dashboard_page_better-angels_incident-chat #map-container,
+.dashboard_page_better-angels_review-alert #map-container {
+    height: 250px;
+}
+.dashboard_page_better-angels_incident-chat #map-container {
+     display: none;
+ }
+.dashboard_page_better-angels_incident-chat #map,
+.dashboard_page_better-angels_review-alert #map {
+    height: 100%;
+}
+
+.dashboard_page_better-angels_review-alert .submit {
+    display: flex;
+}
+.dashboard_page_better-angels_review-alert .submit a {
+    flex-grow: 1;
+    margin: 0 1rem;
+    display: inline-block;
+    text-align: center;
+}
