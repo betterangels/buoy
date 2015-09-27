@@ -12,8 +12,5 @@ if (!defined('WP_UNINSTALL_PLUGIN')) { exit(); }
 //delete_option('better-angels_');
 
 foreach (get_users() as $usr) {
-    delete_user_meta($usr->ID, 'better-angels_call_for_help');
     delete_user_meta($usr->ID, 'better-angels_guardians');
-    delete_user_meta($usr->ID, 'better-angels_sms');
-    delete_user_meta($usr->ID, 'better-angels_sms_provider');
 }
