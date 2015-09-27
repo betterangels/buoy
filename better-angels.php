@@ -110,7 +110,18 @@ esc_html__('Better Angels is provided as free software, but sadly grocery stores
      */
     public function getMyGuardians ($user_id = false) {
         $user_id = (!is_numeric($user_id)) ? get_current_user_id() : $user_id;
-        return array_map('get_userdata', array_unique(get_user_meta($user_id, $this->prefix . 'guardians', false)));
+        return array_map('get_userdata', get_user_meta($user_id, $this->prefix . 'guardians', false));
+    }
+
+    public function isMyGuardian ($guardian_login, $user_id = false) {
+        $user_id = (!is_numeric($user_id)) ? get_current_user_id() : $user_id;
+        $guardians = $this->getMyGuardians($user_id);
+        foreach ($guardians as $guardian) {
+            if ($guardian_login === $guardian->user_login) {
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -123,9 +134,8 @@ esc_html__('Better Angels is provided as free software, but sadly grocery stores
     public function addGuardian ($guardian_login, $user_id = false) {
         $user_id = (!is_numeric($user_id)) ? get_current_user_id() : $user_id;
         $guardian_id = username_exists($guardian_login);
-        // TODO: Check to see if we've already added this particular guardian_id.
-        if (get_user_by('id',  $user_id) && $guardian_id && ($guardian_id !== $user_id)) {
-            return add_user_meta($user_id, $this->prefix . 'guardians', $guardian_id, false);
+        if (!$this->isMyGuardian($guardian_login) && get_user_by('id',  $user_id) && $guardian_id && ($guardian_id !== $user_id)) {
+            add_user_meta($user_id, $this->prefix . 'guardians', $guardian_id, false);
         }
         // TODO: What if the user ID passed in doesn't exist?
     }
@@ -134,7 +144,7 @@ esc_html__('Better Angels is provided as free software, but sadly grocery stores
         $user_id = (!is_numeric($user_id)) ? get_current_user_id() : $user_id;
         $guardian_id = username_exists($guardian_login);
         if (get_user_by('id',  $user_id) && $guardian_id) {
-            return delete_user_meta($user_id, $this->prefix . 'guardians', $guardian_id);
+            delete_user_meta($user_id, $this->prefix . 'guardians', $guardian_id);
         }
         // TODO: What if the user ID passed in doesn't exist?
     }
