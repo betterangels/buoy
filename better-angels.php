@@ -146,14 +146,21 @@ class BetterAngelsPlugin {
         wp_localize_script($this->prefix . 'script', str_replace('-', '_', $this->prefix) . 'vars', $this->getTranslations());
         wp_enqueue_script($this->prefix . 'script');
 
-        if ($this->isAppPage($hook)) {
-            wp_enqueue_style(
-                $this->prefix . 'font-awesome',
-                'https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css'
-            );
+        $to_hook = array( // list of pages where Bootstrap CSS+JS is needed
+            'dashboard_page_' . $this->prefix . 'activate-alert',
+            'dashboard_page_' . $this->prefix . 'incident-chat'
+        );
+        if ($this->isAppPage($hook, $to_hook)) {
             wp_enqueue_style(
                 $this->prefix . 'bootstrap',
                 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'
+            );
+            wp_enqueue_script(
+                $this->prefix . 'bootstrap',
+                'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js',
+                false,
+                null,
+                true
             );
         }
     }
@@ -242,7 +249,7 @@ class BetterAngelsPlugin {
             . substr(hash('md5', serialize($me) . serialize($guardians) . time()), 0, 10)
         );
 
-        $subject = $this->getCallForHelp($me->ID);
+        $subject = (empty($_POST['msg'])) ? $this->getCallForHelp($me->ID) : wp_strip_all_tags($_POST['msg']);
         $responder_link = wp_nonce_url(
             admin_url(
                 '?page=' . $this->prefix . 'review-alert'
@@ -250,6 +257,7 @@ class BetterAngelsPlugin {
                 . '&latitude=' . urlencode($alert_position['latitude'])
                 . '&longitude=' . urlencode($alert_position['longitude'])
                 . '&chat_room=' . urlencode($this->getChatRoomName())
+                . '&msg=' . urlencode($subject)
             ),
             $this->prefix . 'review', $this->prefix . 'nonce'
         );

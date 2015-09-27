@@ -1,6 +1,6 @@
 (function () {
 var BETTER_ANGELS = {};
-BETTER_ANGELS.geoFindMe = function () {
+BETTER_ANGELS.postAlert = function (msg) {
     if (!navigator.geolocation){
         if (console && console.error) {
             console.error('Geolocation is not supported by your browser');
@@ -9,11 +9,12 @@ BETTER_ANGELS.geoFindMe = function () {
     }
     navigator.geolocation.getCurrentPosition(
         function (position) { // success callback
-            jQuery.post(ajaxurl,
-                {
-                    'action': 'better-angels_findme',
-                    'pos': position.coords,
-                },
+            var data = {
+                'action': 'better-angels_findme',
+                'pos': position.coords,
+            };
+            if (msg) { data.msg = msg; }
+            jQuery.post(ajaxurl, data,
                 function (response) {
                     if (response.success) {
                         // decode the HTML-encoded stuff WP sends
@@ -71,7 +72,17 @@ BETTER_ANGELS.getQueryVariable = function (variable) {
 };
 BETTER_ANGELS.init = function () {
     jQuery(document).ready(function () {
-        jQuery('#activate-btn-submit').on('click', BETTER_ANGELS.geoFindMe);
+        jQuery('#activate-btn-submit').on('click', BETTER_ANGELS.postAlert);
+
+        jQuery('#activate-msg-btn-submit').on('click', function () {
+            jQuery('#emergency-message-modal').modal('show');
+        });
+        jQuery('#emergency-message-modal').on('shown.bs.modal', function () {
+              jQuery('#crisis-message').focus();
+        })
+        jQuery('#emergency-message-modal').on('hidden.bs.modal', function () {
+            BETTER_ANGELS.postAlert(jQuery('#crisis-message').val());
+        });
 
         // Show/hide incident map
         jQuery('#toggle-incident-map-btn').on('click', function () {

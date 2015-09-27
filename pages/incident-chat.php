@@ -54,4 +54,3 @@ $curr_user = wp_get_current_user();
         </div><!-- .modal-content -->
     </div><!-- .modal-dialog -->
 </div><!-- .modal.fade -->
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
