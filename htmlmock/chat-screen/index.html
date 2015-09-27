@@ -8,130 +8,71 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-  <link
-    rel="stylesheet"
-    href="src/css/style.css">
-
-    <link
-    rel="stylesheet"
-    href="src/css/themes.css">
-
-  <link
-    rel="stylesheet"
-    href="style.css">
 <style>
-    div.col-md-8 { border: 1px dotted red; }
-    div.col-md-4 { border: 1px dotted yellow; }
+    body { height: 100vh; }
     .modal .modal-dialog { width: 95vw; }
 </style>
 </head>
 <body>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="container-fluid">
-                <div class="row">
-                    <div class="col-md-8">
-                        <div id="chat-panel">
-                            <div id="chat-log" ng-controller="Shell as vm">
-                              <div class="chat-container">
-                                <irontec-simple-chat
-                                    messages="vm.messages"
-                                    username="vm.username"
-                                    input-placeholder-text="You can write here"
-                                    submit-button-text="Send your message"
-                                    title="Community Help Chat"
-                                    theme="material"
-                                    submit-function="vm.sendMessage"
-                                    visible="true">
-                                </irontec-simple-chat>
-                              </div>
-                            </div>
-                        </div>
-                    </div><!-- .col-md-8 -->
-                    <div class="col-md-4">
-                        <section id="chat-participants">
-                            <!-- The list of users who were alerted and have hit "respond" should go here. -->
-                            <ul>
-                                <li>User 1</li>
-                                <li>User 2</li>
-                                <li>User 3</li>
-                                <li>User 4</li>
-                                <li>User 5</li>
-                                <li>User 6</li>
-                            </ul>
-                        </section>
-                    </div><!-- .col-md-4 -->
-                </div><!-- .row -->
-            </div>
-        </div>
-        <div class="row">
-            <section id="chat-entry">
-                <form>
-                    <fieldset><legend>Enter text to type</legend>
-                        <label>
-                            <input id="chat-message" name="chat-message" placeholder="Type a message and press Send to chat" />
-                        </label>
-                        <input type="submit" class="btn btn-success" value="Send" />
-                    </fieldset>
-                </form>
-            </section>
-        </div>
-        <div class="row">
-            <div id="safety-information-modal" class="modal fade" role="dialog" aria-labelledby="safety-information-modal-label">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                            <h4 class="modal-title" id="safety-information-modal-label">Safety information</h4>
-                        </div>
-                        <div class="modal-body">
-                            <h1>Emergency Numbers</h1>
-                            <ul>
-                                <li>Seek a shelter for victims of domestic violence, it is always safe to call the shelter</li>
-                                <li>Call the National Domestic Violence Hotline and they can provide you the location of the nearest shelter:  1-800-799-7233</li>
-                                <li>New Mexico Crisis and Access Line can provide directions to Shelters, refer to Mental Health, Detox, Vocational assistance, Legal Assistance: 1-855-662-7474</li>
-                                <li>If you have a companion animal you need to keep safe but can’t take with you this number is to the New Mexico Companion Animal Rescue Effort (CARE):
-                                    <ul>
-                                        <li>1-844-325-2273</li>
-                                        <li>TTY or TTD: 1-800-659-8831</li>
-                                    </ul>
-                                </li>
-                            </ul>
-                            <h1>Staying Safe</h1>
-                            <ul>
-                                <li>If your abuser is becoming violent, or you believe they could be, leave as quickly and safely as possible and call 911</li>
-                                <li>When you decide to leave, determine a safe route for escape</li>
-                                <li>If an argument seems unavoidable, stay away from any rooms such as the kitchen, bathroom, and garage where you might be trapped or there might be weapons readily available</li>
-                                <li>If you can, pack a bag for you and your children with a change of clothes and all important documents such as birth certificates, social security cards, shot records, check books, ATM cards, drives license, and any medication and money you have, and put it in a safe place where you can access it quickly, like in the trunk of your car or at a friend’s house</li>
-                                <li>If you choose to use alcohol or drugs it is important to be aware of the potential dangers</li>
-                                <li>Teach your children how to call 911 and let them know it is okay to call if there is any violence happening</li>
-                                <li>Be aware of your surroundings and others at all times</li>
-                                <li>Do not go to places where your abuser or their friends frequent</li>
-                            </ul>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div>
-                    </div><!-- .modal-content -->
-                </div><!-- .modal-dialog -->
-            </div><!-- .modal.fade -->
-        </div>
-    </div><!-- .container-fluid -->
+    <iframe id="chat-frame" src="" width="100%" height="100%" frameborder="0"></iframe>
 
-    <!-- begin scripts for chat mockup -->
-    <script src="src/lodash.js.min"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
-    <script src="src/scripts/index.js"></script>
-    <script src="app.js"></script>
-    <!-- end scripts for chat mockup -->
-
+    <div id="safety-information-modal" class="modal fade" role="dialog" aria-labelledby="safety-information-modal-label">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="safety-information-modal-label">Safety information</h4>
+                </div>
+                <div class="modal-body">
+                    <h1>Emergency Numbers</h1>
+                    <ul>
+                        <li>Seek a shelter for victims of domestic violence, it is always safe to call the shelter</li>
+                        <li>Call the National Domestic Violence Hotline and they can provide you the location of the nearest shelter:  1-800-799-7233</li>
+                        <li>New Mexico Crisis and Access Line can provide directions to Shelters, refer to Mental Health, Detox, Vocational assistance, Legal Assistance: 1-855-662-7474</li>
+                        <li>If you have a companion animal you need to keep safe but can’t take with you this number is to the New Mexico Companion Animal Rescue Effort (CARE):
+                            <ul>
+                                <li>1-844-325-2273</li>
+                                <li>TTY or TTD: 1-800-659-8831</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <h1>Staying Safe</h1>
+                    <ul>
+                        <li>If your abuser is becoming violent, or you believe they could be, leave as quickly and safely as possible and call 911</li>
+                        <li>When you decide to leave, determine a safe route for escape</li>
+                        <li>If an argument seems unavoidable, stay away from any rooms such as the kitchen, bathroom, and garage where you might be trapped or there might be weapons readily available</li>
+                        <li>If you can, pack a bag for you and your children with a change of clothes and all important documents such as birth certificates, social security cards, shot records, check books, ATM cards, drives license, and any medication and money you have, and put it in a safe place where you can access it quickly, like in the trunk of your car or at a friend’s house</li>
+                        <li>If you choose to use alcohol or drugs it is important to be aware of the potential dangers</li>
+                        <li>Teach your children how to call 911 and let them know it is okay to call if there is any violence happening</li>
+                        <li>Be aware of your surroundings and others at all times</li>
+                        <li>Do not go to places where your abuser or their friends frequent</li>
+                    </ul>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </div><!-- .modal-content -->
+        </div><!-- .modal-dialog -->
+    </div><!-- .modal.fade -->
     <script>
         // Show "safety information" on page load,
         // this should automatically be dismissed when another user
         // enters the chat room.
-        jQuery(window).load(function () {
-            jQuery('#safety-information-modal').modal('show');
-        });
+        if (getQueryVariable('show_safety_modal')) {
+            jQuery(window).load(function () {
+                jQuery('#safety-information-modal').modal('show');
+            });
+        }
+        document.getElementById('chat-frame').setAttribute('src', 'https://tlk.io/alert_' + getQueryVariable('chat_room'));
+        function getQueryVariable (variable) {
+            var query = window.location.search.substring(1);
+            var vars = query.split("&");
+            for (var i=0;i<vars.length;i++) {
+                var pair = vars[i].split("=");
+                if(pair[0] == variable){return pair[1];}
+            }
+            return(false);
+        }
     </script>
 </body>
 </html>

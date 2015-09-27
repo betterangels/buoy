@@ -26,7 +26,7 @@
 					<div class="btn btn-danger btn-lg center-block">Ignore</div>
 				</div>
 				<div class="col-xs-3 col-xs-offset-2">
-					<div class="btn btn-info btn-lg center-block"><a href="../chat-screen/">Respond</a></div>
+					<div class="btn btn-info btn-lg center-block"><a id="respond-link" href="../chat-screen/?chat_room=">Respond</a></div>
 				</div>
 			</div>
 		</div>
@@ -46,16 +46,19 @@
                 map.setCenter(pos);
                 marker.setPosition(pos);
 
-                function getQueryVariable (variable) {
-                    var query = window.location.search.substring(1);
-                    var vars = query.split("&");
-                    for (var i=0;i<vars.length;i++) {
-                        var pair = vars[i].split("=");
-                        if(pair[0] == variable){return pair[1];}
-                    }
-                    return(false);
-                }
 			}
+
+            document.getElementById('respond-link').setAttribute('href', '../chat-screen/?chat_room=' + getQueryVariable('chat_room'));
+
+            function getQueryVariable (variable) {
+                var query = window.location.search.substring(1);
+                var vars = query.split("&");
+                for (var i=0;i<vars.length;i++) {
+                    var pair = vars[i].split("=");
+                    if(pair[0] == variable){return pair[1];}
+                }
+                return(false);
+            }
 		</script>
 		<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC5paDSn3ORikzyyjWTXcOV6THGY38TKFY&signed_in=true&callback=initMap"
 				  async defer>
