@@ -24,6 +24,8 @@ class BetterAngelsPlugin {
 //        add_action('admin_head', array($this, 'doAdminHeadActions'));
 //        add_action('admin_print_footer_scripts', array($this, 'addQuickTagButton'));
 
+        add_filter('user_contactmethods', array($this, 'addEmergencyPhoneContactMethod'));
+
         register_activation_hook(__FILE__, array($this, 'activate'));
     }
 
@@ -62,6 +64,11 @@ class BetterAngelsPlugin {
 
     public function doAdminHeadActions () {
         $this->registerContextualHelp();
+    }
+
+    public function addEmergencyPhoneContactMethod ($user_contact) {
+        $user_contact[$this->prefix . 'sms'] = esc_html__('Emergency txt (SMS)', 'better-angels');
+        return $user_contact;
     }
 
 
