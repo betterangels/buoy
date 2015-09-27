@@ -100,12 +100,16 @@ class BetterAngelsPlugin {
     }
 
     public function enqueueMapsScripts ($hook) {
-        if ('dashboard_page_' . $this->prefix . 'review_alert' !== $hook) {
+        if (
+            'dashboard_page_' . $this->prefix . 'review_alert' !== $hook
+            &&
+            'dashboard_page_' . $this->prefix . 'incident-chat' !== $hook
+        ) {
             return;
         }
         wp_enqueue_script(
             $this->prefix . 'maps-api',
-            'https://maps.googleapis.com/maps/api/js?key=AIzaSyC5paDSn3ORikzyyjWTXcOV6THGY38TKFY&signed_in=true&callback=initMap',
+            'https://maps.googleapis.com/maps/api/js?key=AIzaSyC5paDSn3ORikzyyjWTXcOV6THGY38TKFY&signed_in=true',
             $this->prefix . 'script',
             false,
             true
