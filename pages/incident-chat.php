@@ -2,8 +2,7 @@
 $curr_user = wp_get_current_user();
 ?>
 <div id="alert-map" role="alert" class="alert alert-warning alert-dismissible fade in">
-    <button id="show-incident-map-btn" class="btn btn-default" type="button">Show Map</button>
-    <button id="hide-incident-map-btn" class="btn btn-default" type="button">Hide Map</button>
+    <button id="toggle-incident-map-btn" class="btn btn-default" type="button"><?php esc_html_e('Show Map', 'better-angels');?></button>
 </div>
 <div id="map-container" class="container-fluid">
     <div id="map"></div>
@@ -18,6 +17,7 @@ $curr_user = wp_get_current_user();
                 <h4 class="modal-title" id="safety-information-modal-label">Safety information</h4>
             </div>
             <div class="modal-body">
+                <!-- TODO: i18n for this text -->
                 <h1>Emergency Numbers</h1>
                 <ul>
                     <li>Seek a shelter for victims of domestic violence, it is always safe to call the shelter</li>

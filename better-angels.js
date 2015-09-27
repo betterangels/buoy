@@ -71,15 +71,20 @@ if (BETTER_ANGELS.getQueryVariable('show_safety_modal')) {
 
 jQuery(document).ready(function () {
 
-    jQuery('#show-incident-map-btn').on('click', function () {
-        jQuery('#map-container').slideDown({
-            'complete': function () { google.maps.event.trigger(map, 'resize'); }
-        });
+    // Show/hide incident map
+    jQuery('#toggle-incident-map-btn').on('click', function () {
+        var map_container = jQuery('#map-container');
+        if (map_container.is(':visible')) {
+            map_container.slideUp();
+            this.textContent = better_angels_vars.i18n_show_map;
+        } else {
+            map_container.slideDown({
+                'complete': function () { google.maps.event.trigger(map, 'resize'); }
+            });
+            this.textContent = better_angels_vars.i18n_hide_map;
+        }
     });
 
-    jQuery('#hide-incident-map-btn').on('click', function () {
-        jQuery('#map-container').slideUp();
-    });
 });
 
 jQuery(window).on('load', function () {

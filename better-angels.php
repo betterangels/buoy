@@ -116,6 +116,18 @@ class BetterAngelsPlugin {
         }
     }
 
+    /**
+     * Translate user interface strings used in JavaScript.
+     *
+     * @return array An array of translated strings suitable for wp_localize_script().
+     */
+    private function getTranslations () {
+        return array(
+            'i18n_show_map' => __('Show Map', 'better-angels'),
+            'i18n_hide_map' => __('Hide Map', 'better-angels')
+        );
+    }
+
     public function enqueueAdminScripts ($hook) {
         $plugin_data = get_plugin_data(__FILE__);
         wp_enqueue_style(
@@ -130,6 +142,7 @@ class BetterAngelsPlugin {
             false,
             $plugin_data['Version']
         );
+        wp_localize_script($this->prefix . 'script', str_replace('-', '_', $this->prefix) . 'vars', $this->getTranslations());
         wp_enqueue_script($this->prefix . 'script');
 
         if ($this->isAppPage($hook)) {
