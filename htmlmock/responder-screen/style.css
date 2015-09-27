@@ -1,0 +1,47 @@
+html, body {
+	height: 100%;
+}
+
+.container {
+	height: 100%;
+}
+
+.row-map {
+	height: 50%;
+}
+
+.col-xs-8 {
+	height: 100%;
+}
+
+#map {
+	border: inset;
+	height: 100%;
+	margin-bottom: 50px;
+}
+
+.row-user {
+	height: 12.5%;
+}
+
+.col-xs-12 {
+	height: 100%;
+}
+
+#username {
+	font-size: 35px;
+	height: 100%;
+	text-align: center;
+}
+
+.row-buttons {
+	height: 25%;
+}
+
+.col-xs-3 {
+	height: 100%;
+}
+
+.btn {
+	vertical-align: bottom;
+}
