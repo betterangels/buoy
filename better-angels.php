@@ -21,6 +21,7 @@ class BetterAngelsPlugin {
 
         add_action('plugins_loaded', array($this, 'registerL10n'));
         add_action('admin_init', array($this, 'registerSettings'));
+        add_action('current_screen', array($this, 'registerContextualHelp'));
         add_action('admin_enqueue_scripts', array($this, 'enqueueAdminScripts'));
         add_action('admin_enqueue_scripts', array($this, 'enqueueMapsScripts'));
         add_action('admin_menu', array($this, 'registerAdminMenu'));
@@ -118,7 +119,6 @@ class BetterAngelsPlugin {
 
     public function enqueueAdminScripts ($hook) {
         $plugin_data = get_plugin_data(__FILE__);
-        $this->registerContextualHelp();
         wp_enqueue_style(
             $this->prefix . 'style',
             plugins_url('style.css', __FILE__),
@@ -237,7 +237,7 @@ class BetterAngelsPlugin {
     }
 
     // TODO: Write help screens.
-    private function registerContextualHelp () {
+    public function registerContextualHelp () {
         $screen = get_current_screen();
     }
 
