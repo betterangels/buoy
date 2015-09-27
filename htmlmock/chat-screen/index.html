@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>MOCKUP - Activation Screen</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<style>
+    body { margin: 10px; }
+    div.col-md-8 { border: 1px dotted red; }
+    div.col-md-4 { border: 1px dotted yellow; }
+</style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-md-8">
+                        <section id="chat-panel">
+                            <div id="chat-log">
+                                <!-- The scrolling window of chat messages should go here. -->
+                                <ol>
+                                    <li><div><span class="User">User 1</span>: <span class="chat-message">Hell oworld.</span></div></li>
+                                    <li><div><span class="User">User 5</span>: <span class="chat-message">How are you?</span></div></li>
+                                </ol>
+                            </div>
+                        </section>
+                    </div><!-- .col-md-8 -->
+                    <div class="col-md-4">
+                        <section id="chat-participants">
+                            <!-- The list of users who were alerted and have hit "respond" should go here. -->
+                            <ul>
+                                <li>User 1</li>
+                                <li>User 2</li>
+                                <li>User 3</li>
+                                <li>User 4</li>
+                                <li>User 5</li>
+                                <li>User 6</li>
+                            </ul>
+                        </section>
+                    </div><!-- .col-md-4 -->
+                </div><!-- .row -->
+            </div>
+        </div>
+        <div class="row">
+            <section id="chat-entry">
+                <form>
+                    <fieldset><legend>Enter text to type</legend>
+                        <label>
+                            <input id="chat-message" name="chat-message" placeholder="Type a message and press Send to chat" />
+                        </label>
+                        <input type="submit" class="btn btn-success" value="Send" />
+                    </fieldset>
+                </form>
+            </section>
+        </div>
+        <div class="row">
+            <section id="more-info">
+                <!-- TODO: What does "More info" mean? -->
+                <p>More info here? (What is more info?)</p>
+            </section>
+        </div>
+    </div><!-- .container-fluid -->
+</body>
+</html>
