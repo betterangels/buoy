@@ -4,6 +4,9 @@ $respond_link = wp_nonce_url(
     admin_url(
         '?page=' . $this->prefix . 'incident-chat'
         . '&chat_room=' . urldecode($_GET['chat_room'])
+        . '&who=' . $alerter->user_login
+        . '&latitude=' . $_GET['latitude']
+        . '&longitude=' . $_GET['longitude']
     ),
     $this->prefix . 'chat', $this->prefix . 'nonce'
 );

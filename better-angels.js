@@ -109,21 +109,11 @@ BETTER_ANGELS.init = function () {
     });
 
     jQuery(window).on('load', function () {
-        if (jQuery('.dashboard_page_better-angels_review-alert #map').length) {
+        if (jQuery('.dashboard_page_better-angels_review-alert #map, .dashboard_page_better-angels_incident-chat #map').length) {
             BETTER_ANGELS.initMap({
                 'lat': parseFloat(jQuery('#map-container').data('latitude')),
                 'lng': parseFloat(jQuery('#map-container').data('longitude'))
             });
-        } else if (jQuery('.dashboard_page_better-angels_incident-chat #map').length) {
-            navigator.geolocation.getCurrentPosition(
-                function (position) {
-                    var coords = {
-                        'lat': parseFloat(position.coords.latitude),
-                        'lng': parseFloat(position.coords.longitude)
-                    };
-                    BETTER_ANGELS.initMap(coords);
-                }
-            );
         }
     });
 
