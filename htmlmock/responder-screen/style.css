@@ -49,3 +49,4 @@ html, body {
 .btn {
 	vertical-align: bottom;
 }
+button a { color: inherit; }
