@@ -101,20 +101,19 @@ class BetterAngelsPlugin {
     }
 
     public function enqueueMapsScripts ($hook) {
-        if (
-            'dashboard_page_' . $this->prefix . 'review_alert' !== $hook
-            &&
-            'dashboard_page_' . $this->prefix . 'incident-chat' !== $hook
-        ) {
-            return;
-        }
-        wp_enqueue_script(
-            $this->prefix . 'maps-api',
-            'https://maps.googleapis.com/maps/api/js?key=AIzaSyC5paDSn3ORikzyyjWTXcOV6THGY38TKFY&signed_in=true',
-            $this->prefix . 'script',
-            false,
-            true
+        $to_hook = array( // list of pages where maps API is needed
+            'dashboard_page_' . $this->prefix . 'incident-chat',
+            'dashboard_page_' . $this->prefix . 'review-chat'
         );
+        if ($this->isAppPage($hook, $to_hook)) {
+            wp_enqueue_script(
+                $this->prefix . 'maps-api',
+                'https://maps.googleapis.com/maps/api/js?key=AIzaSyC5paDSn3ORikzyyjWTXcOV6THGY38TKFY&signed_in=true',
+                $this->prefix . 'script',
+                false,
+                true
+            );
+        }
     }
 
     public function enqueueAdminScripts ($hook) {
@@ -133,12 +132,43 @@ class BetterAngelsPlugin {
         );
         wp_enqueue_script($this->prefix . 'script');
 
-        if ('dashboard_page_' . $this->prefix . 'incident-chat' == $hook) {
+        if ($this->isAppPage($hook)) {
+            wp_enqueue_style(
+                $this->prefix . 'font-awesome',
+                'https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css'
+            );
             wp_enqueue_style(
                 $this->prefix . 'bootstrap',
                 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'
             );
         }
+    }
+
+    /**
+     * Checks to see if the current page, called by a WordPress hook,
+     * is one of the "app pages" where important functionality provided
+     * by this plugin occurrs. Used to check whether or not to enqueue
+     * certain additional, heavyweight assets, like BootstrapCSS.
+     *
+     * @param string $hook The hook name that called this page. (Set by WordPress.)
+     * @param array $matches Optional list of hook names that should be matched against, useful for checking against a single hook.
+     * @return bool True if the page is "one of ours," false otherwise.
+     */
+    private function isAppPage ($hook, $matches = array()) {
+        $our_hooks = array(
+            'dashboard_page_' . $this->prefix . 'activate-alert',
+            'dashboard_page_' . $this->prefix . 'incident-chat',
+            'dashboard_page_' . $this->prefix . 'review-chat',
+        );
+
+        if (0 < count($matches)) { $our_hooks = $matches; }
+
+        foreach ($our_hooks as $the_hook) {
+            if ($the_hook === $hook) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public function getSmsEmailGatewayDomain($provider) {
