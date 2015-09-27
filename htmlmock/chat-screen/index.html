@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.4.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
   <link
     rel="stylesheet"
@@ -19,9 +20,9 @@
     rel="stylesheet"
     href="style.css">
 <style>
-    body { margin: 10px; }
     div.col-md-8 { border: 1px dotted red; }
     div.col-md-4 { border: 1px dotted yellow; }
+    .modal .modal-dialog { width: 95vw; }
 </style>
 </head>
 <body>
@@ -76,18 +77,61 @@
             </section>
         </div>
         <div class="row">
-            <section id="more-info">
-                <!-- TODO: What does "More info" mean? -->
-                <!-- "More info" means provide some contact/post-planning options for local shelters/hotlines/other possibilities of stuff to do such as a safety plan when no one responds to the alert. -->
-            </section>
+            <div id="safety-information-modal" class="modal fade" role="dialog" aria-labelledby="safety-information-modal-label">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                            <h4 class="modal-title" id="safety-information-modal-label">Safety information</h4>
+                        </div>
+                        <div class="modal-body">
+                            <h1>Emergency Numbers</h1>
+                            <ul>
+                                <li>Seek a shelter for victims of domestic violence, it is always safe to call the shelter</li>
+                                <li>Call the National Domestic Violence Hotline and they can provide you the location of the nearest shelter:  1-800-799-7233</li>
+                                <li>New Mexico Crisis and Access Line can provide directions to Shelters, refer to Mental Health, Detox, Vocational assistance, Legal Assistance: 1-855-662-7474</li>
+                                <li>If you have a companion animal you need to keep safe but can’t take with you this number is to the New Mexico Companion Animal Rescue Effort (CARE):
+                                    <ul>
+                                        <li>1-844-325-2273</li>
+                                        <li>TTY or TTD: 1-800-659-8831</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <h1>Staying Safe</h1>
+                            <ul>
+                                <li>If your abuser is becoming violent, or you believe they could be, leave as quickly and safely as possible and call 911</li>
+                                <li>When you decide to leave, determine a safe route for escape</li>
+                                <li>If an argument seems unavoidable, stay away from any rooms such as the kitchen, bathroom, and garage where you might be trapped or there might be weapons readily available</li>
+                                <li>If you can, pack a bag for you and your children with a change of clothes and all important documents such as birth certificates, social security cards, shot records, check books, ATM cards, drives license, and any medication and money you have, and put it in a safe place where you can access it quickly, like in the trunk of your car or at a friend’s house</li>
+                                <li>If you choose to use alcohol or drugs it is important to be aware of the potential dangers</li>
+                                <li>Teach your children how to call 911 and let them know it is okay to call if there is any violence happening</li>
+                                <li>Be aware of your surroundings and others at all times</li>
+                                <li>Do not go to places where your abuser or their friends frequent</li>
+                            </ul>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                    </div><!-- .modal-content -->
+                </div><!-- .modal-dialog -->
+            </div><!-- .modal.fade -->
         </div>
     </div><!-- .container-fluid -->
-  <script src="src/lodash.js.min"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
 
-  <script src="src/scripts/index.js"></script>
+    <!-- begin scripts for chat mockup -->
+    <script src="src/lodash.js.min"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.15/angular.min.js"></script>
+    <script src="src/scripts/index.js"></script>
+    <script src="app.js"></script>
+    <!-- end scripts for chat mockup -->
 
-  <script src="app.js"></script>
+    <script>
+        // Show "safety information" on page load,
+        // this should automatically be dismissed when another user
+        // enters the chat room.
+        jQuery(window).load(function () {
+            jQuery('#safety-information-modal').modal('show');
+        });
+    </script>
 </body>
 </html>
