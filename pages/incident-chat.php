@@ -8,7 +8,7 @@ $curr_user = wp_get_current_user();
 <div id="map-container" class="container-fluid">
     <div id="map"></div>
 </div>
-<div id="tlkio" data-channel="<?php print esc_attr($this->getChatRoomName());?>" data-nickname="<?php esc_attr_e($curr_user->display_name);?>" style="height:100%;"></div><script async src="http://tlk.io/embed.js" type="text/javascript"></script>
+<div id="tlkio" data-channel="<?php print esc_attr($this->getChatRoomName());?>" data-nickname="<?php esc_attr_e($curr_user->display_name);?>" style="height:100%;"></div><script async src="https://tlk.io/embed.js" type="text/javascript"></script>
 
 <div id="safety-information-modal" class="modal fade" role="dialog" aria-labelledby="safety-information-modal-label">
     <div class="modal-dialog">
