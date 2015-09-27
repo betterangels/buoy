@@ -2,7 +2,7 @@
 Contributors: meitar
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TJLPJYXHSRBEE&lc=US&item_name=Inline%20Google%20Spreadsheet%20Viewer&item_number=Inline%20Google%20Spreadsheet%20Viewer&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted
 Tags: community, emergency response
-Requires at least: 4.2
+Requires at least: 3.5
 Tested up to: 4.3.1
 Stable tag: 0.1
 License: GPLv3
@@ -12,19 +12,6 @@ A community-driven emergency first responder system.
 
 == Description ==
 
-**This is an experimental plugin and is NOT yet recommended for production use.**
-
-Better Angels *Buoy* is an app designed to quickly connect survivors of domestic or dating violence (DV) with trusted friends, family members, advocates, and other allies in times of crisis.
-
-*For service providers*
-
-Anyone with a WordPress-powered website or blog can install the plugin to host an instance of the Buoy app for their community or constituents. Legal aid service providers, DV advocates, shelters, and other institutions can offer survivors one-click emergency access to a network of trusted peers and/or on-call emergency responders.
-
-*For victims and survivors*
-
-With Buoy, you are never more than one button press away from the people you trust most. There is no additional software to download or install. Simply bookmark a page with your smartphone's built-in Web browser to gain instant access to your personal emergency response team. Quickly send them your location with a pre-defined custom message, or provide a per-alert message.
-
-**See the [screenshots](https://wordpress.org/plugins/buoy/screenshots/) for an example walkthrough of how Buoy works.**
 
 == Installation ==
 
@@ -33,15 +20,9 @@ With Buoy, you are never more than one button press away from the people you tru
 
 == Frequently Asked Questions ==
 
-= Does Buoy track my location? =
-
-No. Buoy never tracks or record your movements. The only time Buoy knows where you are is when you press the emergency alert button. Buoy then sends this information only to the people you added to your emergency response team.
-
 == Screenshots ==
 
-1. The Buoy emergency alert screen. Use the larger button with a buoy icon to immediately send a new alert to your team. Use the smaller button with the chat bubble icon to write a custom alert message that will be sent to your team.
-
-2. The "Choose your team members" page lets you determine who you want to notify in the event of a crisis.
+1. 
 
 == Change log ==
 
