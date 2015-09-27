@@ -4,8 +4,9 @@
 }
 .dashboard_page_better-angels_activate-alert #activate-btn-submit {
     background: #d43f3a;
+    margin-top: 10px;
     height: 100%;
-    width: 100%;
+    width: calc(100% - 10px);
 }
 .dashboard_page_better-angels_activate-alert #activate-btn-submit img {
     max-height: calc(100% - 32px);
