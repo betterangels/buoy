@@ -21,8 +21,7 @@ class BetterAngelsPlugin {
         add_action('plugins_loaded', array($this, 'registerL10n'));
         add_action('admin_init', array($this, 'registerSettings'));
         add_action('admin_menu', array($this, 'registerAdminMenu'));
-//        add_action('admin_head', array($this, 'doAdminHeadActions'));
-//        add_action('admin_print_footer_scripts', array($this, 'addQuickTagButton'));
+        add_action('admin_head', array($this, 'doAdminHeadActions'));
 
         add_filter('user_contactmethods', array($this, 'addEmergencyPhoneContactMethod'));
 
@@ -71,7 +70,14 @@ class BetterAngelsPlugin {
     }
 
     public function doAdminHeadActions () {
+        $plugin_data = get_plugin_data(__FILE__);
         $this->registerContextualHelp();
+        wp_enqueue_style(
+            $this->prefix . 'style',
+            plugins_url('style.css', __FILE__),
+            false,
+            $plugin_data['Version']
+        );
     }
 
     public function addEmergencyPhoneContactMethod ($user_contact) {
