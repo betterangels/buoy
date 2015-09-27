@@ -17,10 +17,10 @@ $respond_link = wp_nonce_url(
     >
     <div id="map"></div>
 </div>
-<h1><?php print sprintf(esc_html__('%1$s sent an alert', 'better-angels'), $alerter->display_name);?></h1>
+<h1><?php print sprintf(esc_html__('%1$s needs your help', 'better-angels'), $alerter->display_name);?></h1>
 <blockquote id="crisis-message">
     <p>
-        <?php print esc_html(urldecode($_GET['msg']));?>
+        <?php print esc_html($this->getCallForHelp($alerter->ID));?>
     </p>
 </blockquote>
 <p class="submit">

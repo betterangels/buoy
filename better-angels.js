@@ -37,13 +37,25 @@ BETTER_ANGELS.geoFindMe = function () {
 BETTER_ANGELS.initMap = function (coords) {
     if ('undefined' === typeof google) { return; }
     var map = new google.maps.Map(document.getElementById('map'), {
-        zoom: 16,
-        center: coords
+        'zoom': 16,
+        'center': coords
+    });
+    var infowindow_content = '<p>'
+            + '<img src="' + jQuery('#map-container').data('icon')
+            + '" alt="' + jQuery('#map-container').data('alerter')
+            + '" style="float:left;margin-right:5px;" />'
+            + jQuery('#map-container').data('info-window-text')
+            + '</p>';
+    var infowindow = new google.maps.InfoWindow({
+        'content': infowindow_content
     });
     var marker = new google.maps.Marker({
-        position: coords,
-        map: map,
-        title: 'Crisis'
+        'position': coords,
+        'map': map,
+        'title': better_angels_vars.i18n_map_title
+    });
+    marker.addListener('click', function () {
+        infowindow.open(map, marker);
     });
     map.setCenter(coords);
     marker.setPosition(coords);
@@ -83,18 +95,26 @@ BETTER_ANGELS.init = function () {
                 jQuery('#safety-information-modal').modal('show');
             });
         }
+
     });
 
     jQuery(window).on('load', function () {
-        navigator.geolocation.getCurrentPosition(
-            function (position) {
-                var coords = {
-                    'lat': parseFloat(position.coords.latitude),
-                    'lng': parseFloat(position.coords.longitude)
-                };
-                BETTER_ANGELS.initMap(coords);
-            }
-        );
+        if (jQuery('.dashboard_page_better-angels_review-alert #map').length) {
+            BETTER_ANGELS.initMap({
+                'lat': parseFloat(jQuery('#map-container').data('latitude')),
+                'lng': parseFloat(jQuery('#map-container').data('longitude'))
+            });
+        } else if (jQuery('.dashboard_page_better-angels_incident-chat #map').length) {
+            navigator.geolocation.getCurrentPosition(
+                function (position) {
+                    var coords = {
+                        'lat': parseFloat(position.coords.latitude),
+                        'lng': parseFloat(position.coords.longitude)
+                    };
+                    BETTER_ANGELS.initMap(coords);
+                }
+            );
+        }
     });
 
 };

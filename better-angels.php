@@ -103,14 +103,14 @@ class BetterAngelsPlugin {
     public function enqueueMapsScripts ($hook) {
         $to_hook = array( // list of pages where maps API is needed
             'dashboard_page_' . $this->prefix . 'incident-chat',
-            'dashboard_page_' . $this->prefix . 'review-chat'
+            'dashboard_page_' . $this->prefix . 'review-alert'
         );
         if ($this->isAppPage($hook, $to_hook)) {
             wp_enqueue_script(
                 $this->prefix . 'maps-api',
                 'https://maps.googleapis.com/maps/api/js?language=' . get_locale(),
                 $this->prefix . 'script',
-                false,
+                null, // do not set a WP version!
                 true
             );
         }
@@ -123,8 +123,9 @@ class BetterAngelsPlugin {
      */
     private function getTranslations () {
         return array(
-            'i18n_show_map' => __('Show Map', 'better-angels'),
-            'i18n_hide_map' => __('Hide Map', 'better-angels')
+            'i18n_map_title' => __('Incident Map', 'better-angels'),
+            'i18n_hide_map' => __('Hide Map', 'better-angels'),
+            'i18n_show_map' => __('Show Map', 'better-angels')
         );
     }
 
@@ -214,11 +215,24 @@ class BetterAngelsPlugin {
     }
 
     /**
+     * Get a user's pre-defined crisis message, or a default message if empty.
+     *
+     * @return string The message.
+     */
+    private function getCallForHelp ($user_id = null) {
+        $user_id = (!is_numeric($user_id)) ? get_current_user_id() : $user_id;
+        $call_for_help = wp_strip_all_tags(get_user_meta($user_id, $this->prefix . 'call_for_help', true));
+        return (empty($call_for_help))
+            ? __('Please help!', 'better-angels') : $call_for_help;
+    }
+
+    /**
      * Responds to ajax requests activated from the main emergency alert button.
      *
      * TODO: Refactor this method, shouldn't have responsibility for all it's doing.
      */
     public function newAlert () {
+        $alert_position = $_POST['pos'];
         $me = wp_get_current_user();
         $guardians = $this->getMyGuardians();
 
@@ -228,10 +242,18 @@ class BetterAngelsPlugin {
             . substr(hash('md5', serialize($me) . serialize($guardians) . time()), 0, 10)
         );
 
-        $call_for_help = wp_strip_all_tags(get_user_meta($me->ID, $this->prefix . 'call_for_help', true));
-        $subject = (empty($call_for_help))
-            ? __('Please help!', 'better-angels') : $call_for_help;
-        $responder_link = wp_nonce_url(admin_url('?page=' . $this->prefix . 'review-alert'), $this->prefix . 'review', $this->prefix . 'review');
+        $subject = $this->getCallForHelp($me->ID);
+        $responder_link = wp_nonce_url(
+            admin_url(
+                '?page=' . $this->prefix . 'review-alert'
+                . '&who=' . urlencode($me->user_login)
+                . '&latitude=' . urlencode($alert_position['latitude'])
+                . '&longitude=' . urlencode($alert_position['longitude'])
+                . '&chat_room=' . urlencode($this->getChatRoomName())
+            ),
+            $this->prefix . 'review', $this->prefix . 'nonce'
+        );
+        // TODO: Write a more descriptive message.
         $message = $responder_link;
 
         foreach ($guardians as $guardian) {
@@ -389,6 +411,7 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
         if (!current_user_can('read')) {
             wp_die(__('You do not have sufficient permissions to access this page.', 'better-angels'));
         }
+        // TODO: Make it so that only the alerter's guardians (or admin users) can see this page.
         require_once 'pages/review-alert.php';
     }
 

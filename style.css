@@ -13,6 +13,25 @@
 }
 
 .dashboard_page_better-angels_incident-chat #alert-map { margin-bottom: 0; }
-.dashboard_page_better-angels_incident-chat #map-container { height: 250px; display: none; }
-.dashboard_page_better-angels_incident-chat #map { height: 100%; }
+.dashboard_page_better-angels_incident-chat #map-container,
+.dashboard_page_better-angels_review-alert #map-container {
+    height: 250px;
+}
+.dashboard_page_better-angels_incident-chat #map-container {
+     display: none;
+ }
+.dashboard_page_better-angels_incident-chat #map,
+.dashboard_page_better-angels_review-alert #map {
+    height: 100%;
+}
 .dashboard_page_better-angels_incident-chat #safety-information-modal { top: 40px; }
+
+.dashboard_page_better-angels_review-alert .submit {
+    display: flex;
+}
+.dashboard_page_better-angels_review-alert .submit a {
+    flex-grow: 1;
+    margin: 0 1rem;
+    display: inline-block;
+    text-align: center;
+}
