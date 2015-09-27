@@ -1,3 +1,4 @@
+(function () {
 var BETTER_ANGELS = {};
 BETTER_ANGELS.geoFindMe = function () {
     if (!navigator.geolocation){
@@ -34,6 +35,7 @@ BETTER_ANGELS.geoFindMe = function () {
  * @param object coords An object of geolocated data with properties named "lat" and "lng".
  */
 BETTER_ANGELS.initMap = function (coords) {
+    if ('undefined' === typeof google) { return; }
     var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 16,
         center: coords
@@ -55,46 +57,46 @@ BETTER_ANGELS.getQueryVariable = function (variable) {
     }
     return(false);
 };
+BETTER_ANGELS.init = function () {
+    jQuery(document).ready(function () {
+        jQuery('#activate-btn-submit').on('click', BETTER_ANGELS.geoFindMe);
 
-jQuery(document).ready(function () {
-    jQuery('#activate-btn-submit').on('click', BETTER_ANGELS.geoFindMe);
-});
+        // Show/hide incident map
+        jQuery('#toggle-incident-map-btn').on('click', function () {
+            var map_container = jQuery('#map-container');
+            if (map_container.is(':visible')) {
+                map_container.slideUp();
+                this.textContent = better_angels_vars.i18n_show_map;
+            } else {
+                map_container.slideDown({
+                    'complete': function () { google.maps.event.trigger(map, 'resize'); }
+                });
+                this.textContent = better_angels_vars.i18n_hide_map;
+            }
+        });
 
-// Show "safety information" on page load,
-// TODO: this should automatically be dismissed when another user
-// enters the chat room.
-if (BETTER_ANGELS.getQueryVariable('show_safety_modal')) {
-    jQuery(window).load(function () {
-        jQuery('#safety-information-modal').modal('show');
-    });
-}
-
-jQuery(document).ready(function () {
-
-    // Show/hide incident map
-    jQuery('#toggle-incident-map-btn').on('click', function () {
-        var map_container = jQuery('#map-container');
-        if (map_container.is(':visible')) {
-            map_container.slideUp();
-            this.textContent = better_angels_vars.i18n_show_map;
-        } else {
-            map_container.slideDown({
-                'complete': function () { google.maps.event.trigger(map, 'resize'); }
+        // Show "safety information" on page load,
+        // TODO: this should automatically be dismissed when another user
+        // enters the chat room.
+        if (BETTER_ANGELS.getQueryVariable('show_safety_modal')) {
+            jQuery(window).load(function () {
+                jQuery('#safety-information-modal').modal('show');
             });
-            this.textContent = better_angels_vars.i18n_hide_map;
         }
     });
 
-});
+    jQuery(window).on('load', function () {
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                var coords = {
+                    'lat': parseFloat(position.coords.latitude),
+                    'lng': parseFloat(position.coords.longitude)
+                };
+                BETTER_ANGELS.initMap(coords);
+            }
+        );
+    });
 
-jQuery(window).on('load', function () {
-    navigator.geolocation.getCurrentPosition(
-        function (position) {
-            var coords = {
-                'lat': parseFloat(position.coords.latitude),
-                'lng': parseFloat(position.coords.longitude)
-            };
-            BETTER_ANGELS.initMap(coords);
-        }
-    );
-});
+};
+BETTER_ANGELS.init();
+})();
