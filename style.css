@@ -1,3 +1,8 @@
 .dashboard_page_better-angels_activate-alert #wpbody-content {
     height: calc(100vh - 32px);
 }
+.dashboard_page_better-angels_activate-alert #activate-btn-submit {
+    background: #d43f3a;
+    height: 100%;
+    width: 100%;
+}

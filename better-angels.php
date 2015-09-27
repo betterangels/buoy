@@ -20,8 +20,11 @@ class BetterAngelsPlugin {
 
         add_action('plugins_loaded', array($this, 'registerL10n'));
         add_action('admin_init', array($this, 'registerSettings'));
+        add_action('admin_enqueue_scripts', array($this, 'enqueueAdminScripts'));
         add_action('admin_menu', array($this, 'registerAdminMenu'));
-        add_action('admin_head', array($this, 'doAdminHeadActions'));
+        add_action('wp_ajax_' . $this->prefix . 'findme', array($this, 'newAlert'));
+        add_action('show_user_profile', array($this, 'addProfileFields'));
+        add_action('personal_options_update', array($this, 'updateProfileFields'));
 
         add_filter('user_contactmethods', array($this, 'addEmergencyPhoneContactMethod'));
 
@@ -69,7 +72,7 @@ class BetterAngelsPlugin {
         );
     }
 
-    public function doAdminHeadActions () {
+    public function enqueueAdminScripts () {
         $plugin_data = get_plugin_data(__FILE__);
         $this->registerContextualHelp();
         wp_enqueue_style(
@@ -78,11 +81,90 @@ class BetterAngelsPlugin {
             false,
             $plugin_data['Version']
         );
+        wp_register_script(
+            $this->prefix . 'script',
+            plugins_url(str_replace('_', '', $this->prefix) . '.js', __FILE__),
+            false,
+            $plugin_data['Version']
+        );
+        wp_enqueue_script($this->prefix . 'script');
+    }
+
+    public function getSmsEmailGatewayDomain($provider) {
+        $provider_domains = array(
+            'AT&T' => '@txt.att.net',
+            'Alltel' => '@message.alltel.com',
+            'Boost Mobile' => '@myboostmobile.com',
+            'Cricket' => '@sms.mycricket.com',
+            'Metro PCS' => '@mymetropcs.com',
+            'Nextel' => '@messaging.nextel.com',
+            'Ptel' => '@ptel.com',
+            'Qwest' => '@qwestmp.com',
+            'Sprint' => array(
+                '@messaging.sprintpcs.com',
+                '@pm.sprint.com'
+            ),
+            'Suncom' => '@tms.suncom.com',
+            'T-Mobile' => '@tmomail.net',
+            'Tracfone' => '@mmst5.tracfone.com',
+            'U.S. Cellular' => '@email.uscc.net',
+            'Verizon' => '@vtext.com',
+            'Virgin Mobile' => '@vmobl.com'
+        );
+        if (is_array($provider_domains[$provider])) {
+            $at_domain = array_rand($provider_domains[$provider]);
+        } else {
+            $at_domain = $provider_domains[$provider];
+        }
+        return $at_domain;
+    }
+
+    /**
+     * Responds to ajax requests activated from the main emergency alert button.
+     */
+    public function newAlert () {
+        $me = wp_get_current_user();
+
+        // TODO: This needs work.
+        $subject = __('Please help!', 'better-angels');
+        $responder_link = admin_url('?page=' . $this->prefix . 'review-alert');
+        $message = $responder_link;
+
+        $guardians = $this->getMyGuardians();
+        foreach ($guardians as $guardian) {
+            $sms = preg_replace('/[^0-9]/', '', get_user_meta($guardian->ID, $this->prefix . 'sms', true));
+            $sms_provider = get_user_meta($guardian->ID, $this->prefix . 'sms_provider', true);
+            $headers = array(
+                'From: "' . $me->display_name . '" <' . $me->user_email . '>'
+            );
+
+            wp_mail($guardian->user_email, $subject, $message, $headers);
+
+            // Send an email that will be converted to an SMS by the
+            // telco company if the guardian has provided an emergency txt number.
+            if (!empty($sms) && !empty($sms_provider)) {
+                wp_mail(
+                    $sms . $this->getSmsEmailGatewayDomain($sms_provider),
+                    $subject,
+                    $message,
+                    $headers
+                );
+            }
+        }
+        exit();
     }
 
     public function addEmergencyPhoneContactMethod ($user_contact) {
         $user_contact[$this->prefix . 'sms'] = esc_html__('Emergency txt (SMS)', 'better-angels');
         return $user_contact;
+    }
+
+    public function addProfileFields () {
+        require_once 'pages/profile.php';
+    }
+    public function updateProfileFields () {
+        // TODO: Whitelist valid providers.
+        update_user_meta(get_current_user_id(), $this->prefix . 'sms_provider', $_POST[$this->prefix . 'sms_provider']);
     }
 
 
