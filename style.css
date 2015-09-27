@@ -11,6 +11,8 @@
 .dashboard_page_better-angels_activate-alert #activate-btn-submit img {
     max-height: calc(100% - 32px);
 }
+
 .dashboard_page_better-angels_incident-chat #alert-map { margin-bottom: 0; }
 .dashboard_page_better-angels_incident-chat #map-container { height: 250px; display: none; }
 .dashboard_page_better-angels_incident-chat #map { height: 100%; }
+.dashboard_page_better-angels_incident-chat #safety-information-modal { top: 40px; }

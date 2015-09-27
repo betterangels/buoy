@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Buoy (a Better Angels first responder system) 0.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/better-angels\n"
-"POT-Creation-Date: 2015-09-20 17:26:00+00:00\n"
+"POT-Creation-Date: 2015-09-22 08:39:46+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,51 +12,72 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: better-angels.php:48
+#: better-angels.php:61
 msgid "Buoy Settings"
 msgstr ""
 
-#: better-angels.php:49
+#: better-angels.php:62
 msgid "Buoy"
 msgstr ""
 
-#: better-angels.php:56
+#: better-angels.php:69
 msgid "Emergency Team"
 msgstr ""
 
-#: better-angels.php:57
+#: better-angels.php:70
 msgid "My Team"
 msgstr ""
 
-#: better-angels.php:64 better-angels.php:65
+#: better-angels.php:78 better-angels.php:79
+msgid "Respond to Alert"
+msgstr ""
+
+#: better-angels.php:87 better-angels.php:88
+msgid "Incident Chat"
+msgstr ""
+
+#: better-angels.php:95 better-angels.php:96
 msgid "Activate Alert"
 msgstr ""
 
-#: better-angels.php:84
+#: better-angels.php:126 pages/incident-chat.php:5
+msgid "Show Map"
+msgstr ""
+
+#: better-angels.php:127
+msgid "Hide Map"
+msgstr ""
+
+#: better-angels.php:233
+msgid "Please help!"
+msgstr ""
+
+#: better-angels.php:269
 msgid "Emergency txt (SMS)"
 msgstr ""
 
-#: better-angels.php:98
+#: better-angels.php:291
 msgid ""
 "Bouy is provided as free software, but sadly grocery stores do not offer "
 "free food. If you like this plugin, please consider %1$s to its %2$s. "
 "&hearts; Thank you!"
 msgstr ""
 
-#: better-angels.php:99
+#: better-angels.php:292
 msgid "making a donation"
 msgstr ""
 
-#: better-angels.php:100
+#: better-angels.php:293
 msgid "houseless, jobless, nomadic developer"
 msgstr ""
 
-#: better-angels.php:190 better-angels.php:197 better-angels.php:211
+#: better-angels.php:383 better-angels.php:390 better-angels.php:397
+#: better-angels.php:407 better-angels.php:421
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: pages/activate-alert.php:2
-msgid "This page requres iFrames. :("
+#: pages/activate-alert.php:1
+msgid "Activate alert"
 msgstr ""
 
 #: pages/choose-angels.php:1 pages/choose-angels.php:4
@@ -95,8 +116,136 @@ msgid ""
 "their box and click %1$sSave Changes%2$s at the bottom of this page."
 msgstr ""
 
+#: pages/incident-chat.php:16 pages/incident-chat.php:52
+msgid "Close"
+msgstr ""
+
+#: pages/incident-chat.php:17
+msgid "Safety information"
+msgstr ""
+
+#: pages/incident-chat.php:20
+msgid "Emergency Numbers"
+msgstr ""
+
+#: pages/incident-chat.php:22
+msgid ""
+"Seek a shelter for victims of domestic violence, it is always safe to call "
+"the shelter."
+msgstr ""
+
+#: pages/incident-chat.php:23
+msgid ""
+"Call the National Domestic Violence Hotline and they can provide you the "
+"location of the nearest shelter: 1-800-799-7233"
+msgstr ""
+
+#: pages/incident-chat.php:24
+msgid "Love is Respect - To speak to a supportive peer advocate:"
+msgstr ""
+
+#: pages/incident-chat.php:26
+msgid "call:"
+msgstr ""
+
+#: pages/incident-chat.php:27
+msgid "txt:"
+msgstr ""
+
+#: pages/incident-chat.php:28
+msgid "or chat 24/7 at"
+msgstr ""
+
+#: pages/incident-chat.php:31
+msgid ""
+"New Mexico Crisis and Access Line can provide directions to Shelters, refer "
+"to Mental Health, Detox, Vocational assistance, Legal Assistance:"
+msgstr ""
+
+#: pages/incident-chat.php:32
+msgid ""
+"If you have a companion animal you need to keep safe but can’t take with you "
+"this number is to the New Mexico Companion Animal Rescue Effort (CARE):"
+msgstr ""
+
+#: pages/incident-chat.php:35
+msgid "TTY or TTD:"
+msgstr ""
+
+#: pages/incident-chat.php:39
+msgid "Staying Safe"
+msgstr ""
+
+#: pages/incident-chat.php:41
+msgid ""
+"If your abuser is becoming violent, or you believe they could be, leave as "
+"quickly and safely as possible and call 911."
+msgstr ""
+
+#: pages/incident-chat.php:42
+msgid "When you decide to leave, determine a safe route for escape."
+msgstr ""
+
+#: pages/incident-chat.php:43
+msgid ""
+"If an argument seems unavoidable, stay away from any rooms such as the "
+"kitchen, bathroom, and garage where you might be trapped or there might be "
+"weapons readily available."
+msgstr ""
+
+#: pages/incident-chat.php:44
+msgid ""
+"If you can, pack a bag for you and your children with a change of clothes "
+"and all important documents such as birth certificates, social security "
+"cards, shot records, check books, ATM cards, drives license, and any "
+"medication and money you have, and put it in a safe place where you can "
+"access it quickly, like in the trunk of your car or at a friend’s house."
+msgstr ""
+
+#: pages/incident-chat.php:45
+msgid ""
+"If you choose to use alcohol or drugs it is important to be aware of the "
+"potential dangers."
+msgstr ""
+
+#: pages/incident-chat.php:46
+msgid ""
+"Teach your children how to call 911 and let them know it is okay to call if "
+"there is any violence happening."
+msgstr ""
+
+#: pages/incident-chat.php:47
+msgid "Be aware of your surroundings and others at all times."
+msgstr ""
+
+#: pages/incident-chat.php:48
+msgid "Do not go to places where your abuser or their friends frequent."
+msgstr ""
+
 #: pages/options.php:1
 msgid "Better Angels Settings"
+msgstr ""
+
+#: pages/profile.php:9
+msgid "Phone company"
+msgstr ""
+
+#: pages/profile.php:36
+msgid "Crisis message"
+msgstr ""
+
+#: pages/profile.php:47
+msgid ""
+"Your crisis message is the call for help you send to your emergency team "
+"members. Make this short enough to fit inside a txt message!"
+msgstr ""
+
+#: pages/review-alert.php:9
+msgid "Ignore"
+msgstr ""
+
+#: pages/review-alert.php:11
+msgid "Respond"
 msgstr ""
 
 #. Plugin Name of the plugin/theme
