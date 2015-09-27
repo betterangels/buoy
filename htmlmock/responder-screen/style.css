@@ -28,10 +28,14 @@ html, body {
 	height: 100%;
 }
 
-#username {
-	font-size: 35px;
+#help-message {
+	font-size: 27px;
 	height: 100%;
 	text-align: center;
+}
+#username {
+    display: block;
+    font-size: 36px;
 }
 
 .row-buttons {

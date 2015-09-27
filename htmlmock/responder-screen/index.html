@@ -18,7 +18,7 @@
 			</div>
 			<div class="row row-user">
 				<div class="col-xs-12">
-					<div id="username">Survivor</div>
+					<div id="help-message"><span id="username">Survivor</span> needs help</div>
 				</div>
 			</div>
 			<div class="row row-buttons">
@@ -48,7 +48,10 @@
 
 			}
 
-            document.getElementById('respond-link').setAttribute('href', '../chat-screen/?chat_room=' + getQueryVariable('chat_room'));
+            window.addEventListener('DOMContentLoaded', function () {
+                document.getElementById('username').textContent = getQueryVariable('name');
+                document.getElementById('respond-link').setAttribute('href', '../chat-screen/?chat_room=' + getQueryVariable('chat_room'));
+            });
 
             function getQueryVariable (variable) {
                 var query = window.location.search.substring(1);

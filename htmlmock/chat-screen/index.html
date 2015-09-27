@@ -63,7 +63,8 @@
                 jQuery('#safety-information-modal').modal('show');
             });
         }
-        document.getElementById('chat-frame').setAttribute('src', 'https://tlk.io/alert_' + getQueryVariable('chat_room'));
+        document.getElementById('chat-frame').setAttribute('src', 'https://tlk.io/alert_' + getQueryVariable('chat_room') + '?name=' + getQueryVariable('name'));
+
         function getQueryVariable (variable) {
             var query = window.location.search.substring(1);
             var vars = query.split("&");
