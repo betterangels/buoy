@@ -108,7 +108,7 @@ class BetterAngelsPlugin {
         if ($this->isAppPage($hook, $to_hook)) {
             wp_enqueue_script(
                 $this->prefix . 'maps-api',
-                'https://maps.googleapis.com/maps/api/js?key=AIzaSyC5paDSn3ORikzyyjWTXcOV6THGY38TKFY&signed_in=true',
+                'https://maps.googleapis.com/maps/api/js?language=' . get_locale(),
                 $this->prefix . 'script',
                 false,
                 true
