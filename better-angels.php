@@ -70,7 +70,8 @@ class BetterAngelsPlugin {
             __('My Team', 'better-angels'),
             'read',
             $this->prefix . 'choose-angels',
-            array($this, 'renderChooseAngelsPage')
+            array($this, 'renderChooseAngelsPage'),
+            plugins_url('img/icon-bw-life-preserver.svg', __FILE__)
         );
 
         add_submenu_page(

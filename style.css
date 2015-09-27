@@ -1,4 +1,11 @@
 .wp-admin .modal { top: 40px; }
+#toplevel_page_better-angels_choose-angels .wp-menu-image img {
+    margin: 5px;
+    padding: 0;
+    width: calc(100% - 10px);
+    background: gray;
+    border-radius: 5px;
+}
 
 .dashboard_page_better-angels_activate-alert #wpbody-content,
 .dashboard_page_better-angels_incident-chat #wpbody-content {
