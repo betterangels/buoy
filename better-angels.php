@@ -15,12 +15,14 @@ if (!defined('ABSPATH')) { exit; } // Disallow direct HTTP access.
 class BetterAngelsPlugin {
 
     private $prefix = 'better-angels_'; //< Internal prefix for settings, etc., derived from shortcode.
+    private $chat_room_name; //< The name of the chat room for this incident.
 
     public function __construct () {
 
         add_action('plugins_loaded', array($this, 'registerL10n'));
         add_action('admin_init', array($this, 'registerSettings'));
         add_action('admin_enqueue_scripts', array($this, 'enqueueAdminScripts'));
+        add_action('admin_enqueue_scripts', array($this, 'enqueueMapsScripts'));
         add_action('admin_menu', array($this, 'registerAdminMenu'));
         add_action('wp_ajax_' . $this->prefix . 'findme', array($this, 'newAlert'));
         add_action('show_user_profile', array($this, 'addProfileFields'));
@@ -29,6 +31,13 @@ class BetterAngelsPlugin {
         add_filter('user_contactmethods', array($this, 'addEmergencyPhoneContactMethod'));
 
         register_activation_hook(__FILE__, array($this, 'activate'));
+    }
+
+    public function setChatRoomName ($name) {
+        $this->chat_room_name = $name;
+    }
+    public function getChatRoomName () {
+        return $this->chat_room_name;
     }
 
     public function activate () {
@@ -58,9 +67,27 @@ class BetterAngelsPlugin {
         add_menu_page(
             __('Emergency Team', 'better-angels'),
             __('My Team', 'better-angels'),
-            'read', // give access to users of the Subscribers role
+            'read',
             $this->prefix . 'choose-angels',
             array($this, 'renderChooseAngelsPage')
+        );
+
+        add_submenu_page(
+            null,
+            __('Respond to Alert', 'better-angels'),
+            __('Respond to Alert', 'better-angels'),
+            'read',
+            $this->prefix . 'review-alert',
+            array($this, 'renderReviewAlertPage')
+        );
+
+        add_submenu_page(
+            null,
+            __('Incident Chat', 'better-angels'),
+            __('Incident Chat', 'better-angels'),
+            'read',
+            $this->prefix . 'incident-chat',
+            array($this, 'renderIncidentChatPage')
         );
 
         add_dashboard_page(
@@ -72,7 +99,20 @@ class BetterAngelsPlugin {
         );
     }
 
-    public function enqueueAdminScripts () {
+    public function enqueueMapsScripts ($hook) {
+        if ('dashboard_page_' . $this->prefix . 'review_alert' !== $hook) {
+            return;
+        }
+        wp_enqueue_script(
+            $this->prefix . 'maps-api',
+            'https://maps.googleapis.com/maps/api/js?key=AIzaSyC5paDSn3ORikzyyjWTXcOV6THGY38TKFY&signed_in=true&callback=initMap',
+            $this->prefix . 'script',
+            false,
+            true
+        );
+    }
+
+    public function enqueueAdminScripts ($hook) {
         $plugin_data = get_plugin_data(__FILE__);
         $this->registerContextualHelp();
         wp_enqueue_style(
@@ -88,6 +128,13 @@ class BetterAngelsPlugin {
             $plugin_data['Version']
         );
         wp_enqueue_script($this->prefix . 'script');
+
+        if ('dashboard_page_' . $this->prefix . 'incident-chat' == $hook) {
+            wp_enqueue_style(
+                $this->prefix . 'bootstrap',
+                'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'
+            );
+        }
     }
 
     public function getSmsEmailGatewayDomain($provider) {
@@ -122,15 +169,21 @@ class BetterAngelsPlugin {
     /**
      * Responds to ajax requests activated from the main emergency alert button.
      */
+
     public function newAlert () {
         $me = wp_get_current_user();
+        $guardians = $this->getMyGuardians();
+
+        $this->setChatRoomName(
+            str_replace('-', '_', $this->prefix)
+            . substr(hash('md5', serialize($me) . serialize($guardians) . time()), 0, 10)
+        );
 
         // TODO: This needs work.
         $subject = __('Please help!', 'better-angels');
-        $responder_link = admin_url('?page=' . $this->prefix . 'review-alert');
+        $responder_link = wp_nonce_url(admin_url('?page=' . $this->prefix . 'review-alert'), $this->prefix . 'review', $this->prefix . 'review');
         $message = $responder_link;
 
-        $guardians = $this->getMyGuardians();
         foreach ($guardians as $guardian) {
             $sms = preg_replace('/[^0-9]/', '', get_user_meta($guardian->ID, $this->prefix . 'sms', true));
             $sms_provider = get_user_meta($guardian->ID, $this->prefix . 'sms_provider', true);
@@ -151,7 +204,15 @@ class BetterAngelsPlugin {
                 );
             }
         }
-        exit();
+        $next_url = wp_nonce_url(
+            admin_url(
+                '?page=' . $this->prefix . 'incident-chat'
+                . '&show_safety_modal=1'
+                . '&chat_room=' . $this->getChatRoomName()
+            ),
+            $this->prefix . 'chat', $this->prefix . 'nonce'
+        );
+        wp_send_json_success($next_url);
     }
 
     public function addEmergencyPhoneContactMethod ($user_contact) {
@@ -272,6 +333,23 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
             wp_die(__('You do not have sufficient permissions to access this page.', 'better-angels'));
         }
         require_once 'pages/activate-alert.php';
+    }
+
+    public function renderReviewAlertPage () {
+        if (!current_user_can('read')) {
+            wp_die(__('You do not have sufficient permissions to access this page.', 'better-angels'));
+        }
+        require_once 'pages/review-alert.php';
+    }
+
+    public function renderIncidentChatPage () {
+        if (!current_user_can('read')) {
+            wp_die(__('You do not have sufficient permissions to access this page.', 'better-angels'));
+        }
+        if (wp_verify_nonce($_GET[$this->prefix . 'nonce'], "{$this->prefix}chat")) {
+            $this->setChatRoomName($_GET['chat_room']);
+        }
+        require_once 'pages/incident-chat.php';
     }
 
     public function renderChooseAngelsPage () {

@@ -8,16 +8,15 @@ BETTER_ANGELS.geoFindMe = function () {
     }
     navigator.geolocation.getCurrentPosition(
         function (position) { // success callback
-            var new_chat = Math.random().toString(36).substring(2); // not "secure," I know
             jQuery.post(ajaxurl,
                 {
                     'action': 'better-angels_findme',
                     'pos': position.coords,
-                    'chat': new_chat
                 },
                 function (response) {
-                    if (console && console.log) {
-                        console.log(response);
+                    if (response.success) {
+                        // decode the HTML-encoded stuff WP sends
+                        window.location.href = jQuery('<div/>').html(response.data).text();
                     }
                 }
             );
@@ -28,7 +27,25 @@ BETTER_ANGELS.geoFindMe = function () {
             }
         }
     );
-}
+};
+/**
+ * Creates a google map centered on the given coordinates.
+ *
+ * @param object coords An object of geolocated data with properties named "lat" and "lng".
+ */
+BETTER_ANGELS.initMap = function (coords) {
+        var map = new google.maps.Map(document.getElementById('map'), {
+            zoom: 16,
+            center: coords
+        });
+        var marker = new google.maps.Marker({
+            position: coords,
+            map: map,
+            title: 'Crisis'
+        });
+        map.setCenter(coords);
+        marker.setPosition(coords);
+};
 BETTER_ANGELS.getQueryVariable = function (variable) {
     var query = window.location.search.substring(1);
     var vars = query.split("&");
@@ -37,8 +54,37 @@ BETTER_ANGELS.getQueryVariable = function (variable) {
         if(pair[0] == variable){return pair[1];}
     }
     return(false);
-}
+};
 
 jQuery(document).ready(function () {
     jQuery('#activate-btn-submit').on('click', BETTER_ANGELS.geoFindMe);
+});
+
+// Show "safety information" on page load,
+// this should automatically be dismissed when another user
+// enters the chat room.
+if (BETTER_ANGELS.getQueryVariable('show_safety_modal')) {
+    jQuery(window).load(function () {
+        jQuery('#safety-information-modal').modal('show');
+    });
+}
+jQuery('#show-incident-map-btn').on('click', function () {
+    jQuery('#map-container').slideDown(
+        {
+        'complete': function () {
+                //google.maps.event.trigger(map, 'resize');
+                navigator.geolocation.getCurrentPosition(function (position) {
+                    BETTER_ANGELS.initMap(position);
+                });
+            }
+        }
+    );
+});
+jQuery('#hide-incident-map-btn').on('click', function () {
+    jQuery('#map-container').slideUp();
+});
+jQuery(window).on('load', function () {
+    navigator.geolocation.getCurrentPosition(function (position) {
+        BETTER_ANGELS.initMap(position);
+    });
 });
