@@ -1,3 +1,6 @@
+<?php
+$curr_user = wp_get_current_user();
+?>
 <div id="alert-map" role="alert" class="alert alert-warning alert-dismissible fade in">
     <button id="show-incident-map-btn" class="btn btn-default" type="button">Show Map</button>
     <button id="hide-incident-map-btn" class="btn btn-default" type="button">Hide Map</button>
@@ -5,7 +8,7 @@
 <div id="map-container" class="container-fluid">
     <div id="map"></div>
 </div>
-<iframe id="chat-frame" src="https://tlk.io/<?php print esc_attr($this->getChatRoomName());?>" width="100%" height="100%" frameborder="0"></iframe>
+<div id="tlkio" data-channel="<?php print esc_attr($this->getChatRoomName());?>" data-nickname="<?php esc_attr_e($curr_user->display_name);?>" style="height:100%;"></div><script async src="http://tlk.io/embed.js" type="text/javascript"></script>
 
 <div id="safety-information-modal" class="modal fade" role="dialog" aria-labelledby="safety-information-modal-label">
     <div class="modal-dialog">
