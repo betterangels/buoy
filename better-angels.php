@@ -53,8 +53,8 @@ class BetterAngelsPlugin {
         );
 
         add_menu_page(
-            __('Guardian Angels', 'better-angels'),
-            __('Choose your Guardian Angels', 'better-angels'),
+            __('Emergency Team', 'better-angels'),
+            __('My Team', 'better-angels'),
             'read', // give access to users of the Subscribers role
             $this->prefix . 'choose-angels',
             array($this, 'renderChooseAngelsPage')
