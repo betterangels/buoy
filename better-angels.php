@@ -1,8 +1,8 @@
 <?php
 /**
- * Plugin Name: Better Angels first responder system
+ * Plugin Name: Buoy (a Better Angels first responder system)
  * Plugin URI: https://github.com/meitar/better-angels
- * Description: A community-driven emergency first responder system. <strong>Like this plugin? Please <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=TJLPJYXHSRBEE&amp;lc=US&amp;item_name=Better%20Angels&amp;item_number=better-angels&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted" title="Send a donation to the developer of Better Angels">donate</a>. &hearts; Thank you!</strong>
+ * Description: Tell your friends where you are and what you need. (A community-driven emergency first responder system.) <strong>Like this plugin? Please <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=TJLPJYXHSRBEE&amp;lc=US&amp;item_name=Better%20Angels&amp;item_number=better-angels&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted" title="Send a donation to the developer of Better Angels">donate</a>. &hearts; Thank you!</strong>
  * Version: 0.1
  * Author: Maymay <bitetheappleback@gmail.com>
  * Author URI: http://maymay.net/
@@ -45,8 +45,8 @@ class BetterAngelsPlugin {
 
     public function registerAdminMenu () {
         add_options_page(
-            __('Better Angels Settings', 'better-angels'),
-            __('Better Angels', 'better-angels'),
+            __('Buoy Settings', 'better-angels'),
+            __('Buoy', 'better-angels'),
             'manage_options',
             $this->prefix . 'settings',
             array($this, 'renderOptionsPage')
@@ -95,7 +95,7 @@ class BetterAngelsPlugin {
 ?>
 <div class="donation-appeal">
     <p style="text-align: center; font-style: italic; margin: 1em 3em;"><?php print sprintf(
-esc_html__('Better Angels is provided as free software, but sadly grocery stores do not offer free food. If you like this plugin, please consider %1$s to its %2$s. &hearts; Thank you!', 'better-angels'),
+esc_html__('Bouy is provided as free software, but sadly grocery stores do not offer free food. If you like this plugin, please consider %1$s to its %2$s. &hearts; Thank you!', 'better-angels'),
 '<a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=meitarm%40gmail%2ecom&lc=US&amp;item_name=Better%20Angels&amp;item_number=better%2dangels&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donateCC_LG%2egif%3aNonHosted">' . esc_html__('making a donation', 'better-angels') . '</a>',
 '<a href="http://Cyberbusking.org/">' . esc_html__('houseless, jobless, nomadic developer', 'better-angels') . '</a>'
 );?></p>
