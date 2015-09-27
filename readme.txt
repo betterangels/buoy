@@ -12,6 +12,8 @@ A community-driven emergency first responder system.
 
 == Description ==
 
+**This is an experimental plugin and is NOT yet recommended for production use.**
+
 Better Angels *Buoy* is an app designed to quickly connect survivors of domestic or dating violence (DV) with trusted friends, family members, advocates, and other allies in times of crisis.
 
 *For service providers*
