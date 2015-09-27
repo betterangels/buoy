@@ -57,8 +57,16 @@ class BetterAngelsPlugin {
             __('Guardian Angels', 'better-angels'),
             __('Choose your Guardian Angels', 'better-angels'),
             'read', // give access to users of the Subscribers role
-            $this->prefix . 'better-angels',
+            $this->prefix . 'choose-angels',
             array($this, 'renderChooseAngelsPage')
+        );
+
+        add_dashboard_page(
+            __('Activate Alert', 'better-angels'),
+            __('Activate Alert', 'better-angels'),
+            'read', // give access to users of the Subscribers role
+            $this->prefix . 'activate-alert',
+            array($this, 'renderActivateAlertPage')
         );
     }
 
@@ -171,6 +179,13 @@ esc_html__('Better Angels is provided as free software, but sadly grocery stores
         }
     }
 
+    public function renderActivateAlertPage () {
+        if (!current_user_can('read')) {
+            wp_die(__('You do not have sufficient permissions to access this page.', 'better-angels'));
+        }
+        require_once 'pages/activate-alert.php';
+    }
+
     public function renderChooseAngelsPage () {
         if (!current_user_can('read')) {
             wp_die(__('You do not have sufficient permissions to access this page.', 'better-angels'));
@@ -181,62 +196,8 @@ esc_html__('Better Angels is provided as free software, but sadly grocery stores
             $this->updateChooseAngels($_POST);
         }
         $guardians = $this->getMyGuardians();
-?>
-<h2><?php esc_html_e('Chosoe your guardian angels', 'better-angels');?></h2>
-<form method="POST" action="<?php print esc_url(admin_url('?page='.$this->prefix.'better-angels'));?>">
-<?php wp_nonce_field($this->prefix . 'guardians', $this->prefix . 'nonce');?>
-<fieldset><legend><?php esc_html_e('Choose your angels', 'better-angels');?></legend>
-<table class="form-table" summary="<?php esc_attr_e('', 'better-angels');?>">
-    <tbody>
-        <tr>
-            <th>
-                <label for="<?php esc_attr_e($this->prefix);?>add_guardian"><?php esc_html_e('Add a guardian', 'better-angels');?></label>
-            </th>
-            <td>
-                <input list="<?php esc_attr_e($this->prefix);?>guardians_list" id="<?php esc_attr_e($this->prefix);?>add_guardian" name="<?php esc_attr_e($this->prefix);?>add_guardian" placeholder="<?php esc_attr_e('Michelle', 'better-angels')?>" />
-                <datalist id="<?php esc_attr_e($this->prefix);?>guardians_list"/>
-                    <?php $this->printAllUsersForDataList();?>
-                </datalist>
-                <p class="description">
-                    <?php print sprintf(
-                        esc_html__('Your guardians are the people you want to notify in the event of an emergency. Type your trusted friends names in the text box, then press %1$sSave Changes%2$s at the bottom of this page.', 'better-angels'),
-                        '<strong>', '</strong>'
-                    );?>
-                </p>
-            </td>
-        </tr>
-        <tr>
-            <th>
-                <label for="<?php esc_attr_e($this->prefix);?>my_guardians"><?php esc_html_e('Remove a guardian', 'better-angels');?></label>
-            </th>
-            <td>
-                <ul id="<?php esc_attr_e($this->prefix);?>my_guardians">
-                <?php if (empty($guardians)) : print sprintf(esc_html__('You have not chosen any guardians. Maybe you want to %1$sadd a guardian%2$s?', 'better-angels'), '<a href="#' . $this->prefix . 'guardians">', '</a>'); endif;?>
-                <?php foreach ($guardians as $guardian) : ?>
-                    <li>
-                        <label>
-                            <input
-                                type="checkbox"
-                                checked="checked"
-                                value="<?php esc_attr_e($guardian->ID);?>"
-                                name="<?php esc_attr_e($this->prefix);?>my_guardians[]">
-                            <?php print esc_html($guardian->user_nicename);?>
-                        </label>
-                    </li>
-                <?php endforeach;?>
-                </ul>
-                <p class="description"><?php print sprintf(
-                    esc_html__('These are your current guardians. To remove one of them so that they no longer receive notifications when you are in an emergency situation, uncheck their box and click %1$sSave Changes%2$s at the bottom of this page.', 'better-angels'),
-                    '<strong>', '</strong>'
-                );?></p>
-            </td>
-        </tr>
-    </tbody>
-</table>
-</fieldset>
-<?php submit_button();?>
-</form>
-<?php
+
+        require_once 'pages/choose-angels.php';
     }
 
     public function renderOptionsPage () {
@@ -244,10 +205,9 @@ esc_html__('Better Angels is provided as free software, but sadly grocery stores
             wp_die(__('You do not have sufficient permissions to access this page.', 'better-angels'));
         }
         $options = get_option($this->prefix . 'settings');
-?>
-<h2><?php esc_html_e('Better Angels Settings', 'better-angels');?></h2>
-<p>Hello world.</p>
-<?php
+
+        require_once 'pages/options.php';
+
         $this->showDonationAppeal();
     }
 }
