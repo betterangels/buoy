@@ -6,8 +6,3 @@
 # *~
 .DS_Store
 *.swp
-
-# WP-CLI's files added automatically.
-bin/
-# Ignore Travis stuff (for now).
-.travis.yml
