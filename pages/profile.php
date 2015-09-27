@@ -30,5 +30,24 @@ $sms_provider = get_user_meta(get_current_user_id(), $this->prefix . 'sms_provid
                 </select>
             </td>
         </tr>
+        <tr>
+            <th>
+                <label for="<?php esc_html_e($this->prefix);?>call_for_help">
+                    <?php esc_html_e('Crisis message', 'better-angels');?>
+                </label>
+            </th>
+            <td>
+                <textarea
+                    id="<?php print esc_attr($this->prefix);?>call_for_help"
+                    name="<?php print esc_attr($this->prefix)?>call_for_help"
+                    maxlength="160"
+                    ><?php print esc_html(get_user_meta(get_current_user_id(), $this->prefix . 'call_for_help' ,true));?></textarea>
+                <p class="description">
+                    <?php print sprintf(
+                        esc_html__('Your crisis message is the call for help you send to your emergency team members. Make this short enough to fit inside a txt message!', 'better-angels')
+                    );?>
+                </p>
+            </td>
+        </tr>
     </tbody>
 </table>

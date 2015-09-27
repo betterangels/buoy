@@ -34,11 +34,6 @@ BETTER_ANGELS.geoFindMe = function () {
  * @param object coords An object of geolocated data with properties named "lat" and "lng".
  */
 BETTER_ANGELS.initMap = function (coords) {
-    // TODO: Fix this confusion about what "coords" is.
-    var coords = {
-        "lat": parseFloat(coords.latitude),
-        "lng": parseFloat(coords.longitude)
-    };
     var map = new google.maps.Map(document.getElementById('map'), {
         zoom: 16,
         center: coords
@@ -77,16 +72,9 @@ if (BETTER_ANGELS.getQueryVariable('show_safety_modal')) {
 jQuery(document).ready(function () {
 
     jQuery('#show-incident-map-btn').on('click', function () {
-        jQuery('#map-container').slideDown(
-            {
-            'complete': function () {
-                    //google.maps.event.trigger(map, 'resize');
-                    navigator.geolocation.getCurrentPosition(function (position) {
-                        BETTER_ANGELS.initMap(position);
-                    });
-                }
-            }
-        );
+        jQuery('#map-container').slideDown({
+            'complete': function () { google.maps.event.trigger(map, 'resize'); }
+        });
     });
 
     jQuery('#hide-incident-map-btn').on('click', function () {
@@ -95,7 +83,13 @@ jQuery(document).ready(function () {
 });
 
 jQuery(window).on('load', function () {
-    navigator.geolocation.getCurrentPosition(function (position) {
-        BETTER_ANGELS.initMap(position);
-    });
+    navigator.geolocation.getCurrentPosition(
+        function (position) {
+            var coords = {
+                'lat': parseFloat(position.coords.latitude),
+                'lng': parseFloat(position.coords.longitude)
+            };
+            BETTER_ANGELS.initMap(coords);
+        }
+    );
 });

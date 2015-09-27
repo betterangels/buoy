@@ -172,19 +172,22 @@ class BetterAngelsPlugin {
 
     /**
      * Responds to ajax requests activated from the main emergency alert button.
+     *
+     * TODO: Refactor this method, shouldn't have responsibility for all it's doing.
      */
-
     public function newAlert () {
         $me = wp_get_current_user();
         $guardians = $this->getMyGuardians();
 
         $this->setChatRoomName(
             str_replace('-', '_', $this->prefix)
+            // need to limit the length of this string due to Tlk.io integration for now
             . substr(hash('md5', serialize($me) . serialize($guardians) . time()), 0, 10)
         );
 
-        // TODO: This needs work.
-        $subject = __('Please help!', 'better-angels');
+        $call_for_help = wp_strip_all_tags(get_user_meta($me->ID, $this->prefix . 'call_for_help', true));
+        $subject = (empty($call_for_help))
+            ? __('Please help!', 'better-angels') : $call_for_help;
         $responder_link = wp_nonce_url(admin_url('?page=' . $this->prefix . 'review-alert'), $this->prefix . 'review', $this->prefix . 'review');
         $message = $responder_link;
 
@@ -211,7 +214,7 @@ class BetterAngelsPlugin {
         $next_url = wp_nonce_url(
             admin_url(
                 '?page=' . $this->prefix . 'incident-chat'
-                . '&show_safety_modal=1'
+                . '&show_safety_modal=1' // for the alerter
                 . '&chat_room=' . $this->getChatRoomName()
             ),
             $this->prefix . 'chat', $this->prefix . 'nonce'
@@ -230,8 +233,8 @@ class BetterAngelsPlugin {
     public function updateProfileFields () {
         // TODO: Whitelist valid providers.
         update_user_meta(get_current_user_id(), $this->prefix . 'sms_provider', $_POST[$this->prefix . 'sms_provider']);
+        update_user_meta(get_current_user_id(), $this->prefix . 'call_for_help', strip_tags($_POST[$this->prefix . 'call_for_help']));
     }
-
 
     // TODO: Write help screens.
     private function registerContextualHelp () {
