@@ -82,6 +82,15 @@ class BetterAngelsPlugin {
         );
 
         add_submenu_page(
+            $this->prefix . 'choose-angels',
+            __('Safety information', 'better-angels'),
+            __('Safety information', 'better-angels'),
+            'read',
+            $this->prefix . 'safety-info',
+            array($this, 'renderSafetyInfoPage')
+        );
+
+        add_submenu_page(
             null,
             __('Respond to Alert', 'better-angels'),
             __('Respond to Alert', 'better-angels'),
@@ -458,6 +467,14 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
         $guardians = $this->getMyGuardians();
 
         require_once 'pages/choose-angels.php';
+    }
+
+    public function renderSafetyInfoPage () {
+        if (!current_user_can('read')) {
+            wp_die(__('You do not have sufficient permissions to access this page.', 'better-angels'));
+        }
+        $options = get_option($this->prefix . 'settings');
+        print $options['safety_info']; // TODO: Can we harden against XSS here?
     }
 
     public function renderOptionsPage () {
