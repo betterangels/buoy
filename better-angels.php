@@ -44,6 +44,11 @@ class BetterAngelsPlugin {
     }
 
     public function activate () {
+        $options = get_option($this->prefix . 'settings');
+        if (false === $options || empty($options['safety_info'])) {
+            $options['safety_info'] = file_get_contents(dirname(__FILE__) . '/includes/default-safety-information.html');
+        }
+        update_option($this->prefix . 'settings', $options);
     }
 
     public function registerL10n () {
@@ -329,6 +334,13 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
 
     public function validateSettings ($input) {
         $safe_input = array();
+        foreach ($input as $k => $v) {
+            switch ($k) {
+                case 'safety_info':
+                    $safe_input[$k] = force_balance_tags($v);
+                    break;
+            }
+        }
         return $safe_input;
     }
 
