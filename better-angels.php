@@ -34,8 +34,10 @@ class BetterAngelsPlugin {
         register_activation_hook(__FILE__, array($this, 'activate'));
     }
 
-    public function setChatRoomName ($name) {
-        $this->chat_room_name = $name;
+    public function setChatRoomName ($string) {
+        $prefix = 'buoy_';
+        // need to limit the length of this string due to Tlk.io integration for now
+        $this->chat_room_name = $prefix . substr(hash('md5', $string), 0, 20);
     }
     public function getChatRoomName () {
         return $this->chat_room_name;
@@ -245,9 +247,7 @@ class BetterAngelsPlugin {
         $guardians = $this->getMyGuardians();
 
         $this->setChatRoomName(
-            str_replace('-', '_', $this->prefix)
-            // need to limit the length of this string due to Tlk.io integration for now
-            . substr(hash('md5', serialize($me) . serialize($guardians) . time()), 0, 10)
+            serialize($me) . serialize($guardians) . time()
         );
 
         $subject = (empty($_POST['msg'])) ? $this->getCallForHelp($me->ID) : wp_strip_all_tags($_POST['msg']);
