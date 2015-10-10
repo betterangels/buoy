@@ -31,9 +31,12 @@ class BetterAngelsPlugin {
         add_action('show_user_profile', array($this, 'addProfileFields'));
         add_action('personal_options_update', array($this, 'updateProfileFields'));
 
+        add_action($this->prefix . 'delete_old_alerts', array($this, 'deleteOldAlerts'));
+
         add_filter('user_contactmethods', array($this, 'addEmergencyPhoneContactMethod'));
 
         register_activation_hook(__FILE__, array($this, 'activate'));
+        register_deactivation_hook(__FILE__, array($this, 'deactivate'));
     }
 
     public function setIncidentHash ($string_to_hash) {
@@ -57,6 +60,41 @@ class BetterAngelsPlugin {
             $options['safety_info'] = file_get_contents(dirname(__FILE__) . '/includes/default-safety-information.html');
         }
         update_option($this->prefix . 'settings', $options);
+
+        if (!wp_next_scheduled($this->prefix . 'delete_old_alerts')) {
+            wp_schedule_event(
+                time() + HOUR_IN_SECONDS,
+                'twicedaily',
+                $this->prefix . 'delete_old_alerts'
+            );
+        }
+    }
+
+    public function deactivate () {
+        do_action($this->prefix . 'delete_old_alerts');
+        wp_clear_scheduled_hook($this->prefix . 'delete_old_alerts');
+    }
+
+    /**
+     * Deletes posts older than a certain threshold from the database.
+     *
+     * @param string $threshold A strtotime()-compatible string indicating some time in the past. Defaults to '-2 days'.
+     */
+    public function deleteOldAlerts ($threshold = '-2 days') {
+        $threshold = (empty($threshold)) ? '-2 days' : $threshold;
+        $wp_query_args = array(
+            'post_type' => str_replace('-', '_', $this->prefix) . 'alert',
+            'date_query' => array(
+                'column' => 'post_date_gmt',
+                'before' => $threshold,
+                'inclusive' => true
+            ),
+            'fields' => 'ids'
+        );
+        $query = new WP_Query($wp_query_args);
+        foreach ($query->posts as $post_id) {
+            wp_delete_post($post_id, true); // delete immediately
+        }
     }
 
     public function registerL10n () {
