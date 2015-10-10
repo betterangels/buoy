@@ -63,15 +63,6 @@ BETTER_ANGELS.initMap = function (coords) {
     map.setCenter(coords);
     marker.setPosition(coords);
 };
-BETTER_ANGELS.getQueryVariable = function (variable) {
-    var query = window.location.search.substring(1);
-    var vars = query.split("&");
-    for (var i=0;i<vars.length;i++) {
-        var pair = vars[i].split("=");
-        if(pair[0] == variable){return pair[1];}
-    }
-    return(false);
-};
 BETTER_ANGELS.init = function () {
     jQuery(document).ready(function () {
         jQuery('#activate-btn-submit').one('click', BETTER_ANGELS.postAlert);
@@ -100,7 +91,7 @@ BETTER_ANGELS.init = function () {
         // Show "safety information" on page load,
         // TODO: this should automatically be dismissed when another user
         // enters the chat room.
-        if (BETTER_ANGELS.getQueryVariable('show_safety_modal')) {
+        if (jQuery('#safety-information-modal.auto-show-modal').length) {
             jQuery(window).load(function () {
                 jQuery('#safety-information-modal').modal('show');
             });

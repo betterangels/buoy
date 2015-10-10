@@ -4,7 +4,7 @@ class ChatRoomTest extends WP_UnitTestCase {
 
     public function setUp () {
         parent::setUp();
-        $this->plugin = new BetterAngelsPLugin();
+        $this->plugin = new BetterAngelsPlugin();
     }
 
     public function test_chatRoomPrefixIsCorrect () {

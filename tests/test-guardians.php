@@ -4,7 +4,7 @@ class GuardianTest extends WP_UnitTestCase {
 
     public function setUp () {
         parent::setUp();
-        $this->plugin = new BetterAngelsPLugin();
+        $this->plugin = new BetterAngelsPlugin();
         wp_create_user('survivor', 'password', 'survivor@nowhere.invalid');
         wp_create_user('sam', 'password', 'sam@nowhere.invalid');
         wp_create_user('john', 'password', 'john@nowhere.invalid');

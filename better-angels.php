@@ -15,17 +15,19 @@ if (!defined('ABSPATH')) { exit; } // Disallow direct HTTP access.
 class BetterAngelsPlugin {
 
     private $prefix = 'better-angels_'; //< Internal prefix for settings, etc., derived from shortcode.
+    private $incident_hash; //< Hash of the current incident ("alert").
     private $chat_room_name; //< The name of the chat room for this incident.
 
     public function __construct () {
 
         add_action('plugins_loaded', array($this, 'registerL10n'));
+        add_action('init', array($this, 'registerCustomPostTypes'));
         add_action('admin_init', array($this, 'registerSettings'));
         add_action('current_screen', array($this, 'registerContextualHelp'));
         add_action('admin_enqueue_scripts', array($this, 'enqueueAdminScripts'));
         add_action('admin_enqueue_scripts', array($this, 'enqueueMapsScripts'));
         add_action('admin_menu', array($this, 'registerAdminMenu'));
-        add_action('wp_ajax_' . $this->prefix . 'findme', array($this, 'newAlert'));
+        add_action('wp_ajax_' . $this->prefix . 'findme', array($this, 'handleAlert'));
         add_action('show_user_profile', array($this, 'addProfileFields'));
         add_action('personal_options_update', array($this, 'updateProfileFields'));
 
@@ -34,10 +36,16 @@ class BetterAngelsPlugin {
         register_activation_hook(__FILE__, array($this, 'activate'));
     }
 
-    public function setChatRoomName ($string) {
+    public function setIncidentHash ($string_to_hash) {
+        $this->incident_hash = hash('md5', $string_to_hash);
+    }
+    public function getIncidentHash () {
+        return $this->incident_hash;
+    }
+    public function setChatRoomName ($name) {
         $prefix = 'buoy_';
         // need to limit the length of this string due to Tlk.io integration for now
-        $this->chat_room_name = $prefix . substr(hash('md5', $string), 0, 20);
+        $this->chat_room_name = $prefix . substr($name, 0, 20);
     }
     public function getChatRoomName () {
         return $this->chat_room_name;
@@ -53,6 +61,27 @@ class BetterAngelsPlugin {
 
     public function registerL10n () {
         load_plugin_textdomain('better-angels', false, dirname(plugin_basename(__FILE__)) . '/languages/');
+    }
+
+    public function registerCustomPostTypes () {
+        register_post_type(str_replace('-', '_', $this->prefix) . 'alert', array(
+            'label' => __('Incidents', 'better-angels'),
+            'description' => __('A call for help.', 'better-angels'),
+            'public' => false,
+            'show_ui' => false,
+            // TODO: Do we need to/should we use custom capabilities?
+            //       Or will the default "post" types be sufficient?
+            //'capability_type' => str_replace('-', '_', $this->prefix)
+            'hierarchical' => false,
+            'supports' => array(
+                'title',
+                'author',
+                'custom-fields'
+            ),
+            'has_archive' => false,
+            'rewrite' => false,
+            'can_export' => false
+        ));
     }
 
     public function registerSettings () {
@@ -251,28 +280,62 @@ class BetterAngelsPlugin {
     }
 
     /**
+     * Inserts a new alert (incident) as a custom post type in the WordPress database.
+     *
+     * @param array $post_args Arguments for the post type.
+     * @param array $geodata Array includin a `latitude` and a `longitude` key for geodata.
+     * @return int Result of `wp_insert_post()` (int ID of new post on success, WP_Error on error.)
+     */
+    public function newAlert ($post_args, $geodata) {
+        // TODO: Do some validation on $post_args?
+        // These values should always be hard-coded.
+        $post_args['post_type'] = str_replace('-', '_', $this->prefix) . 'alert';
+        $post_args['post_content'] = ''; // Empty content
+        $post_args['post_status'] = 'publish'; // TODO: Should we use a custom status to restrict access here?
+        $post_args['ping_status'] = 'closed';
+        $post_args['comment_status'] = 'closed';
+
+        $alert_id = wp_insert_post($post_args);
+        if (!is_wp_error($alert_id)) {
+            update_post_meta($alert_id, $this->prefix . 'incident_hash', $this->getIncidentHash());
+            update_post_meta($alert_id, 'geo_latitude', $geodata['latitude']);
+            update_post_meta($alert_id, 'geo_longitude', $geodata['longitude']);
+            // TODO: Should we explicitly mark this geodata privacy info?
+            //       See https://codex.wordpress.org/Geodata#Geodata_Format
+            //update_post_meta($alert_id, 'geo_public', 1);
+            update_post_meta($alert_id, $this->prefix . 'chat_room_name', $this->getChatRoomName());
+        }
+        return $alert_id;
+    }
+
+    /**
      * Responds to ajax requests activated from the main emergency alert button.
      *
      * TODO: Refactor this method, shouldn't have responsibility for all it's doing.
      */
-    public function newAlert () {
+    public function handleAlert () {
+        // Collect info from the browser via Ajax request
         $alert_position = $_POST['pos'];
         $me = wp_get_current_user();
         $guardians = $this->getMyGuardians();
-
-        $this->setChatRoomName(
-            serialize($me) . serialize($guardians) . time()
-        );
-
         $subject = (empty($_POST['msg'])) ? $this->getCallForHelp($me->ID) : wp_strip_all_tags($_POST['msg']);
+
+        // Set instance variables
+        $this->setIncidentHash(serialize($me) . serialize($guardians) . time());
+        $this->setChatRoomName($this->getIncidentHash());
+
+        // Create a new alert in the DB
+        // TODO: Should we use a custom post type? Should we use a custom table?
+        $alert_id = $this->newAlert(array('post_title' => $subject), $alert_position);
+
+        // TODO: Investigate use of nonce here.
+        //       WordPress nonces seem to be user specific, so we can't verify this
+        //       because this link is intentionally intended to be clicked on by a
+        //       different, second user.
         $responder_link = wp_nonce_url(
             admin_url(
                 '?page=' . $this->prefix . 'review-alert'
-                . '&who=' . urlencode($me->user_login)
-                . '&latitude=' . urlencode($alert_position['latitude'])
-                . '&longitude=' . urlencode($alert_position['longitude'])
-                . '&chat_room=' . urlencode($this->getChatRoomName())
-                . '&msg=' . urlencode($subject)
+                . '&' . $this->prefix . 'incident_hash=' . $this->getIncidentHash()
             ),
             $this->prefix . 'review', $this->prefix . 'nonce'
         );
@@ -280,6 +343,7 @@ class BetterAngelsPlugin {
         $message = $responder_link;
 
         foreach ($guardians as $guardian) {
+            // TODO: Wrap this "send an alert" procedure into its own function?
             $sms = preg_replace('/[^0-9]/', '', get_user_meta($guardian->ID, $this->prefix . 'sms', true));
             $sms_provider = get_user_meta($guardian->ID, $this->prefix . 'sms_provider', true);
             $headers = array(
@@ -299,11 +363,12 @@ class BetterAngelsPlugin {
                 );
             }
         }
+
+        // Construct the redirect URL to the alerter's chat room
         $next_url = wp_nonce_url(
             admin_url(
                 '?page=' . $this->prefix . 'incident-chat'
-                . '&show_safety_modal=1' // for the alerter
-                . '&chat_room=' . $this->getChatRoomName()
+                . '&' . $this->prefix . 'incident_hash=' . $this->getIncidentHash()
             ),
             $this->prefix . 'chat', $this->prefix . 'nonce'
         );
@@ -438,6 +503,7 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
     }
 
     public function renderReviewAlertPage () {
+        // NOTE: WordPress nonces are user-specific, so we don't use one here.
         if (!current_user_can('read')) {
             wp_die(__('You do not have sufficient permissions to access this page.', 'better-angels'));
         }
@@ -446,11 +512,8 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
     }
 
     public function renderIncidentChatPage () {
-        if (!current_user_can('read')) {
+        if (!current_user_can('read') || !wp_verify_nonce($_GET[$this->prefix . 'nonce'], "{$this->prefix}chat")) {
             wp_die(__('You do not have sufficient permissions to access this page.', 'better-angels'));
-        }
-        if (wp_verify_nonce($_GET[$this->prefix . 'nonce'], "{$this->prefix}chat")) {
-            $this->setChatRoomName($_GET['chat_room']);
         }
         require_once 'pages/incident-chat.php';
     }
