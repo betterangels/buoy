@@ -139,7 +139,7 @@ class BetterAngelsPlugin {
             array($this, 'renderOptionsPage')
         );
 
-        add_menu_page(
+        $hook = add_menu_page(
             __('Emergency Team', 'better-angels'),
             __('My Team', 'better-angels'),
             'read',
@@ -147,6 +147,7 @@ class BetterAngelsPlugin {
             array($this, 'renderChooseAngelsPage'),
             plugins_url('img/icon-bw-life-preserver.svg', __FILE__)
         );
+        add_action('load-' . $hook, array($this, 'addChooseAngelsHelpTabs'));
 
         add_submenu_page(
             $this->prefix . 'choose-angels',
@@ -531,6 +532,21 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
         if (!empty($request[$this->prefix . 'add_guardian'])) {
             $this->addGuardian($request[$this->prefix . 'add_guardian']);
         }
+    }
+
+    public function addChooseAngelsHelpTabs () {
+        $screen = get_current_screen();
+        $html = '';
+        $html .= '<p>'. esc_html__('Here, you can choose who to send emergency alerts to if you find yourself in a crisis situation. The people listed here will be notified of where you are and what you need when you activate an alert using Buoy.', 'better-angels') . '</p>';
+        $html .= '<p>' . esc_html__('The people you trust must already have accounts on this website in order for you to add them to your team. If they do not yet have accounts here, or if you do not know their account name, contact them privately and ask them to sign up.', 'better-angels') . '</p>';
+        $html .= '<p>' . esc_html__('To add a team member, type their user name in the "Add a team member" box. Alternatively, click or tap inside the box once to select it, then click or tap inside the box again to reveal a drop-down menu of active accounts you can add to your team. When you have entered the user name of the person you want to add to your team, click the "Save Changes" button at the bottom of this page.', 'better-angels') . '</p>';
+        $html .= '<p>' . esc_html__('Your current team is shown in the list below with a check mark next to their user name.', 'better-angels') . '</p>';
+        $html .= '<p>' . esc_html__('To remove a person from your team, uncheck the checkbox next to their user name and click the "Save Changes" button at the bottom of this page.', 'better-angels') . '</p>';
+        $screen->add_help_tab(array(
+            'title' => __('Choosing a personal emergency response team', 'better-angels'),
+            'id' => esc_html($this->prefix . 'choose-angels-help'),
+            'content' => $html
+        ));
     }
 
     public function renderActivateAlertPage () {
