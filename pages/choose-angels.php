@@ -24,6 +24,10 @@ if (isset($_GET['msg']) && 'no-guardians' === $_GET['msg']) {
             </th>
             <td>
                 <input list="<?php esc_attr_e($this->prefix);?>guardians_list" id="<?php esc_attr_e($this->prefix);?>add_guardian" name="<?php esc_attr_e($this->prefix);?>add_guardian" placeholder="<?php esc_attr_e('Michelle', 'better-angels')?>" />
+                <label>
+                    <input type="checkbox" id="<?php esc_attr_e($this->prefix);?>is_fake_guardian" name="<?php esc_attr_e($this->prefix);?>is_fake_guardian" />
+                    <?php esc_html_e('Add as fake team member', 'better-angels');?>
+                </label>
                 <datalist id="<?php esc_attr_e($this->prefix);?>guardians_list"/>
                     <?php $this->printAllUsersForDataList();?>
                 </datalist>
@@ -33,18 +37,9 @@ if (isset($_GET['msg']) && 'no-guardians' === $_GET['msg']) {
                         '<strong>', '</strong>'
                     );?>
                 </p>
-            </td>
-        </tr>
-        <tr>
-            <th>
-                <label for="<?php esc_attr_e($this->prefix);?>add_fake_guardian"><?php esc_html_e('Add a FAKE team member', 'better-angels');?></label>
-            </th>
-            <td>
-                <input list="<?php esc_attr_e($this->prefix);?>guardians_list" id="<?php esc_attr_e($this->prefix);?>add_fake_guardian" name="<?php esc_attr_e($this->prefix);?>add_fake_guardian" placeholder="<?php esc_attr_e('Bob', 'better-angels')?>" />
                 <p class="description">
                     <?php print sprintf(
-                        esc_html__('You can add a "fake" team member who will think that they are on your response team but who will never actually get any alerts from you. Only add a fake team member if you are being pressured into adding someone to your team who you do not actually trust to appropriately support you. This person will get an invitation asking them to confirm joining your team but will never actually receive alerts you send to the rest of your team.', 'better-angels'),
-                        '<strong>', '</strong>'
+                        esc_html__('You can optionally add the team member as a "fake" who will think that they are on your response team but who will never actually get any alerts from you. Only add a fake team member if you are being pressured into adding someone to your team who you do not actually trust to appropriately support you. This person will get an invitation asking them to confirm joining your team in the same way as a real team member will, but the fake team member will never actually receive alerts you send to the rest of your team.', 'better-angels')
                     );?>
                 </p>
             </td>

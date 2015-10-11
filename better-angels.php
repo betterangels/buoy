@@ -519,14 +519,9 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
 
     public function isMyGuardian ($guardian_login, $user_id = false) {
         $user_id = (!is_numeric($user_id)) ? get_current_user_id() : $user_id;
-        $guardians = array_merge(
-            $this->getMyGuardians($user_id),
-            $this->getMyPendingGuardians($user_id),
-            $this->getMyFakeGuardians($user_id),
-            $this->getMyPendingFakeGuardians($user_id)
-        );
-        foreach ($guardians as $guardian) {
-            if ($guardian_login === $guardian->user_login) {
+        $team = $this->getResponseTeam(true, $user_id);
+        foreach ($team as $user) {
+            if ($guardian_login === $user->user_login) {
                 return true;
             }
         }
@@ -599,17 +594,35 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
         // TODO: What if the user ID passed in doesn't exist?
     }
 
+    /**
+     * Get an array of users who are on a particular user's team.
+     *
+     * @param bool $include_fake Whether or not to include "fake" team members.
+     * @param int $user_id User ID of the team owner. (Defaults to current user.)
+     * @return array List of WP_User objects comprising all users.
+     */
+    public function getResponseTeam ($include_fake = false, $user_id = false) {
+        $user_id = (!is_numeric($user_id)) ? get_current_user_id() : $user_id;
+        $users = array_merge(
+            $this->getMyGuardians($user_id),
+            $this->getMyPendingGuardians($user_id)
+        );
+        if ($include_fake) {
+            $users = array_merge(
+                $users,
+                $this->getMyFakeGuardians($user_id),
+                $this->getMyPendingFakeGuardians($user_id)
+            );
+        }
+        return $users;
+    }
+
     private function updateChooseAngels ($request, $user_id = false) {
         $user_id = (!is_numeric($user_id)) ? get_current_user_id() : $user_id;
 
         // Anything to delete?
         // Delete before adding!
-        $all_my_guardians = array_merge(
-            $this->getMyGuardians($user_id),
-            $this->getMyFakeGuardians($user_id),
-            $this->getMyPendingGuardians($user_id),
-            $this->getMyPendingFakeGuardians($user_id)
-        );
+        $all_my_guardians = $this->getResponseTeam(true, $user_id);
         if (!empty($request[$this->prefix . 'my_guardians'])) {
             foreach ($all_my_guardians as $guard) {
                 if (!in_array($guard->ID, $request[$this->prefix . 'my_guardians'])) {
@@ -625,10 +638,8 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
 
         // Anything to add?
         if (!empty($request[$this->prefix . 'add_guardian'])) {
-            $this->requestGuardian($request[$this->prefix . 'add_guardian']);
-        }
-        if (!empty($request[$this->prefix . 'add_fake_guardian'])) {
-            $this->requestFakeGuardian($request[$this->prefix . 'add_fake_guardian']);
+            $func = (isset($request[$this->prefix . 'is_fake_guardian'])) ? 'requestFakeGuardian' : 'requestGuardian';
+            $this->$func($request[$this->prefix . 'add_guardian']);
         }
     }
 
@@ -637,13 +648,19 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
         $html = '';
         $html .= '<p>'. esc_html__('You can choose who to send emergency alerts to if you find yourself in a crisis situation. The people listed here will be notified of where you are and what you need when you activate an alert using Buoy, unless they have the word "fake" next to their name.', 'better-angels') . '</p>';
         $html .= '<p>' . esc_html__('The people you trust must already have accounts on this website in order for you to add them to your team. If they do not yet have accounts here, or if you do not know their account name, contact them privately and ask them to sign up.', 'better-angels') . '</p>';
-        $html .= '<p>' . esc_html__('To add a team member, type their user name in the "Add a team member" box. Alternatively, click or tap inside the box once to select it, then click or tap inside the box again to reveal a drop-down menu of active accounts you can add to your team. When you have entered the user name of the person you want to add to your team, click the "Save Changes" button at the bottom of this page.', 'better-angels') . '</p>';
-        $html .= '<p>' . esc_html__('If someone you know is pressuring you to add them to your team but you do not actually want them to get emergency alerts from you, use the "Add a FAKE team member" box to make them think they are on your team, but not actually send them any alerts.', 'better-angels') . '</p>';
         $html .= '<p>' . esc_html__('Your current team members are shown in the list below with a check mark next to their user name. A "pending" next to their name means they have not yet approved your invitation. A "fake" next to their name means they are not actually going to get alerts you send. Your team members must accept your invitation before your emergency alerts are sent to them.', 'better-angels') . '</p>';
+        $screen->add_help_tab(array(
+            'title' => __('About your Buoy personal emergency response team', 'better-angels'),
+            'id' => esc_html($this->prefix . 'about-choose-angels-help'),
+            'content' => $html
+        ));
+        $html = '';
+        $html .= '<p>' . esc_html__('To add a team member, type their user name in the "Add a team member" box. Alternatively, click or tap inside the box once to select it, then click or tap inside the box again to reveal a drop-down menu of active accounts you can add to your team. When you have entered the user name of the person you want to add to your team, click the "Save Changes" button at the bottom of this page.', 'better-angels') . '</p>';
+        $html .= '<p>' . esc_html__('If someone you know is pressuring you to add them to your team but you do not actually want them to get emergency alerts from you, check the "Add as fake team member" box to make them think they are on your team, but not actually send them any alerts.', 'better-angels') . '</p>';
         $html .= '<p>' . esc_html__('To remove a person from your team, uncheck the checkbox next to their user name and click the "Save Changes" button at the bottom of this page. People you remove from your team will be able to see that you have removed them, so do not remove "fake" members until you feel it is safe for you to do so.', 'better-angels') . '</p>';
         $screen->add_help_tab(array(
-            'title' => __('Choosing a personal emergency response team', 'better-angels'),
-            'id' => esc_html($this->prefix . 'choose-angels-help'),
+            'title' => __('Adding and removing team members', 'better-angels'),
+            'id' => esc_html($this->prefix . 'add-remove-choose-angels-help'),
             'content' => $html
         ));
     }
