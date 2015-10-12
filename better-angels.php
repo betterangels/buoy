@@ -656,6 +656,14 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
 
     private function updateChooseAngels ($request) {
         $user_id = get_current_user_id();
+
+        // Anything to edit/toggle type?
+        if (!empty($request[$this->prefix . 'guardian'])) {
+            foreach ($request[$this->prefix . 'guardian'] as $id => $data) {
+                $this->setGuardianType($id, $data['type']);
+            }
+        }
+
         // Anything to delete?
         // Delete before adding!
         $all_my_guardians = $this->getResponseTeam(true, $user_id);
@@ -679,6 +687,40 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
                 get_current_user_id(),
                 isset($request[$this->prefix . 'is_fake_guardian'])
             );
+        }
+    }
+
+    public function setGuardianType ($guardian_id, $type) {
+        if ('fake' === $type) {
+            $this->setAsFakeGuardian($guardian_id);
+        } else {
+            $this->setAsRealGuardian($guardian_id);
+        }
+    }
+
+    public function setAsFakeGuardian ($guardian_id) {
+        $g = get_userdata($guardian_id);
+        $m = get_user_meta(get_current_user_id(), $this->prefix . 'pending_guardians', $guardian_id, true);
+        if (empty($m)) {
+            $this->removeGuardian($g->user_login, get_current_user_id());
+            update_user_meta(get_current_user_id(), $this->prefix . 'pending_fake_guardians', $guardian_id);
+            $this->addGuardian($g->user_login, get_current_user_id(), true);
+        } else {
+            $this->removeGuardian($g->user_login, get_current_user_id());
+            update_user_meta(get_current_user_id(), $this->prefix . 'pending_fake_guardians', $guardian_id);
+        }
+    }
+
+    public function setAsRealGuardian ($guardian_id) {
+        $g = get_userdata($guardian_id);
+        $m = get_user_meta(get_current_user_id(), $this->prefix . 'pending_fake_guardians', $guardian_id, true);
+        if (empty($m)) {
+            $this->removeGuardian($g->user_login, get_current_user_id());
+            update_user_meta(get_current_user_id(), $this->prefix . 'pending_guardians', $guardian_id);
+            $this->addGuardian($g->user_login, get_current_user_id(), false);
+        } else {
+            $this->removeGuardian($g->user_login, get_current_user_id());
+            update_user_meta(get_current_user_id(), $this->prefix . 'pending_guardians', $guardian_id);
         }
     }
 

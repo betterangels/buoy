@@ -1,7 +1,7 @@
 <?php
 $full_team = array();
 foreach (get_user_meta(get_current_user_id(), $this->prefix . 'guardians') as $x) {
-    $full_team[] = array('data' => get_userdata($x));
+    $full_team[] = array('type' => array(), 'data' => get_userdata($x));
 }
 foreach (get_user_meta(get_current_user_id(), $this->prefix . 'fake_guardians') as $x) {
     $full_team[] = array('type' => array('fake'), 'data' => get_userdata($x));
