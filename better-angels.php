@@ -32,6 +32,9 @@ class BetterAngelsPlugin {
         add_action('show_user_profile', array($this, 'addProfileFields'));
         add_action('personal_options_update', array($this, 'updateProfileFields'));
 
+        add_action('added_user_meta', array($this, 'addedUserMeta'), 10, 4);
+        add_action('updated_user_meta', array($this, 'updatedUserMeta'), 10, 4);
+
         add_action($this->prefix . 'delete_old_alerts', array($this, 'deleteOldAlerts'));
 
         add_filter('user_contactmethods', array($this, 'addEmergencyPhoneContactMethod'));
@@ -339,6 +342,25 @@ class BetterAngelsPlugin {
     }
 
     /**
+     * Dispatches events to respond to user metadata additions.
+     */
+    public function addedUserMeta ($meta_id, $object_id, $meta_key, $_meta_value) {
+        switch ($meta_key) {
+            case $this->prefix . 'pending_guardians':
+            case $this->prefix . 'pending_fake_guardians':
+                $g = get_userdata($_meta_value);
+                $this->sendGuardianRequest($g->user_login);
+                break;
+        }
+    }
+
+    /**
+     * Dispatches events to respond to user metadata updates.
+     */
+    public function updatedUserMeta ($meta_id, $object_id, $meta_key, $_meta_value) {
+    }
+
+    /**
      * Inserts a new alert (incident) as a custom post type in the WordPress database.
      *
      * @param array $post_args Arguments for the post type.
@@ -517,9 +539,14 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
         return array_map('get_userdata', get_user_meta($user_id, $this->prefix . 'pending_fake_guardians', false));
     }
 
-    public function isMyGuardian ($guardian_login, $user_id = false) {
-        $user_id = (!is_numeric($user_id)) ? get_current_user_id() : $user_id;
-        $team = $this->getResponseTeam(true, $user_id);
+    /**
+     * Checks to see if a user account is on the response team of the current user.
+     *
+     * @param string $guardian_login The WP user login name of the account to check.
+     * @return bool True if $guardian_login is the username of a team member for the current user.
+     */
+    public function isMyGuardian ($guardian_login) {
+        $team = $this->getResponseTeam(true, get_current_user_id());
         foreach ($team as $user) {
             if ($guardian_login === $user->user_login) {
                 return true;
@@ -533,55 +560,65 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
      *
      * @param string $guardian_login The WP login name of the user who is to be added to a team.
      * @param int $user_id The WP user ID of the user whose team to add the guardian to.
+     * @param bool $fake Whether or not to add this guardian as a "fake" team member.
+     * @return void
      */
-    public function requestGuardian ($guardian_login, $user_id = false) {
-        $user_id = (!is_numeric($user_id)) ? get_current_user_id() : $user_id;
-        $this->sendGuardianRequest($guardian_login, $user_id);
-        add_user_meta($user_id, $this->prefix . 'pending_guardians', username_exists($guardian_login), false);
-    }
-
-    public function requestFakeGuardian ($guardian_login, $user_id = false) {
-        $user_id = (!is_numeric($user_id)) ? get_current_user_id() : $user_id;
-        $this->sendGuardianRequest($guardian_login, $user_id);
-        add_user_meta($user_id, $this->prefix . 'pending_fake_guardians', username_exists($guardian_login), false);
-    }
-
-    private function sendGuardianRequest ($guardian_login, $user_id) {
-        $wp_user = get_user_by('id', $user_id);
-        $guardian_id = username_exists($guardian_login);
-        if (!$this->isMyGuardian($guardian_login) && $wp_user && $guardian_id && ($guardian_id !== $user_id)) {
-            // Send an email notification to the guardian asking for permission to be added to team.
-            $g = get_userdata($guardian_id);
-            $subject = sprintf(__('%s wants you to join their crisis response team', 'better-angels'), $wp_user->display_name);
-            // TODO: Write a better message.
-            $msg = wp_nonce_url(
-                admin_url(
-                    'index.php?page=' . $this->prefix . 'confirm-guardianship'
-                ),
-                $this->prefix . 'confirm-guardianship', $this->prefix . 'nonce'
-            );
-            wp_mail($g->user_email, $subject, $msg);
+    public function requestGuardian ($guardian_login, $user_id, $fake) {
+        if (!$this->isMyGuardian($guardian_login)) {
+            $meta_key = $this->prefix . 'pending_' . (($fake) ? 'fake_' : '' ) . 'guardians';
+            add_user_meta($user_id, $meta_key, username_exists($guardian_login), false);
         }
     }
 
     /**
-     * Adds a user as a guardian.
+     * Sends a notification (by email) asking a user for confirmation to join a response team.
+     *
+     * @param string $guardian_login The user to notify.
+     * @return bool Same as wp_mail()'s return value.
+     */
+    private function sendGuardianRequest ($guardian_login) {
+        $curr_user = wp_get_current_user();
+        $guardian_id = username_exists($guardian_login);
+        // Send an email notification to the guardian asking for permission to be added to team.
+        $g = get_userdata($guardian_id);
+        $subject = sprintf(__('%s wants you to join their crisis response team', 'better-angels'), $curr_user->display_name);
+        // TODO: Write a better message.
+        $msg = wp_nonce_url(
+            admin_url(
+                'admin.php?page=' . $this->prefix . 'confirm-guardianship'
+            ),
+            $this->prefix . 'confirm-guardianship', $this->prefix . 'nonce'
+        );
+        return wp_mail($g->user_email, $subject, $msg);
+    }
+
+    /**
+     * Adds a user as a guardian for another user.
      *
      * @param string $guardian_login The WP login name of the user who is set as a guardian.
-     * @param int $user_id The WP user ID of the user being guarded, or the current user if not specified.
-     * @return int|bool The new user meta key on success or false on failure.
+     * @param int $user_id The WP user ID of the user being guarded.
+     * @param bool $fake Whether to add this guardian as a "fake" team member or not.
+     * @return void
      */
-    public function addGuardian ($guardian_login, $user_id = false) {
-        $user_id = (!is_numeric($user_id)) ? get_current_user_id() : $user_id;
+    public function addGuardian ($guardian_login, $user_id, $fake) {
         $guardian_id = username_exists($guardian_login);
-        if (!$this->isMyGuardian($guardian_login) && get_user_by('id', $user_id) && $guardian_id && ($guardian_id !== $user_id)) {
-            if (add_user_meta($user_id, $this->prefix . 'guardians', $guardian_id, false)) {
-                delete_user_meta($user_id, $this->prefix . 'pending_guardians', $guardian_id);
-            }
+        $meta_key = (($fake) ? 'fake_' : '' ) . 'guardians';
+        $existing_guardians = get_user_meta($user_id, $this->prefix . $meta_key, false);
+        $invitations = get_user_meta($user_id, $this->prefix . 'pending_' . $meta_key, false);
+        if ($guardian_id !== $user_id && !in_array($guardian_id, $existing_guardians) && in_array($guardian_id, $invitations)) {
+            add_user_meta($user_id, $this->prefix . $meta_key, $guardian_id, false);
+            delete_user_meta($user_id, $this->prefix . 'pending_' . $meta_key, $guardian_id);
         }
         // TODO: What if the user ID passed in doesn't exist?
     }
 
+    /**
+     * Removes a user from all "guardian" (team member) lists.
+     *
+     * @param string $guardian_login WP user name of the account to remove.
+     * @param int $user_id WP user ID number of the team owner.
+     * @return void
+     */
     public function removeGuardian ($guardian_login, $user_id = false) {
         $user_id = (!is_numeric($user_id)) ? get_current_user_id() : $user_id;
         $guardian_id = username_exists($guardian_login);
@@ -617,9 +654,8 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
         return $users;
     }
 
-    private function updateChooseAngels ($request, $user_id = false) {
-        $user_id = (!is_numeric($user_id)) ? get_current_user_id() : $user_id;
-
+    private function updateChooseAngels ($request) {
+        $user_id = get_current_user_id();
         // Anything to delete?
         // Delete before adding!
         $all_my_guardians = $this->getResponseTeam(true, $user_id);
@@ -638,8 +674,11 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
 
         // Anything to add?
         if (!empty($request[$this->prefix . 'add_guardian'])) {
-            $func = (isset($request[$this->prefix . 'is_fake_guardian'])) ? 'requestFakeGuardian' : 'requestGuardian';
-            $this->$func($request[$this->prefix . 'add_guardian']);
+            $this->requestGuardian(
+                sanitize_user($request[$this->prefix . 'add_guardian'], true),
+                get_current_user_id(),
+                isset($request[$this->prefix . 'is_fake_guardian'])
+            );
         }
     }
 
@@ -732,13 +771,12 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
 
         // Add them only to the lists they should actually be on.
         foreach ($user_teams as $user_id) {
-            // If we're actually being added as a "fake" guardian, just remove the "pending" status.
-            if (get_user_meta($user_id, $this->prefix . 'pending_fake_guardians', get_current_user_id(), true)) {
-                update_user_meta($user_id, $this->prefix . 'fake_guardians', get_current_user_id());
-                delete_user_meta($user_id, $this->prefix . 'pending_fake_guardians', get_current_user_id());
-            } else {
-                $this->addGuardian($curr_user->user_login, $user_id);
-            }
+            $fake = get_user_meta($user_id, $this->prefix . 'pending_fake_guardians', $curr_user->ID, true);
+            $this->addGuardian(
+                $curr_user->user_login,
+                $user_id,
+                (empty($fake)) ? false : true
+            );
         }
     }
 
