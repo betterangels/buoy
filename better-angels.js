@@ -1,4 +1,7 @@
 var BUOY = (function () {
+    this.emergency_location;
+    this.google_map;
+
     var postAlert = function () {
         if (!navigator.geolocation){
             if (console && console.error) {
@@ -39,7 +42,7 @@ var BUOY = (function () {
      */
     var initMap = function (coords) {
         if ('undefined' === typeof google) { return; }
-        var map = new google.maps.Map(document.getElementById('map'), {
+        google_map = map = new google.maps.Map(document.getElementById('map'), {
             'zoom': 16,
             'center': coords
         });
@@ -57,11 +60,12 @@ var BUOY = (function () {
             'map': map,
             'title': better_angels_vars.i18n_map_title
         });
+        map.setCenter(coords);
+        marker.setPosition(coords);
+
         marker.addListener('click', function () {
             infowindow.open(map, marker);
         });
-        map.setCenter(coords);
-        marker.setPosition(coords);
     };
 
     var init = function () {
@@ -83,7 +87,10 @@ var BUOY = (function () {
                     this.textContent = better_angels_vars.i18n_show_map;
                 } else {
                     map_container.slideDown({
-                        'complete': function () { google.maps.event.trigger(map, 'resize'); }
+                        'complete': function () {
+                            google.maps.event.trigger(map, 'resize');
+                            google_map.panTo(emergency_location);
+                        }
                     });
                     this.textContent = better_angels_vars.i18n_hide_map;
                 }
@@ -102,10 +109,11 @@ var BUOY = (function () {
 
         jQuery(window).on('load', function () {
             if (jQuery('.dashboard_page_better-angels_review-alert #map, .dashboard_page_better-angels_incident-chat #map').length) {
-                initMap({
+                this.emergency_location = {
                     'lat': parseFloat(jQuery('#map-container').data('latitude')),
                     'lng': parseFloat(jQuery('#map-container').data('longitude'))
-                });
+                };
+                initMap(this.emergency_location);
             }
         });
 
