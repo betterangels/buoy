@@ -44,7 +44,7 @@ class BetterAngelsPlugin {
     }
 
     public function setIncidentHash ($string_to_hash) {
-        $this->incident_hash = hash('md5', $string_to_hash);
+        $this->incident_hash = hash('sha256', $string_to_hash);
     }
     public function getIncidentHash () {
         return $this->incident_hash;
@@ -403,7 +403,7 @@ class BetterAngelsPlugin {
 
         // Set instance variables
         $this->setIncidentHash(serialize($me) . serialize($guardians) . time());
-        $this->setChatRoomName($this->getIncidentHash());
+        $this->setChatRoomName(hash('sha1', $this->getIncidentHash() . uniqid('', true)));
 
         // Create a new alert in the DB
         // TODO: Should we use a custom post type? Should we use a custom table?
