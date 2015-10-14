@@ -236,7 +236,10 @@ class BetterAngelsPlugin {
         return array(
             'i18n_map_title' => __('Incident Map', 'better-angels'),
             'i18n_hide_map' => __('Hide Map', 'better-angels'),
-            'i18n_show_map' => __('Show Map', 'better-angels')
+            'i18n_show_map' => __('Show Map', 'better-angels'),
+            'i18n_crisis_location' => __('Location of emergency alert signal', 'better-angels'),
+            'i18n_my_location' => __('My location', 'better-angels'),
+            'i18n_responding_to_alert' => __('Responding to alert', 'better-angels')
         );
     }
 

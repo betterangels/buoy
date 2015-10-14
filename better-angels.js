@@ -1,6 +1,7 @@
 var BUOY = (function () {
     this.emergency_location;
-    this.google_map;
+    this.map;           //< Google Map object itself
+    this.marker_bounds; //< Google Map marker bounding box
 
     var getMyPosition = function (success) {
         if (!navigator.geolocation){
@@ -41,9 +42,6 @@ var BUOY = (function () {
         );
     }
 
-    var respondToIncident = function () {
-    };
-
     /**
      * Creates a google map centered on the given coordinates.
      *
@@ -51,10 +49,10 @@ var BUOY = (function () {
      */
     var initMap = function (coords) {
         if ('undefined' === typeof google) { return; }
-        google_map = map = new google.maps.Map(document.getElementById('map'), {
-            'zoom': 16,
-            'center': coords
-        });
+
+        this.map = new google.maps.Map(document.getElementById('map'));
+        this.marker_bounds = new google.maps.LatLngBounds();
+
         var infowindow_content = '<p>'
                 + '<img src="' + jQuery('#map-container').data('icon')
                 + '" alt="' + jQuery('#map-container').data('alerter')
@@ -65,33 +63,46 @@ var BUOY = (function () {
             'content': infowindow_content
         });
         var marker = new google.maps.Marker({
-            'position': coords,
+            'position': new google.maps.LatLng(coords.lat, coords.lng),
             'map': map,
-            'title': better_angels_vars.i18n_map_title
+            'title': better_angels_vars.i18n_crisis_location
         });
-        map.setCenter(coords);
-        marker.setPosition(coords);
-
+        marker_bounds.extend(new google.maps.LatLng(coords.lat, coords.lng));
         marker.addListener('click', function () {
             infowindow.open(map, marker);
         });
 
-        jQuery.each(jQuery('#map-container').data('responder-info'), function (i, v) {
-            var marker = new google.maps.Marker({
-                'position': {
-                    'lat': parseFloat(v.geo.latitude),
-                    'lng': parseFloat(v.geo.longitude)
-                },
-                'map': map,
-                'icon': v.avatar_url
+        if (jQuery('#map-container').data('responder-info')) {
+            jQuery.each(jQuery('#map-container').data('responder-info'), function (i, v) {
+                var responder_geo = new google.maps.LatLng(
+                    parseFloat(v.geo.latitude), parseFloat(v.geo.longitude)
+                );
+                var marker = new google.maps.Marker({
+                    'position': responder_geo,
+                    'map': map,
+                    'title': v.display_name,
+                    'icon': v.avatar_url
+                });
+                marker_bounds.extend(responder_geo);
             });
-            var infowindow = new google.maps.InfoWindow({
-                'content': v.display_name
+        }
+
+        if (jQuery('#map-container.show-current-location').length) {
+            // Add my current position to the map.
+            getMyPosition(function (position) {
+                var my_geo = new google.maps.LatLng(
+                    position.coords.latitude, position.coords.longitude
+                );
+                var my_marker = new google.maps.Marker({
+                    'position': my_geo,
+                    'map': map,
+                    'title': better_angels_vars.i18n_my_location,
+                    'icon': jQuery('#map-container').data('my-avatar-url')
+                });
+                marker_bounds.extend(my_geo);
+                map.fitBounds(marker_bounds);
             });
-            marker.addListener('click', function () {
-                infowindow.open(map, marker);
-            });
-        });
+        }
     };
 
     var init = function () {
@@ -116,7 +127,7 @@ var BUOY = (function () {
                     map_container.slideDown({
                         'complete': function () {
                             google.maps.event.trigger(map, 'resize');
-                            google_map.panTo(emergency_location);
+                            map.fitBounds(marker_bounds);
                         }
                     });
                     this.textContent = better_angels_vars.i18n_hide_map;
@@ -135,6 +146,8 @@ var BUOY = (function () {
             // Respond to incident.
             jQuery('#incident-response-form').one('submit', function (e) {
                 e.preventDefault();
+                jQuery(e.target).find('input[type="submit"]').prop('disabled', true);
+                jQuery(e.target).find('input[type="submit"]').val(better_angels_vars.i18n_responding_to_alert);
                 getMyPosition(function (position) {
                     jQuery('#incident-response-form input[name$="location"]').val(
                         position.coords.latitude + ',' + position.coords.longitude

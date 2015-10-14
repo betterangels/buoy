@@ -9,12 +9,13 @@ $respond_link = wp_nonce_url(
     $this->prefix . 'chat', $this->prefix . 'nonce'
 );
 ?>
-<div id="map-container"
+<div id="map-container" class="show-current-location"
     data-alerter="<?php print esc_attr($alerter->display_name);?>"
     data-latitude="<?php print esc_attr(get_post_meta($alert_post->ID, 'geo_latitude', true));?>"
     data-longitude="<?php print esc_attr(get_post_meta($alert_post->ID, 'geo_longitude', true));?>"
     data-icon="<?php print esc_attr(get_avatar_url($alerter->ID, array('size' => 32)));?>"
     data-info-window-text="<?php print sprintf(esc_attr__("%s's last known location", 'better-angels'), $alerter->display_name);?>"
+    data-my-avatar-url="<?php print esc_attr(get_avatar_url(get_current_user_id(), array('size' => 32)));?>"
     >
     <div id="map"></div>
 </div>
