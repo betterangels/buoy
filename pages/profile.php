@@ -49,5 +49,28 @@ $sms_provider = get_user_meta(get_current_user_id(), $this->prefix . 'sms_provid
                 </p>
             </td>
         </tr>
+        <tr>
+            <th>
+                <label for="<?php esc_html_e($this->prefix);?>public_responder">
+                    <?php esc_html_e('Crisis response', 'better-angels');?>
+                </label>
+            </th>
+            <td>
+                <label>
+                    <input type="checkbox"
+                        id="<?php print esc_attr($this->prefix);?>public_responder"
+                        name="<?php print esc_attr($this->prefix);?>public_responder"
+                        <?php checked(get_user_meta(get_current_user_id(), $this->prefix . 'public_responder', true));?>
+                        value="1"
+                    />
+                    <?php esc_html_e('List me publicly as an available crisis response team member', 'better-angels');?>
+                </label>
+                <p class="description">
+                    <?php print sprintf(
+                        esc_html__('Check this box to allow users you do not know personally to invite you to join their personal emerency response team.', 'better-angels')
+                    );?>
+                </p>
+            </td>
+        </tr>
     </tbody>
 </table>

@@ -472,6 +472,12 @@ class BetterAngelsPlugin {
         // TODO: Whitelist valid providers.
         update_user_meta(get_current_user_id(), $this->prefix . 'sms_provider', $_POST[$this->prefix . 'sms_provider']);
         update_user_meta(get_current_user_id(), $this->prefix . 'call_for_help', strip_tags($_POST[$this->prefix . 'call_for_help']));
+
+        if (!empty($_POST[$this->prefix . 'public_responder'])) {
+            update_user_meta(get_current_user_id(), $this->prefix . 'public_responder', 1);
+        } else {
+            delete_user_meta(get_current_user_id(), $this->prefix . 'public_responder');
+        }
     }
 
     // TODO: Write help screens.
@@ -506,10 +512,15 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
     private function printUsersForDataList () {
         if (current_user_can('list_users')) {
             $users = get_users();
-            foreach ($users as $usr) {
-                if ($usr->ID !== get_current_user_id() && !$this->isMyGuardian($usr->user_login))
-                print "<option value=\"{$usr->user_nicename}\">";
-            }
+        } else {
+            $users = get_users(array(
+                'meta_key' => $this->prefix . 'public_responder',
+                'meta_value' => 1
+            ));
+        }
+        foreach ($users as $usr) {
+            if ($usr->ID !== get_current_user_id() && !$this->isMyGuardian($usr->user_login))
+            print "<option value=\"{$usr->user_nicename}\">";
         }
     }
 
