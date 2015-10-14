@@ -108,6 +108,11 @@ class GuardianTest extends WP_UnitTestCase {
         $this->assertEmpty(get_user_meta(get_current_user_id(), 'better-angels_guardians'));
     }
 
+    public function test_cannotAddNonExistentUserAsGuardian () {
+        $this->plugin->requestGuardian('thisuserdoesnotexist', get_current_user_id(), false);
+        $this->assertEmpty($this->plugin->getMyGuardians());
+    }
+
     public function test_setTeamMembership () {
         // TODO: Need tests for this, should've done them first.
     }

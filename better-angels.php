@@ -18,7 +18,10 @@ class BetterAngelsPlugin {
     private $incident_hash; //< Hash of the current incident ("alert").
     private $chat_room_name; //< The name of the chat room for this incident.
 
+    private $Error; //< WP_Error object
+
     public function __construct () {
+        $this->Error = new WP_Error();
 
         add_action('plugins_loaded', array($this, 'registerL10n'));
         add_action('init', array($this, 'registerCustomPostTypes'));
@@ -561,12 +564,19 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
      * @param string $guardian_login The WP login name of the user who is to be added to a team.
      * @param int $user_id The WP user ID of the user whose team to add the guardian to.
      * @param bool $fake Whether or not to add this guardian as a "fake" team member.
-     * @return void
+     * @return (int|bool) Result of add_user_meta() or false if $guardian_login is not a valid user name.
      */
     public function requestGuardian ($guardian_login, $user_id, $fake) {
+        if (!username_exists($guardian_login)) {
+            $this->Error->add(
+                'no-such-user',
+                sprintf(__('There is no one with the account name "%s" on this system.', 'better-angels'), $guardian_login)
+            );
+            return false;
+        }
         if (!$this->isMyGuardian($guardian_login)) {
             $meta_key = $this->prefix . 'pending_' . (($fake) ? 'fake_' : '' ) . 'guardians';
-            add_user_meta($user_id, $meta_key, username_exists($guardian_login), false);
+            return add_user_meta($user_id, $meta_key, username_exists($guardian_login), false);
         }
     }
 

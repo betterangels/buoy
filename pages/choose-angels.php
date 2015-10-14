@@ -15,6 +15,20 @@ foreach (get_user_meta(get_current_user_id(), $this->prefix . 'pending_fake_guar
 ?>
 <h2><?php esc_html_e('Choose your team members', 'better-angels');?></h2>
 <?php
+foreach ($this->Error->errors as $code => $err) {
+    switch ($code) {
+        case 'no-such-user':
+            foreach ($err as $msg) {
+?>
+<div class="notice error is-dismissible">
+<p><?php print esc_html($msg);?></p>
+</div>
+<?php
+            }
+    } // end switch
+}
+?>
+<?php
 if (isset($_GET['msg']) && 'no-guardians' === $_GET['msg']) {
     $notice = '<div class="error notice is-dismissible"><p>';
     $notice .= esc_html__('You have no team members. Before you can activate an alert, you must invite at least one other user to join your personal emergency response team and they must have accepted your invitation. Use this page to choose a response team.', 'better-angels');
