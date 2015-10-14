@@ -40,7 +40,7 @@ class BetterAngelsPlugin {
 
         add_action($this->prefix . 'delete_old_alerts', array($this, 'deleteOldAlerts'));
 
-        add_filter('user_contactmethods', array($this, 'addEmergencyPhoneContactMethod'));
+        add_filter('user_contactmethods', array($this, 'addContactInfoFields'));
 
         register_activation_hook(__FILE__, array($this, 'activate'));
         register_deactivation_hook(__FILE__, array($this, 'deactivate'));
@@ -459,8 +459,9 @@ class BetterAngelsPlugin {
         wp_send_json_success($next_url);
     }
 
-    public function addEmergencyPhoneContactMethod ($user_contact) {
-        $user_contact[$this->prefix . 'sms'] = esc_html__('Emergency txt (SMS)', 'better-angels');
+    public function addContactInfoFields ($user_contact) {
+        $user_contact[$this->prefix . 'sms'] = esc_html__('Phone number', 'better-angels');
+        $user_contact[$this->prefix . 'pronoun'] = esc_html__('Gender pronoun', 'better-angels');
         return $user_contact;
     }
 
@@ -582,6 +583,11 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
         }
     }
 
+    private function getUserGenderPronoun ($user_id) {
+        $pronoun = get_user_meta($user_id, $this->prefix . 'pronoun', true);
+        return (empty($pronoun)) ? 'their' : $pronoun;
+    }
+
     /**
      * Sends a notification (by email) asking a user for confirmation to join a response team.
      *
@@ -593,7 +599,10 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
         $guardian_id = username_exists($guardian_login);
         // Send an email notification to the guardian asking for permission to be added to team.
         $g = get_userdata($guardian_id);
-        $subject = sprintf(__('%s wants you to join their crisis response team', 'better-angels'), $curr_user->display_name);
+        $subject = sprintf(
+            __('%1$s wants you to join %2$s crisis response team', 'better-angels'),
+            $curr_user->display_name, $this->getUserGenderPronoun($curr_user->ID)
+        );
         // TODO: Write a better message.
         $msg = wp_nonce_url(
             admin_url(
