@@ -74,3 +74,9 @@ $sms_provider = get_user_meta(get_current_user_id(), $this->prefix . 'sms_provid
         </tr>
     </tbody>
 </table>
+<script type="text/javascript">
+// Kludgy way to fix up the WordPress contact form fields.
+jQuery('#your-profile').removeAttr('novalidate');
+jQuery('input[name$="_sms"]').attr('type', 'tel');
+jQuery('input[name$="_sms"]').attr('pattern', '(?:\\+\\d\\d?[-. ]?)?[-. ()0-9]+');
+</script>
