@@ -2,7 +2,7 @@ var BUOY = (function () {
     this.emergency_location;
     this.google_map;
 
-    var postAlert = function () {
+    var getMyPosition = function (success) {
         if (!navigator.geolocation){
             if (console && console.error) {
                 console.error('Geolocation is not supported by your browser');
@@ -10,30 +10,39 @@ var BUOY = (function () {
             return;
         }
         navigator.geolocation.getCurrentPosition(
-            function (position) { // success callback
-                var data = {
-                    'action': 'better-angels_findme',
-                    'pos': position.coords,
-                };
-                if (jQuery('#crisis-message').val()) {
-                    data.msg = jQuery('#crisis-message').val();
-                }
-                jQuery.post(ajaxurl, data,
-                    function (response) {
-                        if (response.success) {
-                            // decode the HTML-encoded stuff WP sends
-                            window.location.href = jQuery('<div/>').html(response.data).text();
-                        }
-                    }
-                );
-            },
-            function () { // error callback
+            success,
+            function () {
                 if (console && console.error) {
                     console.error("Unable to retrieve location."); 
                 }
             }
         );
+    };
+
+    var activateAlert = function () {
+        getMyPosition(postAlert);
+    };
+
+    var postAlert = function (position) {
+        var data = {
+            'action': 'better-angels_findme',
+            'pos': position.coords
+        };
+        if (jQuery('#crisis-message').val()) {
+            data.msg = jQuery('#crisis-message').val();
+        }
+        jQuery.post(ajaxurl, data,
+            function (response) {
+                if (response.success) {
+                    // decode the HTML-encoded stuff WP sends
+                    window.location.href = jQuery('<div/>').html(response.data).text();
+                }
+            }
+        );
     }
+
+    var respondToIncident = function () {
+    };
 
     /**
      * Creates a google map centered on the given coordinates.
@@ -66,18 +75,36 @@ var BUOY = (function () {
         marker.addListener('click', function () {
             infowindow.open(map, marker);
         });
+
+        jQuery.each(jQuery('#map-container').data('responder-info'), function (i, v) {
+            var marker = new google.maps.Marker({
+                'position': {
+                    'lat': parseFloat(v.geo.latitude),
+                    'lng': parseFloat(v.geo.longitude)
+                },
+                'map': map,
+                'icon': v.avatar_url
+            });
+            var infowindow = new google.maps.InfoWindow({
+                'content': v.display_name
+            });
+            marker.addListener('click', function () {
+                infowindow.open(map, marker);
+            });
+        });
     };
 
     var init = function () {
         jQuery(document).ready(function () {
-            jQuery('#activate-btn-submit').one('click', postAlert);
+            // Panic buttons (activate alert).
+            jQuery('#activate-btn-submit').one('click', activateAlert);
             jQuery('#activate-msg-btn-submit').on('click', function () {
                 jQuery('#emergency-message-modal').modal('show');
             });
             jQuery('#emergency-message-modal').on('shown.bs.modal', function () {
                   jQuery('#crisis-message').focus();
             })
-            jQuery('#emergency-message-modal').one('hidden.bs.modal', postAlert);
+            jQuery('#emergency-message-modal').one('hidden.bs.modal', activateAlert);
 
             // Show/hide incident map
             jQuery('#toggle-incident-map-btn').on('click', function () {
@@ -104,6 +131,17 @@ var BUOY = (function () {
                     jQuery('#safety-information-modal').modal('show');
                 });
             }
+
+            // Respond to incident.
+            jQuery('#incident-response-form').one('submit', function (e) {
+                e.preventDefault();
+                getMyPosition(function (position) {
+                    jQuery('#incident-response-form input[name$="location"]').val(
+                        position.coords.latitude + ',' + position.coords.longitude
+                    );
+                    jQuery(e.target).submit();
+                });
+            });
 
         });
 

@@ -1,10 +1,5 @@
 <?php
-$posts = get_posts(array(
-    'post_type' => str_replace('-', '_', $this->prefix) . 'alert',
-    'meta_key' => $this->prefix . 'incident_hash',
-    'meta_value' => urldecode($_GET[$this->prefix . 'incident_hash'])
-));
-$alert_post = array_pop($posts);
+$alert_post = $this->getAlert(urldecode($_GET[$this->prefix . 'incident_hash']));
 $alerter = get_userdata($alert_post->post_author);
 $respond_link = wp_nonce_url(
     admin_url(
@@ -29,6 +24,17 @@ $respond_link = wp_nonce_url(
         <?php print esc_html($alert_post->post_title);?>
     </p>
 </blockquote>
-<p class="submit">
-    <a class="button button-primary" href="<?php print esc_url($respond_link);?>"><?php esc_html_e('Respond', 'better-angels');?></a>
-</p>
+<form id="incident-response-form" action="<?php print esc_url($respond_link);?>" method="POST">
+    <input type="hidden"
+        id="<?php print esc_attr($this->prefix)?>location"
+        name="<?php print esc_attr($this->prefix)?>location"
+        value=""
+    />
+    <p class="submit">
+        <input type="submit" class="button button-primary"
+            id="<?php esc_attr_e($this->prefix);?>respond"
+            name="<?php esc_attr_e($this->prefix);?>respond"
+            value="<?php esc_attr_e('Respond', 'better-angels');?>"
+        />
+    </p>
+</form>

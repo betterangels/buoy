@@ -766,9 +766,61 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
         require_once 'pages/review-alert.php';
     }
 
+    public function getAlert ($incident_hash) {
+        $posts = get_posts(array(
+            'post_type' => str_replace('-', '_', $this->prefix) . 'alert',
+            'meta_key' => $this->prefix . 'incident_hash',
+            'meta_value' => $incident_hash
+        ));
+        return array_pop($posts);
+    }
+
+    public function addIncidentResponder ($alert_post, $user_id) {
+        if (!in_array($user_id, get_post_meta($alert_post->ID, $this->prefix . 'responders'))) {
+            add_post_meta($alert_post->ID, $this->prefix . 'responders', $user_id, false);
+        }
+    }
+
+    /**
+     * Sets the geo-located metadata for a responer in the context of an alert. The responder is the current user.
+     *
+     * @param object $alert_post The WP post object of the alert incident.
+     * @param array $geo An array with `latitude` and `longitude` keys.
+     * @return void
+     */
+    public function setResponderGeoLocation ($alert_post, $geo) {
+        update_post_meta($alert_post->ID, $this->prefix . 'responder_' . get_current_user_id() . '_location', $geo);
+    }
+    public function getResponderGeoLocation ($alert_post, $user_id) {
+        return get_post_meta($alert_post->ID, $this->prefix . 'responder_' . $user_id . '_location', true);
+    }
+
+    /**
+     * Retrieves the list of responders for a given alert.
+     *
+     * @param object $alert_post The WP Post object of the alert.
+     * @return array
+     */
+    public function getIncidentResponders ($alert_post) {
+        return get_post_meta($alert_post->ID, $this->prefix . 'responders', false);
+    }
+
     public function renderIncidentChatPage () {
         if (!current_user_can('read') || !wp_verify_nonce($_GET[$this->prefix . 'nonce'], "{$this->prefix}chat")) {
             wp_die(__('You do not have sufficient permissions to access this page.', 'better-angels'));
+        }
+        $alert_post = $this->getAlert(urldecode($_GET[$this->prefix . 'incident_hash']));
+        if (get_current_user_id() != $alert_post->post_author) {
+            $this->addIncidentResponder($alert_post, get_current_user_id());
+            // TODO: Clean this up a bit, maybe the JavaScript should send JSON data?
+            if (!empty($_POST[$this->prefix . 'location'])) {
+                $p = explode(',', $_POST[$this->prefix . 'location']);
+                $responder_geo = array(
+                    'latitude' => $p[0],
+                    'longitude' => $p[1]
+                );
+                $this->setResponderGeoLocation($alert_post, $responder_geo);
+            }
         }
         require_once 'pages/incident-chat.php';
     }

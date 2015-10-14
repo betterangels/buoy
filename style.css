@@ -51,9 +51,7 @@
 .dashboard_page_better-angels_review-alert .submit {
     display: flex;
 }
-.dashboard_page_better-angels_review-alert .submit a {
+.dashboard_page_better-angels_review-alert .submit input {
     flex-grow: 1;
     margin: 0 1rem;
-    display: inline-block;
-    text-align: center;
 }

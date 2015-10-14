@@ -27,6 +27,8 @@ class AlertsTest extends WP_UnitTestCase {
 
         $this->assertEquals($geodata['latitude'], get_post_meta($id, 'geo_latitude', true));
         $this->assertEquals($geodata['longitude'], get_post_meta($id, 'geo_longitude', true));
+
+        return $wp_post;
     }
 
     public function test_deleteOldAlertsIsScheduledAndUnscheduled () {
@@ -65,6 +67,55 @@ class AlertsTest extends WP_UnitTestCase {
         $this->plugin->deleteOldAlerts('-1 day');
 
         $this->assertNull(get_post($id_1_day_ago));
+    }
+
+    /**
+     * @depends test_newAlertCreated
+     */
+    public function test_addIncidentResponder ($alert_post) {
+        $expected = array(get_current_user_id());
+
+        $this->plugin->addIncidentResponder($alert_post, get_current_user_id());
+
+        $this->assertEquals($expected, get_post_meta($alert_post->ID, 'better-angels_responders'));
+
+        return $alert_post;
+    }
+
+    /**
+     * @depends test_addIncidentResponder
+     */
+    public function test_canOnlyAddSameIncidentResponderOnce ($alert_post) {
+        $expected = array(get_current_user_id());
+
+        $this->plugin->addIncidentResponder($alert_post, get_current_user_id());
+        $this->plugin->addIncidentResponder($alert_post, get_current_user_id());
+
+        $this->assertEquals($expected, get_post_meta($alert_post->ID, 'better-angels_responders'));
+    }
+
+    /**
+     * @depends test_addIncidentResponder
+     */
+    public function test_getIncidentResponders ($alert_post) {
+        $expected = array(get_current_user_id());
+        $this->plugin->addIncidentResponder($alert_post, get_current_user_id());
+        $this->assertEquals($expected, $this->plugin->getIncidentResponders($alert_post));
+    }
+
+    /**
+     * @depends test_addIncidentResponder
+     */
+    public function test_getResponderGeoLocation ($alert_post) {
+        $responder_id = get_current_user_id();
+        $expected = $geo = array(
+            'latitude' => 35.068548299999996,
+            'longitude' => -106.509757
+        );
+
+        $this->plugin->setResponderGeoLocation($alert_post, $geo);
+        $responder_geo = $this->plugin->getResponderGeoLocation($alert_post, $responder_id);
+        $this->assertEquals($expected, $responder_geo);
     }
 
 }

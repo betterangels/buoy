@@ -1,14 +1,20 @@
 <?php
 $options = get_option($this->prefix . 'settings');
-$posts = get_posts(array(
-    'post_type' => str_replace('-', '_', $this->prefix) . 'alert',
-    'meta_key' => $this->prefix . 'incident_hash',
-    'meta_value' => urldecode($_GET[$this->prefix . 'incident_hash'])
-));
-$alert_post = array_pop($posts);
+$alert_post = $this->getAlert(urldecode($_GET[$this->prefix . 'incident_hash']));
 $alerter = get_userdata($alert_post->post_author);
 $curr_user = wp_get_current_user();
 $auto_show_modal = ($curr_user->ID === $alerter->ID) ? 'auto-show-modal' : '';
+$responders = $this->getIncidentResponders($alert_post);
+$responder_info = array();
+foreach ($responders as $responder_id) {
+    $responder_data = get_userdata($responder_id);
+    $responder_info[] = array(
+        'id' => $responder_id,
+        'display_name' => $responder_data->display_name,
+        'avatar_url' => get_avatar_url($responder_id, array('size' => 32)),
+        'geo' => $this->getResponderGeoLocation($alert_post, $responder_id)
+    );
+}
 ?>
 <div id="alert-map" role="alert" class="alert alert-warning alert-dismissible fade in">
     <button id="toggle-incident-map-btn" class="btn btn-default" type="button"><?php esc_html_e('Show Map', 'better-angels');?></button>
@@ -19,6 +25,7 @@ $auto_show_modal = ($curr_user->ID === $alerter->ID) ? 'auto-show-modal' : '';
     data-longitude="<?php print esc_attr(get_post_meta($alert_post->ID, 'geo_longitude', true));?>"
     data-icon="<?php print esc_attr(get_avatar_url($alerter->ID, array('size' => 32)));?>"
     data-info-window-text="<?php print sprintf(esc_attr__("%s's last known location", 'better-angels'), $alerter->display_name);?>"
+    data-responder-info='<?php print esc_attr(json_encode($responder_info));?>'
     >
     <div id="map"></div>
 </div>
