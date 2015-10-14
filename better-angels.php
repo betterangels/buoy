@@ -502,11 +502,13 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
         return $safe_input;
     }
 
-    private function printAllUsersForDataList () {
-        $users = get_users();
-        foreach ($users as $usr) {
-            if ($usr->ID !== get_current_user_id() && !$this->isMyGuardian($usr->user_login))
-            print "<option value=\"{$usr->user_nicename}\">";
+    private function printUsersForDataList () {
+        if (current_user_can('list_users')) {
+            $users = get_users();
+            foreach ($users as $usr) {
+                if ($usr->ID !== get_current_user_id() && !$this->isMyGuardian($usr->user_login))
+                print "<option value=\"{$usr->user_nicename}\">";
+            }
         }
     }
 

@@ -52,7 +52,7 @@ if (isset($_GET['msg']) && 'no-guardians' === $_GET['msg']) {
                     <?php esc_html_e('Add as fake team member', 'better-angels');?>
                 </label>
                 <datalist id="<?php esc_attr_e($this->prefix);?>guardians_list"/>
-                    <?php $this->printAllUsersForDataList();?>
+                    <?php $this->printUsersForDataList();?>
                 </datalist>
                 <p class="description">
                     <?php print sprintf(
