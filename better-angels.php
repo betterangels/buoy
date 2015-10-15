@@ -511,17 +511,18 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
     }
 
     private function printUsersForDataList () {
-        if (current_user_can('list_users')) {
-            $users = get_users();
-        } else {
-            $users = get_users(array(
+        $args = array();
+        if (!current_user_can('list_users')) {
+            $args = array(
                 'meta_key' => $this->prefix . 'public_responder',
                 'meta_value' => 1
-            ));
+            );
         }
+        $users = get_users($args);
         foreach ($users as $usr) {
-            if ($usr->ID !== get_current_user_id() && !$this->isMyGuardian($usr->user_login))
-            print "<option value=\"{$usr->user_nicename}\">";
+            if ($usr->ID !== get_current_user_id() && !$this->isMyGuardian($usr->user_login)) {
+                print "<option value=\"{$usr->user_nicename}\">";
+            }
         }
     }
 
