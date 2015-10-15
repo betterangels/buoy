@@ -1,17 +1,5 @@
 <?php
-$full_team = array();
-foreach (get_user_meta(get_current_user_id(), $this->prefix . 'guardians') as $x) {
-    $full_team[] = array('type' => array(), 'data' => get_userdata($x));
-}
-foreach (get_user_meta(get_current_user_id(), $this->prefix . 'fake_guardians') as $x) {
-    $full_team[] = array('type' => array('fake'), 'data' => get_userdata($x));
-}
-foreach (get_user_meta(get_current_user_id(), $this->prefix . 'pending_guardians') as $x) {
-    $full_team[] = array('type' => array('pending'), 'data' => get_userdata($x));
-}
-foreach (get_user_meta(get_current_user_id(), $this->prefix . 'pending_fake_guardians') as $x) {
-    $full_team[] = array('type' => array('pending', 'fake'), 'data' => get_userdata($x));
-}
+$full_team = $this->getResponseTeam(get_current_user_id());
 ?>
 <h2><?php esc_html_e('Choose your team members', 'better-angels');?></h2>
 <?php
@@ -80,39 +68,38 @@ if (isset($_GET['msg']) && 'no-guardians' === $_GET['msg']) {
                             <input
                                 type="checkbox"
                                 checked="checked"
-                                value="<?php esc_attr_e($guardian['data']->ID);?>"
+                                value="<?php esc_attr_e($guardian->ID);?>"
                                 name="<?php esc_attr_e($this->prefix);?>my_guardians[]">
-                            <?php print esc_html($guardian['data']->user_nicename);?>
-                            <?php if (!empty($guardian['type'])) : ?>
-                            <span class="description <?php esc_attr_e(join(' ', $guardian['type']));?>">
-                            (<?php
-                                $cnt = count($guardian['type']);
-                                for ($i = 0; $i < $cnt; $i++) {
-                                    if ('pending' === $guardian['type'][$i]) {
-                                        esc_html_e('pending', 'better-angels');
-                                    } else if ('fake' === $guardian['type'][$i]) {
-                                        esc_html_e('fake', 'better-angels');
-                                    }
-                                    if ($i < ($cnt - 1)) { print ', '; }
+                            <?php print esc_html($guardian->user_nicename);?>
+                            <?php if (!empty($guardian->{$this->prefix . 'guardian_info'})) : ?>
+                            <?php
+                                $descriptors = array();
+                                if (empty($guardian->{$this->prefix . 'guardian_info'}['receive_alerts'])) {
+                                    $descriptors[] = esc_html__('fake', 'better-angels');
                                 }
-                            ?>)
-                            </span>
+                                if (empty($guardian->{$this->prefix . 'guardian_info'}['confirmed'])) {
+                                    $descriptors[] = esc_html__('pending', 'better-angels');
+                                }
+                                if (!empty($descriptors)) {
+                                    print '<span class="description">(' . join(', ', $descriptors) . ')</span>';
+                                }
+                            ?>
                             <?php endif;?>
                         </label>
                         <label>
                             <input
                                 type="radio"
-                                <?php checked(!in_array('fake', $guardian['type']));?>
-                                value="<?php print esc_attr('real');?>"
-                                name="<?php esc_attr_e($this->prefix);?>guardian[<?php print esc_attr($guardian['data']->ID);?>][type]">
+                                <?php checked(false, empty($guardian->{$this->prefix . 'guardian_info'}['receive_alerts']));?>
+                                value="1"
+                                name="<?php esc_attr_e($this->prefix);?>guardian[<?php print esc_attr($guardian->ID);?>][receive_alerts]">
                             <?php esc_html_e('real', 'better-angels');?>
                         </label>
                         <label>
                             <input
                                 type="radio"
-                                <?php checked(in_array('fake', $guardian['type']));?>
-                                value="<?php print esc_attr('fake');?>"
-                                name="<?php esc_attr_e($this->prefix);?>guardian[<?php print esc_attr($guardian['data']->ID);?>][type]">
+                                <?php checked(true, empty($guardian->{$this->prefix . 'guardian_info'}['receive_alerts']));?>
+                                value="0"
+                                name="<?php esc_attr_e($this->prefix);?>guardian[<?php print esc_attr($guardian->ID);?>][receive_alerts]">
                             <?php esc_html_e('fake', 'better-angels');?>
                         </label>
                     </li>

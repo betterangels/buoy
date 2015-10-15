@@ -19,17 +19,17 @@ foreach ($posts as $post) {
     wp_delete_post($post->ID, true);
 }
 
-// Delete all custom user profile data.
 foreach (get_users() as $usr) {
+    // Delete all custom user profile data.
     delete_user_meta($usr->ID, 'better-angels_call_for_help');
     delete_user_meta($usr->ID, 'better-angels_public_responder');
     delete_user_meta($usr->ID, 'better-angels_sms');
     delete_user_meta($usr->ID, 'better-angels_sms_provider');
     delete_user_meta($usr->ID, 'better-angels_pronoun');
+
+    // Delete extra metadata of this user's guardian memberships.
+    delete_metadata('users', null, 'better-angels_guardian_' . $usr->ID . '_info', null, true);
 }
 
-// Delete all response team lists.
+// Delete response team lists.
 delete_metadata('user', null, 'better-angels_guardians', null, true);
-delete_metadata('user', null, 'better-angels_fake_guardians', null, true);
-delete_metadata('user', null, 'better-angels_pending_guardians', null, true);
-delete_metadata('user', null, 'better-angels_pending_fake_guardians', null, true);
