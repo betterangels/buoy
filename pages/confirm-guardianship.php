@@ -55,9 +55,12 @@ foreach ($teams as $owner) {
                 <?php foreach ($joined as $user) : ?>
                     <li>
                         <?php print esc_html($user->user_nicename);?>
-                        <a href="<?php print wp_nonce_url(admin_url('admin.php?page=' . $this->prefix . 'confirm-guardianship&team=' . $user->user_nicename), $this->prefix . 'leave-team', $this->prefix . 'nonce');?>">
+                        <button type="submit" class="button button-small"
+                            name="<?php print esc_attr($this->prefix);?>leave-team"
+                            value="<?php print esc_attr($user->user_login);?>"
+                        >
                             <?php print sprintf(esc_html__("Leave %s's team", 'better-angels'), $user->user_nicename);?>
-                        </a>
+                        </button>
                     </li>
                 <?php endforeach;?>
                 </ul>

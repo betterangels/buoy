@@ -850,11 +850,11 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
             foreach ($join_teams as $owner_id) {
                 $this->setGuardianInfo(get_current_user_id(), $owner_id, array('confirmed' => true));
             }
-        }
 
-        // Leave a team.
-        if (isset($_GET[$this->prefix . 'nonce']) && wp_verify_nonce($_GET[$this->prefix . 'nonce'], $this->prefix . 'leave-team')) {
-            $this->removeGuardian(get_current_user_id(), username_exists($_GET['team']));
+            // Leave a team.
+            if (!empty($_POST[$this->prefix . 'leave-team'])) {
+                $this->removeGuardian(get_current_user_id(), username_exists($_POST[$this->prefix . 'leave-team']));
+            }
         }
 
         require_once 'pages/confirm-guardianship.php';
