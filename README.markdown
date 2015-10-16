@@ -1,6 +1,10 @@
 # Better Angels' Buoy: A community-driven emergency first responder system.
 
-[![Build Status](https://travis-ci.org/meitar/better-angels.svg?branch=master)](https://travis-ci.org/meitar/better-angels)
+| Branch   | Builds |
+| :------- |:------:|
+| `master` | [![Build Status for master branch](https://travis-ci.org/meitar/better-angels.svg?branch=master)](https://travis-ci.org/meitar/better-angels) |
+| `develop` | [![Build Status for develop branch](https://travis-ci.org/meitar/better-angels.svg?branch=develop)](https://travis-ci.org/meitar/better-angels) |
+| `trunk` | [![Build Status for trunk branch](https://travis-ci.org/meitar/better-angels.svg?branch=trunk)](https://travis-ci.org/meitar/better-angels) |
 
 Better Angels' *Buoy* is an app designed to quickly connect survivors of domestic or dating violence (DV) with trusted friends, family members, advocates, and other allies in times of crisis.
 
