@@ -96,8 +96,4 @@ class GuardianTest extends WP_UnitTestCase {
         $this->assertEquals($info_arr, $info);
     }
 
-    public function test_getMyGuardians () {
-        $this->markTestIncomplete();
-    }
-
 }
