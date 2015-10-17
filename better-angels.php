@@ -32,6 +32,7 @@ class BetterAngelsPlugin {
         add_action('admin_menu', array($this, 'registerAdminMenu'));
         add_action('current_screen', array($this, 'maybeRedirect'));
         add_action('wp_ajax_' . $this->prefix . 'findme', array($this, 'handleAlert'));
+        add_action('wp_ajax_' . $this->prefix . 'update-location', array($this, 'handleLocationUpdate'));
         add_action('show_user_profile', array($this, 'addProfileFields'));
         add_action('personal_options_update', array($this, 'updateProfileFields'));
 
@@ -458,6 +459,48 @@ class BetterAngelsPlugin {
             $this->prefix . 'chat', $this->prefix . 'nonce'
         );
         wp_send_json_success($next_url);
+    }
+
+    /**
+     * Responds to Ajax POSTs containing new position information of responders/alerter.
+     * Sends back the location of all responders to this alert.
+     */
+    public function handleLocationUpdate () {
+        $new_position = $_POST['pos'];
+        $alert_post = $this->getAlert($_POST['incident_hash']);
+        $me = wp_get_current_user();
+        $mkey = ($me->ID == $alert_post->post_author) ? 'alerter_location': "responder_{$me->ID}_location";
+        update_post_meta($alert_post->ID, $this->prefix . $mkey, $new_position);
+
+        $alerter = get_userdata($alert_post->post_author);
+        $data = array(array(
+            'id' => $alert_post->post_author,
+            'geo' => get_post_meta($alert_post->ID, $this->prefix . 'alerter_location', true),
+            'display_name' => $alerter->display_name,
+            'avatar_url' => get_avatar_url($alerter->ID, array('size' => 32))
+        ));
+        wp_send_json_success(array_merge($data, $this->getResponderInfo($alert_post)));
+    }
+
+    /**
+     * Retrieves an array of responder metadata for an alert.
+     *
+     * @param object $alert_post The WP_Post object of the alert.
+     * @return array
+     */
+    public function getResponderInfo ($alert_post) {
+        $responders = $this->getIncidentResponders($alert_post);
+        $responder_info = array();
+        foreach ($responders as $responder_id) {
+            $responder_data = get_userdata($responder_id);
+            $responder_info[] = array(
+                'id' => $responder_id,
+                'display_name' => $responder_data->display_name,
+                'avatar_url' => get_avatar_url($responder_id, array('size' => 32)),
+                'geo' => $this->getResponderGeoLocation($alert_post, $responder_id)
+            );
+        }
+        return $responder_info;
     }
 
     public function addContactInfoFields ($user_contact) {
