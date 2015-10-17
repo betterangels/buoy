@@ -850,10 +850,11 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
     }
 
     public function renderIncidentChatPage () {
-        if (!current_user_can('read') || !wp_verify_nonce($_GET[$this->prefix . 'nonce'], "{$this->prefix}chat")) {
-            wp_die(__('You do not have sufficient permissions to access this page.', 'better-angels'));
-        }
         $alert_post = $this->getAlert(urldecode($_GET[$this->prefix . 'incident_hash']));
+        if (!$alert_post || !current_user_can('read') || !isset($_GET[$this->prefix . 'nonce']) || !wp_verify_nonce($_GET[$this->prefix . 'nonce'], "{$this->prefix}chat")) {
+            print __('You do not have sufficient permissions to access this page.', 'better-angels');
+            return;
+        }
         if (get_current_user_id() != $alert_post->post_author) {
             $this->addIncidentResponder($alert_post, get_current_user_id());
             // TODO: Clean this up a bit, maybe the JavaScript should send JSON data?
