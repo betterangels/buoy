@@ -7,6 +7,7 @@ $auto_show_modal = ($curr_user->ID === $alerter->ID) ? 'auto-show-modal' : '';
 ?>
 <div id="alert-map" role="alert" class="alert alert-warning alert-dismissible fade in">
     <button id="toggle-incident-map-btn" class="btn btn-default" type="button"><?php esc_html_e('Show Map', 'better-angels');?></button>
+    <button id="fit-map-to-markers-btn" class="btn btn-default" type="button"><?php esc_html_e('Zoom to fit', 'better-angels');?></button>
 </div>
 <div id="map-container" class="container-fluid"
     data-incident-hash="<?php print esc_attr(get_post_meta($alert_post->ID, $this->prefix . 'incident_hash', true));?>"

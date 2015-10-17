@@ -4,6 +4,7 @@ var BUOY = (function () {
     this.map;           //< Google Map object itself
     this.marker_bounds; //< Google Map marker bounding box
     this.map_markers = {};
+    this.map_touched = false; //< Whether the user has manually interacted with the map.
     this.geowatcher_id; //< ID of Geolocation.watchPosition() timer
 
     var getMyPosition = function (success) {
@@ -50,7 +51,9 @@ var BUOY = (function () {
                 map_markers[responder.id] = marker;
             }
             marker_bounds.extend(new_pos);
-            map.fitBounds(marker_bounds);
+            if (!map_touched) {
+                map.fitBounds(marker_bounds);
+            };
         }
     };
 
@@ -124,6 +127,13 @@ var BUOY = (function () {
         }
 
         map.fitBounds(marker_bounds);
+
+        map.addListener('click', touchMap);
+        map.addListener('drag', touchMap);
+    };
+
+    var touchMap = function () {
+        map_touched = true;
     };
 
     var addMarkerForCurrentLocation = function () {
@@ -170,6 +180,10 @@ var BUOY = (function () {
                     });
                     this.textContent = better_angels_vars.i18n_hide_map;
                 }
+            });
+
+            jQuery('#fit-map-to-markers-btn').on('click', function () {
+                map.fitBounds(marker_bounds);
             });
 
             // Show "safety information" on page load,
