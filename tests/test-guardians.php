@@ -96,4 +96,25 @@ class GuardianTest extends WP_UnitTestCase {
         $this->assertEquals($info_arr, $info);
     }
 
+    public function provider_test_getResponseTeam () {
+        return array(
+            // user ID, guardian IDs, count() of guardians this ID should have
+            // can't add user ID 2 because that's the "current user"
+            array(1, array(1, 3, 4, 5, 6), 4), // because I can't add self as guardian
+            array(2, array(), 0),
+            array(3, array(1, 4), 2),
+            array(5, array(1, 2, 3, 4, 5), 3) // because I cannot add "self" (user ID 2) as guardian
+        );
+    }
+
+    /**
+     * @dataProvider provider_test_getResponseTeam
+     */
+    public function test_getResponseTeam_returns_team_of_requested_user ($user_id, $guardian_ids, $num_expected) {
+        foreach ($guardian_ids as $gid) {
+            $this->plugin->addGuardian($gid, $user_id);
+        }
+        $this->assertCount($num_expected, $this->plugin->getResponseTeam($user_id));
+    }
+
 }

@@ -604,7 +604,7 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
         }
         $users = get_users($args);
         foreach ($users as $usr) {
-            if ($usr->ID !== get_current_user_id() && !$this->isMyGuardian($usr->user_login)) {
+            if ($usr->ID !== get_current_user_id() && !$this->isGuardian($usr->ID)) {
                 print "<option value=\"{$usr->user_nicename}\">";
             }
         }
@@ -628,15 +628,16 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
     }
 
     /**
-     * Checks to see if a user account is on the response team of the current user.
+     * Checks to see if a user account is on the response team of a user.
      *
-     * @param string $guardian_login The WP user login name of the account to check.
+     * @param string $guardian_ID The WP user ID of the account to check.
+     * @param string $user_id The WP user ID of the user whose team to check.
      * @return bool True if $guardian_login is the username of a team member for the current user.
      */
-    public function isMyGuardian ($guardian_login) {
-        $team = $this->getResponseTeam(get_current_user_id());
+    public function isGuardian ($guardian_id, $user_id) {
+        $team = $this->getResponseTeam($user_id);
         foreach ($team as $user) {
-            if ($guardian_login === $user->user_login) {
+            if ($guardian_id === $user->ID) {
                 return true;
             }
         }
@@ -695,7 +696,7 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
                 $guardian_id
             );
         }
-        if (get_current_user_id() == $guardian_id) {
+        if (get_current_user_id() == $guardian_id || $user_id === $guardian_id) {
             $err->add(
                 'cannot-guard-self',
                 __('Cannot add yourself as your own guardian.', 'better-angels'),
@@ -746,10 +747,10 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
      */
     public function getResponseTeam ($user_id) {
         $full_team = array_map(
-            'get_userdata', get_user_meta(get_current_user_id(), $this->prefix . 'guardians')
+            'get_userdata', get_user_meta($user_id, $this->prefix . 'guardians')
         );
         foreach ($full_team as $k => $g) {
-            $info = $this->getGuardianInfo($g->ID, get_current_user_id());
+            $info = $this->getGuardianInfo($g->ID, $user_id);
             $prop = $this->prefix . 'guardian_info';
             $full_team[$k]->$prop = $info;
         }
@@ -792,7 +793,7 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
         // Anything to add?
         if (!empty($request[$this->prefix . 'add_guardian'])) {
             $guardian_id = username_exists($request[$this->prefix . 'add_guardian']);
-            $this->addGuardian( $guardian_id, get_current_user_id());
+            $this->addGuardian($guardian_id, get_current_user_id());
             if (isset($request[$this->prefix . 'is_fake_guardian'])) {
                 $this->setGuardianInfo(
                     $guardian_id,
@@ -837,15 +838,17 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
 
     public function renderActivateAlertPage () {
         if (!current_user_can('read')) {
-            wp_die(__('You do not have sufficient permissions to access this page.', 'better-angels'));
+            esc_html_e('You do not have sufficient permissions to access this page.', 'better-angels');
+            return;
         }
         require_once 'pages/activate-alert.php';
     }
 
     public function renderReviewAlertPage () {
         $alert_post = $this->getAlert($_GET[$this->prefix . 'incident_hash']);
-        if (!current_user_can('read') || !in_array(wp_get_current_user(), $this->getGuardians($alert_post->post_author))) {
-            wp_die(__('You do not have sufficient permissions to access this page.', 'better-angels'));
+        if (!current_user_can('read') || !$this->isGuardian(get_current_user_id(), $alert_post->post_author)) {
+            esc_html_e('You do not have sufficient permissions to access this page.', 'better-angels');
+            return;
         }
         require_once 'pages/review-alert.php';
     }
@@ -892,7 +895,7 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
     public function renderIncidentChatPage () {
         $alert_post = $this->getAlert(urldecode($_GET[$this->prefix . 'incident_hash']));
         if (!$alert_post || !current_user_can('read') || !isset($_GET[$this->prefix . 'nonce']) || !wp_verify_nonce($_GET[$this->prefix . 'nonce'], "{$this->prefix}chat")) {
-            print __('You do not have sufficient permissions to access this page.', 'better-angels');
+            esc_html_e('You do not have sufficient permissions to access this page.', 'better-angels');
             return;
         }
         if (get_current_user_id() != $alert_post->post_author) {
