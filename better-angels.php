@@ -27,6 +27,7 @@ class BetterAngelsPlugin {
         add_action('init', array($this, 'registerCustomPostTypes'));
         add_action('admin_init', array($this, 'registerSettings'));
         add_action('current_screen', array($this, 'registerContextualHelp'));
+        add_action('send_headers', array($this, 'redirectShortUrl'));
         add_action('admin_enqueue_scripts', array($this, 'enqueueAdminScripts'));
         add_action('admin_enqueue_scripts', array($this, 'enqueueMapsScripts'));
         add_action('admin_menu', array($this, 'registerAdminMenu'));
@@ -414,19 +415,14 @@ class BetterAngelsPlugin {
         // TODO: Should we use a custom post type? Should we use a custom table?
         $alert_id = $this->newAlert(array('post_title' => $subject), $alert_position);
 
-        // TODO: Investigate use of nonce here.
-        //       WordPress nonces seem to be user specific, so we can't verify this
-        //       because this link is intentionally intended to be clicked on by a
-        //       different, second user.
-        $responder_link = wp_nonce_url(
-            admin_url(
-                '?page=' . $this->prefix . 'review-alert'
-                . '&' . $this->prefix . 'incident_hash=' . $this->getIncidentHash()
-            ),
-            $this->prefix . 'review', $this->prefix . 'nonce'
+        $responder_link = admin_url(
+            '?page=' . $this->prefix . 'review-alert'
+            . '&' . $this->prefix . 'incident_hash=' . $this->getIncidentHash()
         );
-        // TODO: Write a more descriptive message.
-        $message = $responder_link;
+        $responder_short_link = home_url(
+            '?' . str_replace('_', '-', $this->prefix) . 'alert='
+            . substr($this->getIncidentHash(), 0, 8)
+        );
 
         foreach ($guardians as $guardian) {
             // TODO: Wrap this "send an alert" procedure into its own function?
@@ -436,15 +432,32 @@ class BetterAngelsPlugin {
                 'From: "' . $me->display_name . '" <' . $me->user_email . '>'
             );
 
-            wp_mail($guardian->user_email, $subject, $message, $headers);
+            // TODO: Write a more descriptive message.
+            wp_mail($guardian->user_email, $subject, $responder_link, $headers);
 
             // Send an email that will be converted to an SMS by the
             // telco company if the guardian has provided an emergency txt number.
             if (!empty($sms) && !empty($sms_provider)) {
+                $sms_max_length = 160;
+                // We need to ensure that SMS notifications fit within the 160 character
+                // limit of SMS transmissions. Since we're using email-to-SMS gateways,
+                // a subject will be wrapped inside of parentheses, making it two chars
+                // longer than whatever its original contents are. Then a space is
+                // inserted between the subject and the message body. The total length
+                // of strlen($subject) + 2 + 1 + strlen($message) must be less than 160.
+                $extra_length = 3; // two parenthesis and a space
+                // but in practice, there seems to be another 7 chars eaten up somewhere?
+                $extra_length += 7;
+                $url_length = strlen($responder_short_link);
+                $full_length = strlen($subject) + $extra_length + $url_length;
+                if ($full_length > $sms_max_length) {
+                    // truncate the $subject since the link must be fully included
+                    $subject = substr($subject, 0, $sms_max_length - $url_length - $extra_length);
+                }
                 wp_mail(
                     $sms . $this->getSmsEmailGatewayDomain($sms_provider),
                     $subject,
-                    $message,
+                    $responder_short_link,
                     $headers
                 );
             }
@@ -527,6 +540,34 @@ class BetterAngelsPlugin {
     // TODO: Write help screens.
     public function registerContextualHelp () {
         $screen = get_current_screen();
+    }
+
+    /**
+     * Detects an alert "short URL," which is a GET request with a special querystring parameter
+     * that matches the first 8 characters of an alert's incident hash value and, if matched,
+     * redirects to the full URL of that particular alert, then `exit()`s.
+     *
+     * @return void
+     */
+    public function redirectShortUrl () {
+        $get_param = str_replace('_', '-', $this->prefix) . 'alert';
+        if (!empty($_GET[$get_param]) && 8 === strlen($_GET[$get_param])) {
+            $short_key = urldecode($_GET[$get_param]);
+            $posts = get_posts(array(
+                'post_type' => str_replace('-', '_', $this->prefix) . 'alert',
+                'meta_key' => $this->prefix . 'incident_hash'
+            ));
+            foreach ($posts as $post) {
+                $full_hash = get_post_meta($post->ID, $this->prefix . 'incident_hash', true);
+                if (substr($full_hash, 0, strlen($short_key))) {
+                    wp_safe_redirect(admin_url(
+                        '?page=' . $this->prefix . 'review-alert'
+                        . '&' . $this->prefix . 'incident_hash=' . urlencode($full_hash)
+                    ));
+                    exit();
+                }
+            }
+        }
     }
 
     private function showDonationAppeal () {
@@ -802,11 +843,10 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
     }
 
     public function renderReviewAlertPage () {
-        // NOTE: WordPress nonces are user-specific, so we don't use one here.
-        if (!current_user_can('read')) {
+        $alert_post = $this->getAlert($_GET[$this->prefix . 'incident_hash']);
+        if (!current_user_can('read') || !in_array(wp_get_current_user(), $this->getGuardians($alert_post->post_author))) {
             wp_die(__('You do not have sufficient permissions to access this page.', 'better-angels'));
         }
-        // TODO: Make it so that only the alerter's guardians (or admin users) can see this page.
         require_once 'pages/review-alert.php';
     }
 
@@ -925,4 +965,4 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
     }
 }
 
-$better_angels_plugin = new BetterAngelsPlugin();
+new BetterAngelsPlugin();
