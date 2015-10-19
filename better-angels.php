@@ -404,7 +404,7 @@ class BetterAngelsPlugin {
         $alert_position = $_POST['pos'];
         $me = wp_get_current_user();
         $guardians = $this->getGuardians(get_current_user_id());
-        $subject = (empty($_POST['msg'])) ? $this->getCallForHelp($me->ID) : wp_strip_all_tags($_POST['msg']);
+        $subject = (empty($_POST['msg'])) ? $this->getCallForHelp($me->ID) : wp_strip_all_tags(stripslashes_deep($_POST['msg']));
 
         // Set instance variables
         $this->setIncidentHash(serialize($me) . serialize($guardians) . time());
