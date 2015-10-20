@@ -28,6 +28,7 @@ class BetterAngelsPlugin {
         add_action('admin_init', array($this, 'registerSettings'));
         add_action('current_screen', array($this, 'registerContextualHelp'));
         add_action('send_headers', array($this, 'redirectShortUrl'));
+        add_action('wp_before_admin_bar_render', array($this, 'addIncidentMenu'));
         add_action('admin_enqueue_scripts', array($this, 'enqueueAdminScripts'));
         add_action('admin_enqueue_scripts', array($this, 'enqueueMapsScripts'));
         add_action('admin_menu', array($this, 'registerAdminMenu'));
@@ -553,10 +554,7 @@ class BetterAngelsPlugin {
         $get_param = str_replace('_', '-', $this->prefix) . 'alert';
         if (!empty($_GET[$get_param]) && 8 === strlen($_GET[$get_param])) {
             $short_key = urldecode($_GET[$get_param]);
-            $posts = get_posts(array(
-                'post_type' => str_replace('-', '_', $this->prefix) . 'alert',
-                'meta_key' => $this->prefix . 'incident_hash'
-            ));
+            $posts = $this->getActiveAlerts();
             foreach ($posts as $post) {
                 $full_hash = get_post_meta($post->ID, $this->prefix . 'incident_hash', true);
                 if (substr($full_hash, 0, strlen($short_key))) {
@@ -567,6 +565,75 @@ class BetterAngelsPlugin {
                     exit();
                 }
             }
+        }
+    }
+
+    /**
+     * Gets all alert posts.
+     *
+     * @return array
+     */
+    public function getActiveAlerts () {
+        return get_posts(array(
+            'post_type' => str_replace('-', '_', $this->prefix) . 'alert',
+            'meta_key' => $this->prefix . 'incident_hash'
+        ));
+    }
+
+    public function addIncidentMenu () {
+        global $wp_admin_bar;
+        $wp_admin_bar->add_menu(array(
+            'id' => $this->prefix . 'active-incidents-menu',
+            'title' => __('Active alerts', 'better-angels')
+        ));
+
+        $alerts = array(
+            'my_alerts' => array(),
+            'my_responses' => array()
+        );
+        foreach ($this->getActiveAlerts() as $post) {
+            if (get_current_user_id() == $post->post_author) {
+                $alerts['my_alerts'][] = $post;
+            } else if (in_array(get_current_user_id(), $this->getIncidentResponders($post))) {
+                $alerts['my_responses'][] = $post;
+            }
+        }
+
+        // Add group nodes to WP Toolbar
+        foreach ($alerts as $group_name => $posts) {
+            $wp_admin_bar->add_group(array(
+                'id' => $this->prefix . $group_name,
+                'parent' => $this->prefix . 'active-incidents-menu'
+            ));
+        }
+
+        $dtfmt = get_option('date_format') . ' ' . get_option('time_format');
+        foreach ($alerts['my_alerts'] as $post) {
+            $author = get_userdata($post->post_author);
+            $url = wp_nonce_url(
+                admin_url('?page=' . $this->prefix . 'incident-chat&' . $this->prefix . 'incident_hash=' . get_post_meta($post->ID, $this->prefix . 'incident_hash', true)),
+                $this->prefix . 'chat', $this->prefix . 'nonce'
+            );
+            $wp_admin_bar->add_node(array(
+                'id' => $this->prefix . 'active-incident-' . $post->ID,
+                'title' => sprintf(__('My alert on %2$s', 'better-angels'), $author->display_name, date($dtfmt, strtotime($post->post_date))),
+                'parent' => $this->prefix . 'my_alerts',
+                'href' => $url
+            ));
+        }
+
+        foreach ($alerts['my_responses'] as $post) {
+            $author = get_userdata($post->post_author);
+            $url = wp_nonce_url(
+                admin_url('?page=' . $this->prefix . 'incident-chat&' . $this->prefix . 'incident_hash=' . get_post_meta($post->ID, $this->prefix . 'incident_hash', true)),
+                $this->prefix . 'chat', $this->prefix . 'nonce'
+            );
+            $wp_admin_bar->add_node(array(
+                'id' => $this->prefix . 'active-incident-' . $post->ID,
+                'title' => sprintf(__('Alert issued by %1$s on %2$s', 'better-angels'), $author->display_name, date($dtfmt, strtotime($post->post_date))),
+                'parent' => $this->prefix . 'my_responses',
+                'href' => $url
+            ));
         }
     }
 
