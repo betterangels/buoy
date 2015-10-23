@@ -55,3 +55,13 @@
     flex-grow: 1;
     margin: 0 1rem;
 }
+
+#wpadminbar #wp-admin-bar-better-angels_active-incidents-menu {
+    background: red;
+}
+.admin-color-sunrise #wpadminbar #wp-admin-bar-better-angels_active-incidents-menu {
+    background: #096484;
+}
+#wp-toolbar > ul > li#wp-admin-bar-better-angels_active-incidents-menu {
+    display: list-item; /* always show, even on narrow screens */
+}

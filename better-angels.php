@@ -582,10 +582,6 @@ class BetterAngelsPlugin {
 
     public function addIncidentMenu () {
         global $wp_admin_bar;
-        $wp_admin_bar->add_menu(array(
-            'id' => $this->prefix . 'active-incidents-menu',
-            'title' => __('Active alerts', 'better-angels')
-        ));
 
         $alerts = array(
             'my_alerts' => array(),
@@ -597,6 +593,13 @@ class BetterAngelsPlugin {
             } else if (in_array(get_current_user_id(), $this->getIncidentResponders($post))) {
                 $alerts['my_responses'][] = $post;
             }
+        }
+
+        if (!empty($alerts['my_alerts']) || !empty($alerts['my_responses'])) {
+            $wp_admin_bar->add_menu(array(
+                'id' => $this->prefix . 'active-incidents-menu',
+                'title' => __('Active alerts', 'better-angels')
+            ));
         }
 
         // Add group nodes to WP Toolbar
