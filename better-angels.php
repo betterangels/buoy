@@ -915,6 +915,9 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
     }
 
     public function renderReviewAlertPage () {
+        if (empty($_GET[$this->prefix . 'incident_hash'])) {
+            return;
+        }
         $alert_post = $this->getAlert($_GET[$this->prefix . 'incident_hash']);
         if (!current_user_can('read') || !$this->isGuardian(get_current_user_id(), $alert_post->post_author)) {
             esc_html_e('You do not have sufficient permissions to access this page.', 'better-angels');
