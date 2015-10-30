@@ -674,7 +674,7 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
         }
         $users = get_users($args);
         foreach ($users as $usr) {
-            if ($usr->ID !== get_current_user_id() && !$this->isGuardian($usr->ID)) {
+            if ($usr->ID !== get_current_user_id() && !$this->isGuardian($usr->ID, get_current_user_id())) {
                 print "<option value=\"{$usr->user_nicename}\">";
             }
         }
