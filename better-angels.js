@@ -212,6 +212,11 @@ var BUOY = (function () {
                 geowatcher_id = navigator.geolocation.watchPosition(updateMyLocation, logGeoError);
             }
 
+            // Note: This works around GitHub issue #47.
+            // Could be removed after WebKit and/or Bootstrap fixes this in their libs.
+            if (jQuery('.dashboard_page_better-angels_incident-chat, .dashboard_page_better-angels_activate-alert').length) {
+                jQuery('body').append(jQuery('.modal').detach());
+            }
         });
 
         jQuery(window).on('load', function () {
