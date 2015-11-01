@@ -242,6 +242,8 @@ class BetterAngelsPlugin {
             'i18n_show_map' => __('Show Map', 'better-angels'),
             'i18n_crisis_location' => __('Location of emergency alert signal', 'better-angels'),
             'i18n_my_location' => __('My location', 'better-angels'),
+            'i18n_directions' => __('Directions to here', 'better-angels'),
+            'i18n_call' => __('Call', 'better-angels'),
             'i18n_responding_to_alert' => __('Responding to alert', 'better-angels')
         );
     }
@@ -487,12 +489,17 @@ class BetterAngelsPlugin {
         update_post_meta($alert_post->ID, $this->prefix . $mkey, $new_position);
 
         $alerter = get_userdata($alert_post->post_author);
-        $data = array(array(
+        $alerter_info = array(
             'id' => $alert_post->post_author,
             'geo' => get_post_meta($alert_post->ID, $this->prefix . 'alerter_location', true),
             'display_name' => $alerter->display_name,
             'avatar_url' => get_avatar_url($alerter->ID, array('size' => 32))
-        ));
+        );
+        $phone_number = get_user_meta($alert_post->post_author, $this->prefix . 'sms', true);
+        if (!empty($phone_number)) {
+            $alerter_info['call'] = $phone_number;
+        }
+        $data = array($alerter_info);
         wp_send_json_success(array_merge($data, $this->getResponderInfo($alert_post)));
     }
 
@@ -504,17 +511,22 @@ class BetterAngelsPlugin {
      */
     public function getResponderInfo ($alert_post) {
         $responders = $this->getIncidentResponders($alert_post);
-        $responder_info = array();
+        $res = array();
         foreach ($responders as $responder_id) {
             $responder_data = get_userdata($responder_id);
-            $responder_info[] = array(
+            $this_responder = array(
                 'id' => $responder_id,
                 'display_name' => $responder_data->display_name,
                 'avatar_url' => get_avatar_url($responder_id, array('size' => 32)),
                 'geo' => $this->getResponderGeoLocation($alert_post, $responder_id)
             );
+            $phone_number = get_user_meta($responder_id, $this->prefix . 'sms', true); 
+            if (!empty($phone_number)) {
+                $this_responder['call'] = $phone_number;
+            }
+            $res[] = $this_responder;
         }
-        return $responder_info;
+        return $res;
     }
 
     public function addContactInfoFields ($user_contact) {

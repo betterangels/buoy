@@ -49,6 +49,17 @@ var BUOY = (function () {
                     'icon': responder.avatar_url
                 });
                 map_markers[responder.id] = marker;
+                var iw_data = {
+                    'directions': 'https://maps.google.com/?saddr=Current+Location&daddr=' + encodeURIComponent(responder.geo.latitude) + ',' + encodeURIComponent(responder.geo.longitude)
+                };
+                if (responder.call) { iw_data.call = 'tel:' + responder.call; }
+                var infowindow = new google.maps.InfoWindow({
+                    'content': '<p>' + responder.display_name + '</p>'
+                               + infoWindowContent(iw_data)
+                });
+                marker.addListener('click', function () {
+                    infowindow.open(map, marker);
+                });
             }
             marker_bounds.extend(new_pos);
             if (!map_touched) {
@@ -85,6 +96,19 @@ var BUOY = (function () {
         );
     }
 
+    var infoWindowContent = function (data) {
+        var html = '<ul>';
+        for (key in data) {
+            html += '<li>' + jQuery('<span>').append(
+                        jQuery('<a>')
+                        .attr('href', data[key])
+                        .attr('target', '_blank')
+                        .html(better_angels_vars['i18n_' + key])
+                    ).html() + '</li>';
+        }
+        html += '</ul>';
+        return html;
+    };
     /**
      * Creates a google map centered on the given coordinates.
      *
@@ -98,6 +122,9 @@ var BUOY = (function () {
 
         var infowindow = new google.maps.InfoWindow({
             'content': '<p>' + better_angels_vars.i18n_crisis_location + '</p>'
+                       + infoWindowContent({
+                           'directions': 'https://maps.google.com/?saddr=Current+Location&daddr=' + encodeURIComponent(coords.lat) + ',' + encodeURIComponent(coords.lng)
+                       })
         });
         var marker = new google.maps.Marker({
             'position': new google.maps.LatLng(coords.lat, coords.lng),
@@ -115,6 +142,13 @@ var BUOY = (function () {
                 var responder_geo = new google.maps.LatLng(
                     parseFloat(v.geo.latitude), parseFloat(v.geo.longitude)
                 );
+                var infowindow = new google.maps.InfoWindow({
+                    'content': '<p>' + v.display_name + '</p>'
+                               + infoWindowContent({
+                                   'directions': 'https://maps.google.com/?saddr=Current+Location&daddr=' + encodeURIComponent(v.geo.latitude) + ',' + encodeURIComponent(v.geo.longitude),
+                                   'call': 'tel:' + v.call
+                               })
+                });
                 var marker = new google.maps.Marker({
                     'position': responder_geo,
                     'map': map,
@@ -123,6 +157,9 @@ var BUOY = (function () {
                 });
                 map_markers[v.id] = marker;
                 marker_bounds.extend(responder_geo);
+                marker.addListener('click', function () {
+                    infowindow.open(map, marker);
+                });
             });
         }
 
