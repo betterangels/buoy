@@ -742,7 +742,7 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
         // Send an email notification to the guardian asking for permission to be added to team.
         $g = get_userdata($guardian_id);
         $subject = sprintf(
-            __('%1$s wants you to join %2$s crisis response team', 'better-angels'),
+            __('%1$s wants you to join %2$s crisis response team.', 'better-angels'),
             $curr_user->display_name, $this->getUserGenderPronoun($curr_user->ID)
         );
         // TODO: Write a better message.
@@ -841,13 +841,14 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
 
     private function updateChooseAngels ($request) {
         $user_id = get_current_user_id();
+        $wp_user = get_userdata($user_id);
 
         // Anything to edit/toggle type?
         if (!empty($request[$this->prefix . 'guardian'])) {
             foreach ($request[$this->prefix . 'guardian'] as $id => $data) {
                 $this->setGuardianInfo(
                     $id,
-                    get_current_user_id(),
+                    $user_id,
                     array('receive_alerts' => (bool)$data['receive_alerts'])
                 );
             }
@@ -874,22 +875,53 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
 
         // Anything to add?
         if (!empty($request[$this->prefix . 'add_guardian'])) {
+            $ginfo = (isset($request[$this->prefix . 'is_fake_guardian']))
+                ? array('receive_alerts' => false) : array('receive_alerts' => true);
             $guardian_id = username_exists($request[$this->prefix . 'add_guardian']);
-            $this->addGuardian($guardian_id, get_current_user_id());
-            if (isset($request[$this->prefix . 'is_fake_guardian'])) {
-                $this->setGuardianInfo(
-                    $guardian_id,
-                    get_current_user_id(),
-                    array('receive_alerts' => false)
-                );
-            } else {
-                $this->setGuardianInfo(
-                    $guardian_id,
-                    get_current_user_id(),
-                    array('receive_alerts' => true)
-                );
+            // add the user if a valid username was entered
+            if ($guardian_id) {
+                $this->setupGuardian($guardian_id, $user_id, $ginfo);
+            } else if (is_email($request[$this->prefix . 'add_guardian'])) {
+                $user = get_user_by('email', $request[$this->prefix . 'add_guardian']);
+                if ($user) {
+                    $this->setupGuardian($user->ID, $user_id, $ginfo);
+                } else {
+                    $subject = sprintf(
+                        __('%1$s invites you to join the Buoy emergency response alternative on %2$s!', 'better-angels'),
+                        $wp_user->display_name,
+                        get_bloginfo('name')
+                    );
+                    $msg = __('Buoy is a community-driven emergency dispatch and response technology. It is designed to connect people in crisis with trusted friends, family, and other nearby allies who can help. We believe that in situations where traditional emergency services are not available, reliable, trustworthy, or sufficient, communities can come together to aid each other in times of need.', 'better-angels');
+                    $msg .= "\n\n";
+                    $msg .= sprintf(
+                        __('%1$s wants you to join %2$s crisis response team.', 'better-angels'),
+                        $wp_user->display_name, $this->getUserGenderPronoun($wp_user->ID)
+                    );
+                    $msg .= "\n\n";
+                    $msg .= __('To join, sign up for an account here:', 'better-angels');
+                    $msg .= "\n\n" . wp_registration_url();
+                    wp_mail($request[$this->prefix . 'add_guardian'], $subject, $msg);
+                    $this->Error->add(
+                        'unknown-email',
+                        sprintf(esc_html__('You have invited %s to join this Buoy site, but they are not yet on your response team. Contact them privately (such as by phone or txt) to make sure they created an account. Then come back here and add them again.', 'better-angels'), $request[$this->prefix . 'add_guardian']),
+                        $request[$this->prefix . 'add_guardian']
+                    );
+                }
             }
         }
+    }
+
+    /**
+     * Sets up a guardian relationship between two users.
+     *
+     * @param int $guardian_id The user ID number of the guardian.
+     * @param int $user_id The user ID number of the user being guarded.
+     * @param array $settings Additional metadata to set for the guardian.
+     * @return void
+     */
+    private function setupGuardian ($guardian_id, $user_id, $settings) {
+        $this->addGuardian($guardian_id, $user_id);
+        $this->setGuardianInfo($guardian_id, $user_id, $settings);
     }
 
     public function addChooseAngelsHelpTabs () {

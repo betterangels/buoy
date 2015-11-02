@@ -65,7 +65,7 @@ foreach ($teams as $owner) {
                 <?php endforeach;?>
                 </ul>
                 <p class="description"><?php print sprintf(
-                    esc_html__('These are your current team memberships. To leave the team so that you no longer receive alerts from them, uncheck the box next to their name and click %1$sSave Changes%2$s at the bottom of this page. The person whose team you leave will be able to see that you are no longer on their response team.', 'better-angels'),
+                    esc_html__('These are your current team memberships. To leave the team so that you no longer receive alerts from them, click the "Leave" button next to their name. The person whose team you leave will be able to see that you are no longer on their response team.', 'better-angels'),
                     '<strong>', '</strong>'
                 );?></p>
             </td>

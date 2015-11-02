@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Buoy (a Better Angels first responder system) 0.1\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/better-angels\n"
-"POT-Creation-Date: 2015-10-17 23:26:47+00:00\n"
+"POT-Creation-Date: 2015-11-02 21:29:31+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,119 +12,164 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: better-angels.php:114
+#: better-angels.php:116
 msgid "Incidents"
 msgstr ""
 
-#: better-angels.php:115
+#: better-angels.php:117
 msgid "A call for help."
 msgstr ""
 
-#: better-angels.php:143 pages/options.php:4
+#: better-angels.php:145 pages/options.php:4
 msgid "Buoy Settings"
 msgstr ""
 
-#: better-angels.php:144
+#: better-angels.php:146
 msgid "Buoy"
 msgstr ""
 
-#: better-angels.php:151
+#: better-angels.php:153
 msgid "Emergency Team"
 msgstr ""
 
-#: better-angels.php:152
+#: better-angels.php:154
 msgid "My Team"
 msgstr ""
 
-#: better-angels.php:162 better-angels.php:163
+#: better-angels.php:164 better-angels.php:165
 msgid "Team membership"
 msgstr ""
 
-#: better-angels.php:172 better-angels.php:173 pages/incident-chat.php:28
+#: better-angels.php:174 better-angels.php:175 pages/incident-chat.php:28
 #: pages/options.php:12
 msgid "Safety information"
 msgstr ""
 
-#: better-angels.php:181 better-angels.php:182
+#: better-angels.php:183 better-angels.php:184
 msgid "Respond to Alert"
 msgstr ""
 
-#: better-angels.php:190 better-angels.php:191
+#: better-angels.php:192 better-angels.php:193
 msgid "Incident Chat"
 msgstr ""
 
-#: better-angels.php:198 better-angels.php:199
+#: better-angels.php:200 better-angels.php:201
 msgid "Activate Alert"
 msgstr ""
 
-#: better-angels.php:238
+#: better-angels.php:240
 msgid "Incident Map"
 msgstr ""
 
-#: better-angels.php:239
+#: better-angels.php:241
 msgid "Hide Map"
 msgstr ""
 
-#: better-angels.php:240 pages/incident-chat.php:9
+#: better-angels.php:242 pages/incident-chat.php:9
 msgid "Show Map"
 msgstr ""
 
-#: better-angels.php:241
+#: better-angels.php:243
 msgid "Location of emergency alert signal"
 msgstr ""
 
-#: better-angels.php:242
+#: better-angels.php:244
 msgid "My location"
 msgstr ""
 
-#: better-angels.php:243
+#: better-angels.php:245
+msgid "Directions to here"
+msgstr ""
+
+#: better-angels.php:246
+msgid "Call"
+msgstr ""
+
+#: better-angels.php:247
 msgid "Responding to alert"
 msgstr ""
 
-#: better-angels.php:348
+#: better-angels.php:352
 msgid "Please help!"
 msgstr ""
 
-#: better-angels.php:507
+#: better-angels.php:533
 msgid "Phone number"
 msgstr ""
 
-#: better-angels.php:508
+#: better-angels.php:534
 msgid "Gender pronoun"
 msgstr ""
 
-#: better-angels.php:536
+#: better-angels.php:613
+msgid "Active alerts"
+msgstr ""
+
+#: better-angels.php:634
+msgid "My alert on %2$s"
+msgstr ""
+
+#: better-angels.php:648
+msgid "Alert issued by %1$s on %2$s"
+msgstr ""
+
+#: better-angels.php:659
 msgid ""
 "Bouy is provided as free software, but sadly grocery stores do not offer "
 "free food. If you like this plugin, please consider %1$s to its %2$s. "
 "&hearts; Thank you!"
 msgstr ""
 
-#: better-angels.php:537
+#: better-angels.php:660
 msgid "making a donation"
 msgstr ""
 
-#: better-angels.php:538
+#: better-angels.php:661
 msgid "houseless, jobless, nomadic developer"
 msgstr ""
 
-#: better-angels.php:621
-msgid "%1$s wants you to join %2$s crisis response team"
+#: better-angels.php:745 better-angels.php:897
+msgid "%1$s wants you to join %2$s crisis response team."
 msgstr ""
 
-#: better-angels.php:646
+#: better-angels.php:770
 msgid "Cannot add the same user as a guardian twice."
 msgstr ""
 
-#: better-angels.php:653
+#: better-angels.php:777
 msgid "No such user account."
 msgstr ""
 
-#: better-angels.php:660
+#: better-angels.php:784
 msgid "Cannot add yourself as your own guardian."
 msgstr ""
 
-#: better-angels.php:774
+#: better-angels.php:890
+msgid ""
+"%1$s invites you to join the Buoy emergency response alternative on %2$s!"
+msgstr ""
+
+#: better-angels.php:894
+msgid ""
+"Buoy is a community-driven emergency dispatch and response technology. It is "
+"designed to connect people in crisis with trusted friends, family, and other "
+"nearby allies who can help. We believe that in situations where traditional "
+"emergency services are not available, reliable, trustworthy, or sufficient, "
+"communities can come together to aid each other in times of need."
+msgstr ""
+
+#: better-angels.php:901
+msgid "To join, sign up for an account here:"
+msgstr ""
+
+#: better-angels.php:906
+msgid ""
+"You have invited %s to join this Buoy site, but they are not yet on your "
+"response team. Contact them privately (such as by phone or txt) to make sure "
+"they created an account. Then come back here and add them again."
+msgstr ""
+
+#: better-angels.php:930
 msgid ""
 "You can choose who to send emergency alerts to if you find yourself in a "
 "crisis situation. The people listed here will be notified of where you are "
@@ -132,7 +177,7 @@ msgid ""
 "the word \"fake\" next to their name."
 msgstr ""
 
-#: better-angels.php:775
+#: better-angels.php:931
 msgid ""
 "The people you trust must already have accounts on this website in order for "
 "you to add them to your team. If they do not yet have accounts here, or if "
@@ -140,7 +185,7 @@ msgid ""
 "sign up."
 msgstr ""
 
-#: better-angels.php:776
+#: better-angels.php:932
 msgid ""
 "Your current team members are shown in the list below with a check mark next "
 "to their user name. A \"pending\" next to their name means they have not yet "
@@ -149,11 +194,11 @@ msgid ""
 "invitation before your emergency alerts are sent to them."
 msgstr ""
 
-#: better-angels.php:778
+#: better-angels.php:934
 msgid "About your Buoy personal emergency response team"
 msgstr ""
 
-#: better-angels.php:783
+#: better-angels.php:939
 msgid ""
 "To add a team member, type their user name in the \"Add a team member\" box. "
 "Alternatively, click or tap inside the box once to select it, then click or "
@@ -163,7 +208,7 @@ msgid ""
 "this page."
 msgstr ""
 
-#: better-angels.php:784
+#: better-angels.php:940
 msgid ""
 "If someone you know is pressuring you to add them to your team but you do "
 "not actually want them to get emergency alerts from you, check the \"Add as "
@@ -171,7 +216,7 @@ msgid ""
 "actually send them any alerts."
 msgstr ""
 
-#: better-angels.php:785
+#: better-angels.php:941
 msgid ""
 "To remove a person from your team, uncheck the checkbox next to their user "
 "name and click the \"Save Changes\" button at the bottom of this page. "
@@ -180,13 +225,13 @@ msgid ""
 "do so."
 msgstr ""
 
-#: better-angels.php:787
+#: better-angels.php:943
 msgid "Adding and removing team members"
 msgstr ""
 
-#: better-angels.php:799 better-angels.php:807 better-angels.php:855
-#: better-angels.php:875 better-angels.php:889 better-angels.php:910
-#: better-angels.php:918
+#: better-angels.php:955 better-angels.php:967 better-angels.php:1015
+#: better-angels.php:1035 better-angels.php:1049 better-angels.php:1070
+#: better-angels.php:1078
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
@@ -211,11 +256,11 @@ msgstr ""
 msgid "Send"
 msgstr ""
 
-#: pages/choose-angels.php:4 pages/choose-angels.php:29
+#: pages/choose-angels.php:4 pages/choose-angels.php:30
 msgid "Choose your team members"
 msgstr ""
 
-#: pages/choose-angels.php:22
+#: pages/choose-angels.php:23
 msgid ""
 "You have no team members. Before you can activate an alert, you must invite "
 "at least one other user to join your personal emergency response team and "
@@ -223,27 +268,27 @@ msgid ""
 "team."
 msgstr ""
 
-#: pages/choose-angels.php:34
+#: pages/choose-angels.php:35
 msgid "Add a team member"
 msgstr ""
 
-#: pages/choose-angels.php:37
+#: pages/choose-angels.php:38
 msgid "Michelle"
 msgstr ""
 
-#: pages/choose-angels.php:40
+#: pages/choose-angels.php:41
 msgid "Add as fake team member"
 msgstr ""
 
-#: pages/choose-angels.php:47
+#: pages/choose-angels.php:48
 msgid ""
 "Your team members are the people you want to notify in the event of an "
-"emergency. Type your trusted friends names in the text box, then press "
-"%1$sSave Changes%2$s at the bottom of this page. The person you choose will "
-"get an invitation asking them to confirm joining your team."
+"emergency. Type your trusted friends names or email addresses in the text "
+"box, then press %1$sSave Changes%2$s at the bottom of this page. The person "
+"you choose will get an invitation asking them to confirm joining your team."
 msgstr ""
 
-#: pages/choose-angels.php:53
+#: pages/choose-angels.php:54
 msgid ""
 "You can optionally add the team member as a \"fake\" who will think that "
 "they are on your response team but who will never actually get any alerts "
@@ -254,29 +299,29 @@ msgid ""
 "will never actually receive alerts you send to the rest of your team."
 msgstr ""
 
-#: pages/choose-angels.php:60
+#: pages/choose-angels.php:61
 msgid "Remove a team member"
 msgstr ""
 
-#: pages/choose-angels.php:64
+#: pages/choose-angels.php:65
 msgid ""
 "You have not chosen any team members. Maybe you want to %1$sadd a team member"
 "%2$s?"
 msgstr ""
 
-#: pages/choose-angels.php:78 pages/choose-angels.php:103
+#: pages/choose-angels.php:79 pages/choose-angels.php:104
 msgid "fake"
 msgstr ""
 
-#: pages/choose-angels.php:81
+#: pages/choose-angels.php:82
 msgid "pending"
 msgstr ""
 
-#: pages/choose-angels.php:95
+#: pages/choose-angels.php:96
 msgid "real"
 msgstr ""
 
-#: pages/choose-angels.php:109
+#: pages/choose-angels.php:110
 msgid ""
 "These are your current team members. To remove one of them so that they no "
 "longer receive notifications when you are in an emergency situation, uncheck "
@@ -327,9 +372,9 @@ msgstr ""
 #: pages/confirm-guardianship.php:68
 msgid ""
 "These are your current team memberships. To leave the team so that you no "
-"longer receive alerts from them, uncheck the box next to their name and "
-"click %1$sSave Changes%2$s at the bottom of this page. The person whose team "
-"you leave will be able to see that you are no longer on their response team."
+"longer receive alerts from them, click the \"Leave\" button next to their "
+"name. The person whose team you leave will be able to see that you are no "
+"longer on their response team."
 msgstr ""
 
 #: pages/incident-chat.php:10

@@ -6,6 +6,7 @@ $full_team = $this->getResponseTeam(get_current_user_id());
 foreach ($this->Error->errors as $code => $err) {
     switch ($code) {
         case 'no-such-user':
+        case 'unknown-email':
             foreach ($err as $msg) {
 ?>
 <div class="notice error is-dismissible">
@@ -44,7 +45,7 @@ if (isset($_GET['msg']) && 'no-guardians' === $_GET['msg']) {
                 </datalist>
                 <p class="description">
                     <?php print sprintf(
-                        esc_html__('Your team members are the people you want to notify in the event of an emergency. Type your trusted friends names in the text box, then press %1$sSave Changes%2$s at the bottom of this page. The person you choose will get an invitation asking them to confirm joining your team.', 'better-angels'),
+                        esc_html__('Your team members are the people you want to notify in the event of an emergency. Type your trusted friends names or email addresses in the text box, then press %1$sSave Changes%2$s at the bottom of this page. The person you choose will get an invitation asking them to confirm joining your team.', 'better-angels'),
                         '<strong>', '</strong>'
                     );?>
                 </p>
