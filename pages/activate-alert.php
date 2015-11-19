@@ -4,10 +4,10 @@
         value="<?php print esc_attr($this->prefix)?>findme"
     />
 
-    <button id="activate-msg-btn-submit" class="btn">
+    <button id="activate-msg-btn-submit" class="btn hidden">
         <img src="<?php print plugins_url('../img/chat-bubble-1.svg', __FILE__);?>" alt="<?php esc_attr_e('Send emergency message', 'better-angels')?>" />
     </button>
-    <button id="activate-btn-submit" type="submit" class="btn">
+    <button id="activate-btn-submit" class="btn">
         <img src="<?php print plugins_url('../img/life-ring.svg', __FILE__);?>" alt="<?php esc_attr_e('Activate alert', 'better-angels')?>" />
     </button>
 </form>

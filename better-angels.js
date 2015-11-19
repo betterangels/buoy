@@ -118,29 +118,32 @@ var BUOY = (function () {
      * Creates a google map centered on the given coordinates.
      *
      * @param object coords An object of geolocated data with properties named "lat" and "lng".
+     * @param bool mark_coords Whether or not to create a marker and infowindow for the coords location.
      */
-    var initMap = function (coords) {
+    var initMap = function (coords, mark_coords) {
         if ('undefined' === typeof google) { return; }
 
         this.map = new google.maps.Map(document.getElementById('map'));
         this.marker_bounds = new google.maps.LatLngBounds();
 
-        var infowindow = new google.maps.InfoWindow({
-            'content': '<p>' + better_angels_vars.i18n_crisis_location + '</p>'
-                       + infoWindowContent({
-                           'directions': 'https://maps.google.com/?saddr=Current+Location&daddr=' + encodeURIComponent(coords.lat) + ',' + encodeURIComponent(coords.lng)
-                       })
-        });
-        var marker = new google.maps.Marker({
-            'position': new google.maps.LatLng(coords.lat, coords.lng),
-            'map': map,
-            'title': better_angels_vars.i18n_crisis_location
-        });
-        this.map_markers.incident = marker;
-        marker_bounds.extend(new google.maps.LatLng(coords.lat, coords.lng));
-        marker.addListener('click', function () {
-            infowindow.open(map, marker);
-        });
+        if (mark_coords) {
+            var infowindow = new google.maps.InfoWindow({
+                'content': '<p>' + better_angels_vars.i18n_crisis_location + '</p>'
+                           + infoWindowContent({
+                               'directions': 'https://maps.google.com/?saddr=Current+Location&daddr=' + encodeURIComponent(coords.lat) + ',' + encodeURIComponent(coords.lng)
+                           })
+            });
+            var marker = new google.maps.Marker({
+                'position': new google.maps.LatLng(coords.lat, coords.lng),
+                'map': map,
+                'title': better_angels_vars.i18n_crisis_location
+            });
+            this.map_markers.incident = marker;
+            marker_bounds.extend(new google.maps.LatLng(coords.lat, coords.lng));
+            marker.addListener('click', function () {
+                infowindow.open(map, marker);
+            });
+        }
 
         if (jQuery('#map-container').data('responder-info')) {
             jQuery.each(jQuery('#map-container').data('responder-info'), function (i, v) {
@@ -249,9 +252,8 @@ var BUOY = (function () {
                 jQuery(e.target).find('input[type="submit"]').val(better_angels_vars.i18n_responding_to_alert);
                 navigator.geolocation.getCurrentPosition(
                     function (position) {
-                        jQuery('#incident-response-form input[name$="location"]').val(
-                            position.coords.latitude + ',' + position.coords.longitude
-                        );
+                        jQuery('#incident-response-form input[name$="location"]')
+                            .val(position.coords.latitude + ',' + position.coords.longitude);
                         jQuery(e.target).submit();
                     },
                     function () {
@@ -272,15 +274,25 @@ var BUOY = (function () {
             if (jQuery('.dashboard_page_better-angels_incident-chat, .dashboard_page_better-angels_activate-alert').length) {
                 jQuery('body').append(jQuery('.modal').detach());
             }
+            // Show buttons that need JavaScript to function.
+            jQuery('button.hidden, #alert-map.hidden').removeClass('hidden');
         });
 
         jQuery(window).on('load', function () {
-            if (jQuery('.dashboard_page_better-angels_review-alert #map, .dashboard_page_better-angels_incident-chat #map').length) {
+            if (jQuery('.dashboard_page_better-angels_incident-chat #map, .dashboard_page_better-angels_review-alert #map').length) {
                 this.emergency_location = {
                     'lat': parseFloat(jQuery('#map-container').data('incident-latitude')),
                     'lng': parseFloat(jQuery('#map-container').data('incident-longitude'))
                 };
-                initMap(this.emergency_location);
+                if (isNaN(this.emergency_location.lat) || isNaN(this.emergency_location.lng)) {
+                    jQuery('<div class="notice error is-dismissible"><p>' + better_angels_vars.i18n_missing_crisis_location + '</p></div>')
+                        .insertBefore('#map-container');
+                    navigator.geolocation.getCurrentPosition(function (pos) {
+                        initMap({'lat': pos.coords.latitude, 'lng': pos.coords.longitude}, false);
+                    });
+                } else {
+                    initMap(this.emergency_location, true);
+                }
             }
             if (jQuery('.dashboard_page_better-angels_review-alert #map').length) {
                 addMarkerForCurrentLocation();

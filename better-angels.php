@@ -241,6 +241,7 @@ class BetterAngelsPlugin {
             'i18n_hide_map' => __('Hide Map', 'better-angels'),
             'i18n_show_map' => __('Show Map', 'better-angels'),
             'i18n_crisis_location' => __('Location of emergency alert signal', 'better-angels'),
+            'i18n_missing_crisis_location' => __('Emergency alert signal could not be pinpointed on a map.', 'better-angels'),
             'i18n_my_location' => __('My location', 'better-angels'),
             'i18n_directions' => __('Directions to here', 'better-angels'),
             'i18n_call' => __('Call', 'better-angels'),
@@ -401,9 +402,10 @@ class BetterAngelsPlugin {
     }
 
     /**
-     * Responds to ajax requests activated from the main emergency alert button.
+     * Responds to requests activated from the main emergency alert button.
      *
      * TODO: Refactor this method, shouldn't have responsibility for all it's doing.
+     * TODO: Currently responds to both Ajax and non-JS form submissions. Again, refactor needed.
      */
     public function handleAlert () {
         // Collect info from the browser via Ajax request

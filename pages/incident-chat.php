@@ -5,7 +5,7 @@ $alerter = get_userdata($alert_post->post_author);
 $curr_user = wp_get_current_user();
 $auto_show_modal = ($curr_user->ID === $alerter->ID) ? 'auto-show-modal' : '';
 ?>
-<div id="alert-map" role="alert" class="alert alert-warning alert-dismissible fade in">
+<div id="alert-map" role="alert" class="alert alert-warning alert-dismissible fade in hidden">
     <button id="toggle-incident-map-btn" class="btn btn-default" type="button"><?php esc_html_e('Show Map', 'better-angels');?></button>
     <button id="fit-map-to-markers-btn" class="btn btn-default" type="button"><?php esc_html_e('Zoom to fit', 'better-angels');?></button>
 </div>
@@ -16,9 +16,22 @@ $auto_show_modal = ($curr_user->ID === $alerter->ID) ? 'auto-show-modal' : '';
     data-responder-info='<?php print esc_attr(json_encode($this->getResponderInfo($alert_post)));?>'
     data-my-avatar-url="<?php print esc_attr(get_avatar_url(get_current_user_id(), array('size' => 32)));?>"
     >
-    <div id="map"></div>
+    <div id="map">
+        <noscript>
+            <div class="notice error">
+                <p><?php esc_html_e('To view a map of the crisis area, JavaScript must be enabled in your browser.', 'better-angels');?></p>
+            </div>
+        </noscript>
+    </div>
 </div>
-<div id="tlkio" data-channel="<?php print esc_attr(get_post_meta($alert_post->ID, $this->prefix . 'chat_room_name', true));?>" data-nickname="<?php esc_attr_e($curr_user->display_name);?>" style="height:100%;"></div><script async src="https://tlk.io/embed.js" type="text/javascript"></script>
+<div id="tlkio" data-channel="<?php print esc_attr(get_post_meta($alert_post->ID, $this->prefix . 'chat_room_name', true));?>" data-nickname="<?php esc_attr_e($curr_user->display_name);?>" style="height:100%;">
+    <noscript>
+        <div class="notice error">
+            <p><?php esc_html_e('To access the incident chat room, JavaScript must be enabled in your browser.', 'better-angels');?></p>
+        </div>
+    </noscript>
+</div>
+<script async src="https://tlk.io/embed.js" type="text/javascript"></script>
 
 <div id="safety-information-modal" class="modal fade <?php esc_attr_e($auto_show_modal);?>" role="dialog" aria-labelledby="safety-information-modal-label">
     <div class="modal-dialog">
