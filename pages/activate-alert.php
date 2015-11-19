@@ -1,9 +1,16 @@
-<button id="activate-msg-btn-submit" class="btn">
-    <img src="<?php print plugins_url('../img/chat-bubble-1.svg', __FILE__);?>" alt="<?php esc_attr_e('Send emergency message', 'better-angels')?>" />
-</button>
-<button id="activate-btn-submit" class="btn">
-    <img src="<?php print plugins_url('../img/life-ring.svg', __FILE__);?>" alt="<?php esc_attr_e('Activate alert', 'better-angels')?>" />
-</button>
+<form id="activate-alert-form" action="<?php print esc_attr(admin_url('admin-ajax.php'));?>" method="POST">
+    <input type="hidden"
+        name="action"
+        value="<?php print esc_attr($this->prefix)?>findme"
+    />
+
+    <button id="activate-msg-btn-submit" class="btn">
+        <img src="<?php print plugins_url('../img/chat-bubble-1.svg', __FILE__);?>" alt="<?php esc_attr_e('Send emergency message', 'better-angels')?>" />
+    </button>
+    <button id="activate-btn-submit" type="submit" class="btn">
+        <img src="<?php print plugins_url('../img/life-ring.svg', __FILE__);?>" alt="<?php esc_attr_e('Activate alert', 'better-angels')?>" />
+    </button>
+</form>
 
 <div id="emergency-message-modal" class="modal" role="dialog" aria-labelledby="emergency-message-modal-label">
     <div class="modal-dialog">

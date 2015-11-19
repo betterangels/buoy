@@ -373,10 +373,10 @@ class BetterAngelsPlugin {
      * Inserts a new alert (incident) as a custom post type in the WordPress database.
      *
      * @param array $post_args Arguments for the post type.
-     * @param array $geodata Array includin a `latitude` and a `longitude` key for geodata.
+     * @param array $geodata Array includin a `latitude` and a `longitude` key for geodata, or false if no geodata present.
      * @return int Result of `wp_insert_post()` (int ID of new post on success, WP_Error on error.)
      */
-    public function newAlert ($post_args, $geodata) {
+    public function newAlert ($post_args, $geodata = false) {
         // TODO: Do some validation on $post_args?
         // These values should always be hard-coded.
         $post_args['post_type'] = str_replace('-', '_', $this->prefix) . 'alert';
@@ -388,8 +388,10 @@ class BetterAngelsPlugin {
         $alert_id = wp_insert_post($post_args);
         if (!is_wp_error($alert_id)) {
             update_post_meta($alert_id, $this->prefix . 'incident_hash', $this->getIncidentHash());
-            update_post_meta($alert_id, 'geo_latitude', $geodata['latitude']);
-            update_post_meta($alert_id, 'geo_longitude', $geodata['longitude']);
+            if ($geodata) {
+                update_post_meta($alert_id, 'geo_latitude', $geodata['latitude']);
+                update_post_meta($alert_id, 'geo_longitude', $geodata['longitude']);
+            }
             // TODO: Should we explicitly mark this geodata privacy info?
             //       See https://codex.wordpress.org/Geodata#Geodata_Format
             //update_post_meta($alert_id, 'geo_public', 1);
@@ -405,7 +407,7 @@ class BetterAngelsPlugin {
      */
     public function handleAlert () {
         // Collect info from the browser via Ajax request
-        $alert_position = $_POST['pos'];
+        $alert_position = (empty($_POST['pos'])) ? false : $_POST['pos']; // TODO: array_map and sanitize this?
         $me = wp_get_current_user();
         $guardians = $this->getGuardians(get_current_user_id());
         $subject = (empty($_POST['msg'])) ? $this->getCallForHelp($me->ID) : wp_strip_all_tags(stripslashes_deep($_POST['msg']));
@@ -414,8 +416,6 @@ class BetterAngelsPlugin {
         $this->setIncidentHash(serialize($me) . serialize($guardians) . time());
         $this->setChatRoomName(hash('sha1', $this->getIncidentHash() . uniqid('', true)));
 
-        // Create a new alert in the DB
-        // TODO: Should we use a custom post type? Should we use a custom table?
         $alert_id = $this->newAlert(array('post_title' => $subject), $alert_position);
 
         $responder_link = admin_url(
@@ -474,7 +474,13 @@ class BetterAngelsPlugin {
             ),
             $this->prefix . 'chat', $this->prefix . 'nonce'
         );
-        wp_send_json_success($next_url);
+
+        // Respond with JSON redirect if requested, else with HTTP redirect.
+        if (isset($_POST['format']) && 'json' === $_POST['format']) {
+            wp_send_json_success($next_url);
+        } else {
+            wp_safe_redirect(html_entity_decode($next_url));
+        }
     }
 
     /**

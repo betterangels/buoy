@@ -35,6 +35,7 @@ var BUOY = (function () {
     var updateMapMarkers = function (marker_info) {
         for (var i = 0; i < marker_info.length; i++) {
             var responder = marker_info[i];
+            if (!responder.geo) { continue; } // no geo for this responder
             var new_pos = new google.maps.LatLng(
                 parseFloat(responder.geo.latitude),
                 parseFloat(responder.geo.longitude)
@@ -75,14 +76,18 @@ var BUOY = (function () {
     };
 
     var activateAlert = function () {
-        getMyPosition(postAlert);
+        // Always post an alert even if we fail to get geolocation.
+        navigator.geolocation.getCurrentPosition(postAlert, postAlert);
     };
 
     var postAlert = function (position) {
         var data = {
-            'action': 'better-angels_findme',
-            'pos': position.coords
+            'action': jQuery('#activate-alert-form input[name="action"]').val(),
+            'format': 'json' // TODO: Is there a better way? An HTTP header maybe?
         };
+        if (Object.keys(position).length) {
+            data.pos = position.coords;
+        }
         if (jQuery('#crisis-message').val()) {
             data.msg = jQuery('#crisis-message').val();
         }
@@ -193,7 +198,12 @@ var BUOY = (function () {
         incident_hash = jQuery('#map-container').data('incident-hash');
         jQuery(document).ready(function () {
             // Panic buttons (activate alert).
-            jQuery('#activate-btn-submit').one('click', activateAlert);
+            jQuery('#activate-alert-form').on('submit', function (e) {
+                // TODO: Provide some UI feedback that we're submitting the form
+                jQuery(this).find('[type="submit"]').prop('disabled', true);
+                e.preventDefault();
+                activateAlert();
+            });
             jQuery('#activate-msg-btn-submit').on('click', function () {
                 jQuery('#emergency-message-modal').modal('show');
             });
@@ -237,15 +247,23 @@ var BUOY = (function () {
                 e.preventDefault();
                 jQuery(e.target).find('input[type="submit"]').prop('disabled', true);
                 jQuery(e.target).find('input[type="submit"]').val(better_angels_vars.i18n_responding_to_alert);
-                getMyPosition(function (position) {
-                    jQuery('#incident-response-form input[name$="location"]').val(
-                        position.coords.latitude + ',' + position.coords.longitude
-                    );
-                    jQuery(e.target).submit();
-                });
+                navigator.geolocation.getCurrentPosition(
+                    function (position) {
+                        jQuery('#incident-response-form input[name$="location"]').val(
+                            position.coords.latitude + ',' + position.coords.longitude
+                        );
+                        jQuery(e.target).submit();
+                    },
+                    function () {
+                        jQuery(e.target).submit();
+                    }
+                );
             });
 
             if (jQuery('.dashboard_page_better-angels_incident-chat').length) {
+                // TODO: Clear the watcher when failing to get position?
+                //       Then what? Keep trying? Show a dialog asking the user to
+                //       turn on location services?
                 geowatcher_id = navigator.geolocation.watchPosition(updateMyLocation, logGeoError);
             }
 
