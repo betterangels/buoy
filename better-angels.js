@@ -82,8 +82,7 @@ var BUOY = (function () {
 
     var postAlert = function (position) {
         var data = {
-            'action': jQuery('#activate-alert-form input[name="action"]').val(),
-            'format': 'json' // TODO: Is there a better way? An HTTP header maybe?
+            'action': jQuery('#activate-alert-form input[name="action"]').val()
         };
         if (Object.keys(position).length) {
             data.pos = position.coords;
@@ -97,7 +96,8 @@ var BUOY = (function () {
                     // decode the HTML-encoded stuff WP sends
                     window.location.href = jQuery('<div/>').html(response.data).text();
                 }
-            }
+            },
+            'json'
         );
     }
 

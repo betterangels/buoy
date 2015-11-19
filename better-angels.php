@@ -477,8 +477,10 @@ class BetterAngelsPlugin {
             $this->prefix . 'chat', $this->prefix . 'nonce'
         );
 
-        // Respond with JSON redirect if requested, else with HTTP redirect.
-        if (isset($_POST['format']) && 'json' === $_POST['format']) {
+        if (isset($_SERVER['HTTP_ACCEPT'])) {
+            $accepts = explode(',', $_SERVER['HTTP_ACCEPT']);
+        }
+        if ($accepts && 'application/json' === array_shift($accepts)) {
             wp_send_json_success($next_url);
         } else {
             wp_safe_redirect(html_entity_decode($next_url));
