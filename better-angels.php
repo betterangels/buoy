@@ -26,13 +26,15 @@ class BetterAngelsPlugin {
         add_action('plugins_loaded', array($this, 'registerL10n'));
         add_action('init', array($this, 'registerCustomPostTypes'));
         add_action('admin_init', array($this, 'registerSettings'));
+        add_action('admin_init', array($this, 'configureCron'));
         add_action('current_screen', array($this, 'registerContextualHelp'));
+        add_action('current_screen', array($this, 'maybeRedirect'));
         add_action('send_headers', array($this, 'redirectShortUrl'));
         add_action('wp_before_admin_bar_render', array($this, 'addIncidentMenu'));
         add_action('admin_enqueue_scripts', array($this, 'enqueueAdminScripts'));
         add_action('admin_enqueue_scripts', array($this, 'enqueueMapsScripts'));
         add_action('admin_menu', array($this, 'registerAdminMenu'));
-        add_action('current_screen', array($this, 'maybeRedirect'));
+        add_action('admin_notices', array($this, 'showAdminNotices'));
         add_action('wp_ajax_' . $this->prefix . 'findme', array($this, 'handleAlert'));
         add_action('wp_ajax_' . $this->prefix . 'update-location', array($this, 'handleLocationUpdate'));
         add_action('show_user_profile', array($this, 'addProfileFields'));
@@ -140,6 +142,46 @@ class BetterAngelsPlugin {
         );
     }
 
+    public function configureCron () {
+        $options = get_option($this->prefix . 'settings');
+        $path_to_wp_cron = ABSPATH . 'wp-cron.php';
+        $os_cronjob_comment = '# Buoy WordPress Plugin Cronjob';
+        require_once plugin_dir_path(__FILE__) . 'includes/crontab-manager.php';
+        $C = new BuoyCrontabManager();
+        $os_cron = false;
+        foreach ($C->getCron() as $line) {
+            if (strpos($line, $path_to_wp_cron)) {
+                $os_cron = true;
+                break;
+            }
+        }
+        if (empty($options['future_alerts']) && $os_cron) {
+            try {
+                $C->removeCronJobs("/$os_cronjob_comment/");
+            } catch (Exception $e) {
+                $this->Error->add(
+                    'crontab-remove-jobs',
+                    __('Error removing system crontab jobs for timed alerts.', 'better-angels')
+                    . PHP_EOL . $e->getMessage(),
+                    'error'
+                );
+            }
+        } else if (!empty($options['future_alerts']) && !$os_cron) {
+            // TODO: Variablize the frequency
+            $job = '*/5 * * * * php ' . $path_to_wp_cron . ' >/dev/null 2>&1 ' . $os_cronjob_comment;
+            try {
+                $C->appendCronJobs($job)->save();
+            } catch (Exception $e) {
+                $this->Error->add(
+                    'crontab-add-jobs',
+                    __('Error installing system cronjob for timed alerts.', 'better-angels')
+                    . PHP_EOL . $e->getMessage(),
+                    'error'
+                );
+            }
+        }
+    }
+
     public function registerAdminMenu () {
         add_options_page(
             __('Buoy Settings', 'better-angels'),
@@ -227,6 +269,18 @@ class BetterAngelsPlugin {
                 null, // do not set a WP version!
                 true
             );
+        }
+    }
+
+    public function showAdminNotices () {
+        foreach ($this->Error->get_error_codes() as $err_code) {
+            foreach ($this->Error->get_error_messages($err_code) as $err_msg) {
+                $class = 'notice is-dismissible';
+                if ($err_data = $this->Error->get_error_data($err_code)) {
+                    $class .= " $err_data";
+                }
+                print '<div class="' . esc_attr($class) . '"><p>' . nl2br(esc_html($err_msg)) . '</p></div>';
+            }
         }
     }
 
