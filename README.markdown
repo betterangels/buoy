@@ -1,4 +1,4 @@
-# Better Angels' Buoy: A community-driven emergency first responder system.
+# Better Angels' Buoy: A community-driven emergency dispatch system.
 
 | Branch   | Builds |
 | :------- |:------:|
@@ -6,23 +6,29 @@
 | `develop` | [![Build Status for develop branch](https://travis-ci.org/meitar/better-angels.svg?branch=develop)](https://travis-ci.org/meitar/better-angels) |
 | `trunk` | [![Build Status for trunk branch](https://travis-ci.org/meitar/better-angels.svg?branch=trunk)](https://travis-ci.org/meitar/better-angels) |
 
-Better Angels' *Buoy* is an app designed to quickly connect survivors of domestic or dating violence (DV) with trusted friends, family members, advocates, and other allies in times of crisis.
+Buoy is a private, enhanced [9-1-1](https://en.wikipedia.org/wiki/9-1-1) for your website. It is free software created by the Better Angels collective as a [WordPress](https://wordpress.org/) plugin and is designed to quickly connect people in need with trusted friends, family members, advocates, and other allies in times of crisis.
+
+> One can imagine the Internet as a vast ocean, its many users as people sailing to the many ports on the high seas. Buoy is software that equips your website with tools that your users can use to help one another in the real world. The more buoys are deployed on the ocean, the safer traveling becomes for everyone.
+>
+> —The Better Angels
 
 ## For service providers
 
-Anyone with a WordPress-powered website or blog can install the plugin to host an instance of the Buoy app for their community or constituents. Legal aid service providers, DV advocates, shelters, and other institutions can offer survivors one-click emergency access to a network of trusted peers and/or on-call emergency responders.
+Anyone with a WordPress-powered website or blog can install the plugin to host an instance of the Buoy web-app for their community or constituents. Legal aid service providers, domestic, dating, and intimate partner violence prevention advocates, shelters, social groups, alternative medical and mental health collectives, and others can offer members of their community one-click emergency access to a network of trusted peers and/or on-call emergency responders.
 
 ## For victims and survivors
 
-With Buoy, you are never more than one button press away from the people you trust most. There is no additional software to download or install. Simply bookmark a page with your smartphone's built-in Web browser to gain instant access to your personal emergency response team. Quickly send them your location with a pre-defined custom message, or provide a per-alert message.
+With Buoy, you are never more than one button press away from the people you trust most. There is no additional software to download or install. Simply bookmark a page with your smartphone's built-in Web browser to gain instant access to your personal emergency response team. Quickly send them your location with a pre-defined custom message, write a custom message, or schedule a timed alert (like a "safe call") for some time in the future.
+
+The people you select as your emergency contacts ("response team") will get a notification showing them your location in the real world as well as the locations of any other responders to your call for help. If it's safe for you to do so, you can now coordinate with all responders in a live chat room, or responders can coordinate amongst themselves about how best to help you if you are unresponsive.
 
 # Installing
 
-Buoy is currently distributed as a WordPress plugin. Installation is as simply as pressing "Install now" from your admin WordPress Dashboard. You can also find [Buoy hosted on the WordPress plugin repository](https://wordpress.org/plugins/buoy/).
+Installation is as simple as pressing "Install now" from your admin WordPress Dashboard. ([Learn more about installing WordPress plugins from WPBeginner.com](http://www.wpbeginner.com/beginners-guide/step-by-step-guide-to-install-a-wordpress-plugin-for-beginners/).) You can also find [Buoy hosted on the WordPress plugin repository](https://wordpress.org/plugins/buoy/).
 
 # Contributing
 
-Buoy is [free software](https://www.gnu.org/licenses/gpl-3.0.html). It was developed and is maintained primarily by a nomadic hacker named [maymay](https://maymay.net/) who has a lot of fucks to give about supporting domestic violence survivors, along with a growing group of volunteers.
+Buoy is [free software](https://www.gnu.org/licenses/gpl-3.0.html). It was developed and is maintained primarily by a nomadic hacker named [maymay](https://maymay.net/) who has a lot of fucks to give about supporting survivors of any of capitalism's horrors, along with a growing group of volunteers who call themselves the Better Angels.
 
 Even if you don't code, there's a lot you can do to help make Buoy better.
 
@@ -36,7 +42,7 @@ You can also support development of Buoy by supporting the following organizatio
 
 ## Translate
 
-If you speak multiple languages, you can help [translate Buoy into more human languages](https://www.transifex.com/cyberbusking/better-angels/). This helps make Buoy available to people all over the world.
+If you speak multiple languages, you can help [translate Buoy into more human languages](https://www.transifex.com/cyberbusking/better-angels/). This helps make Buoy available to people all over the world in their native languages.
 
 ## Document
 
@@ -46,6 +52,6 @@ You can also write articles on your website or blog. If you do, please [contact 
 
 ## Code
 
-The easiest way to get started contributing code is to use the [Varying Vagrant Vagrants](https://github.com/Varying-Vagrant-Vagrants/VVV) ("VVV") project to make a local WordPress development environment. Then [fork Buoy project on GitHub](https://github.com/meitar/better-angels/fork) and `git clone` your fork into your VVV's `wordpress-default/wp-content/plugins/` directory.
+The easiest way to get started contributing code is to use the [Varying Vagrant Vagrants](https://github.com/Varying-Vagrant-Vagrants/VVV) ("VVV") project to make a local WordPress development environment. Then [fork the Buoy project on GitHub](https://github.com/meitar/better-angels/fork) and `git clone` your fork into your VVV's `wordpress-default/wp-content/plugins/` directory. See our wiki for a step-by-step guide to [setting up a development environment](http://github.com/meitar/better-angels/wiki/Setting-up-a-development-environment).
 
 Patches and pull requests are very welcome!
