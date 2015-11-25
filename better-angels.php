@@ -236,7 +236,9 @@ class BetterAngelsPlugin {
      * @return array An array of translated strings suitable for wp_localize_script().
      */
     private function getTranslations () {
+        $locale_parts = explode('_', get_locale());
         return array(
+            'ietf_language_tag' => array_shift($locale_parts),
             'i18n_map_title' => __('Incident Map', 'better-angels'),
             'i18n_hide_map' => __('Hide Map', 'better-angels'),
             'i18n_show_map' => __('Show Map', 'better-angels'),
@@ -245,7 +247,8 @@ class BetterAngelsPlugin {
             'i18n_my_location' => __('My location', 'better-angels'),
             'i18n_directions' => __('Directions to here', 'better-angels'),
             'i18n_call' => __('Call', 'better-angels'),
-            'i18n_responding_to_alert' => __('Responding to alert', 'better-angels')
+            'i18n_responding_to_alert' => __('Responding to alert', 'better-angels'),
+            'i18n_scheduling_alert' => __('Scheduling alert', 'better-angels')
         );
     }
 
@@ -266,7 +269,7 @@ class BetterAngelsPlugin {
         wp_localize_script($this->prefix . 'script', str_replace('-', '_', $this->prefix) . 'vars', $this->getTranslations());
         wp_enqueue_script($this->prefix . 'script');
 
-        $to_hook = array( // list of pages where Bootstrap CSS+JS is needed
+        $to_hook = array( // list of pages where Bootstrap CSS+JS, certain jQuery is needed
             'dashboard_page_' . $this->prefix . 'activate-alert',
             'dashboard_page_' . $this->prefix . 'incident-chat'
         );
@@ -279,6 +282,18 @@ class BetterAngelsPlugin {
                 $this->prefix . 'bootstrap',
                 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js',
                 false,
+                null,
+                true
+            );
+
+            wp_enqueue_style(
+                'jquery-datetime-picker',
+                plugins_url('includes/jquery.datetimepicker.css', __FILE__)
+            );
+            wp_enqueue_script(
+                'jquery-datetime-picker',
+                plugins_url('includes/jquery.datetimepicker.full.min.js', __FILE__),
+                array('jquery'),
                 null,
                 true
             );

@@ -46,10 +46,17 @@ $options = get_option($this->prefix . 'settings');
                 <h4 class="modal-title" id="scheduled-alert-modal-label"><?php esc_html_e('Schedule a timed alert', 'better-angels');?></h4>
             </div>
             <div class="modal-body">
-                <textarea id="scheduled-crisis-message"></textarea>
+                <div class="form-group">
+                    <label for="scheduled-datetime"><?php esc_html_e('Send alert at', 'better-angels');?></label>
+                    <input id="scheduled-datetime" class="form-control" type="datetime" />
+                    <p class="help-block"><?php esc_html_e('Enter a date and time at which your alert will be sent. You can either select from the pop-up options after clicking in the field, or type a natural-language English expression, such as "next Thursday" (meaning the upcoming Thursday at this time) or "+3 hours" (meaning three hours from now).', 'better-angels');?></p>
+                    <label for="scheduled-crisis-message"><?php esc_html_e('Crisis message', 'better-angels');?></label>
+                    <textarea id="scheduled-crisis-message" class="form-control"></textarea>
+                    <p class="help-block"><?php esc_html_e('Briefly provide an explanation of where you expect to be and what you think you will need from your response team. This message will be sent to your response team at the time you specified unless you cancel the alert.', 'better-angels');?></p>
+                </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal"><?php esc_html_e('Schedule', 'better-angels');?></button>
+                <button type="button" class="btn btn-success" data-dismiss="modal"><?php esc_html_e('Schedule alert', 'better-angels');?></button>
             </div>
         </div><!-- .modal-content -->
     </div><!-- .modal-dialog -->

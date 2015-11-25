@@ -215,8 +215,18 @@ var BUOY = (function () {
             })
             jQuery('#emergency-message-modal').one('hidden.bs.modal', activateAlert);
 
+            if (jQuery('#scheduled-datetime').length) {
+                jQuery('#scheduled-datetime').datetimepicker({
+                    'lang': better_angels_vars.ietf_language_tag,
+                    'minDate': 0 // today is the earliest allowable date
+                });
+            }
             jQuery('#schedule-future-alert-btn').on('click', function () {
                 jQuery('#scheduled-alert-modal').modal('show');
+            });
+            jQuery('#scheduled-alert-modal button.btn-success').on('click', function () {
+                jQuery(this).prop('disabled', true);
+                jQuery(this).html(better_angels_vars.i18n_scheduling_alert);
             });
 
             // Show/hide incident map
