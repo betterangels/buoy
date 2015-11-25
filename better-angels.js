@@ -215,6 +215,10 @@ var BUOY = (function () {
             })
             jQuery('#emergency-message-modal').one('hidden.bs.modal', activateAlert);
 
+            jQuery('#schedule-future-alert-btn').on('click', function () {
+                jQuery('#scheduled-alert-modal').modal('show');
+            });
+
             // Show/hide incident map
             jQuery('#toggle-incident-map-btn').on('click', function () {
                 var map_container = jQuery('#map-container');
@@ -275,7 +279,7 @@ var BUOY = (function () {
                 jQuery('body').append(jQuery('.modal').detach());
             }
             // Show buttons that need JavaScript to function.
-            jQuery('button.hidden, #alert-map.hidden').removeClass('hidden');
+            jQuery('#modal-features.hidden, #alert-map.hidden').removeClass('hidden');
         });
 
         jQuery(window).on('load', function () {

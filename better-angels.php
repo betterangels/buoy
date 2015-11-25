@@ -681,6 +681,9 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
                 case 'safety_info':
                     $safe_input[$k] = force_balance_tags($v);
                     break;
+                case 'future_alerts':
+                    $safe_input[$k] = intval($v);
+                    break;
             }
         }
         return $safe_input;
