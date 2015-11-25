@@ -56,9 +56,29 @@ For instance:
 
 == Screenshots ==
 
-1. The Buoy emergency alert screen. Use the larger button with a buoy icon to immediately send a new alert to your team. Use the smaller button with the chat bubble icon to write a custom alert message that will be sent to your team.
+1. After installing and activating Buoy, each user can define their personal response team by entering other users as emergency contacts on the "Choose your team members" page, available under the "My Team" heading in the WordPress dashboard menu. This page allows you to add or remove users from your response team. When you add a user, they receive an email notification inviting them to join your team.
 
-2. The "Choose your team members" page lets you determine who you want to notify in the event of a crisis.
+2. When you are invited to join someone's response team, you receive an email with a link to the "Team Membership" page, shown here. On this page you can accept another user's invitation to join their team or leave the teams you have previously joined.
+
+3. After at least one person accepts your invitation to join your response team (i.e., they have opted-in to being one of your emergency contacts), you can access the Buoy emergency alert screen. This screen is accessed as a sub-page of the Dashboard menu item. You can bookmark this page and add it to your phone's home screen so you can launch Buoy the same way you would launch any other app you installed from the app store. Pressing the large button nearest the bottom of the screen activates an alert and immediately sends notifications to your response team.
+
+4. Clicking on the smaller button with the chat bubble icon on it opens the custom alert dialog. Use this button to provide additional context about your situation that will be sent as part of the notification responders receive.
+
+5. Clicking on the smaller button with the clock icon on it opens the timed alert ("safe call") dialog. Use this button to schedule an alert to be sent some time in the future. This way you can alert your response team to an emergency in the event that you are unable to cancel the alert. This is especially useful for bad dates.
+
+6. Regardless of which alert option you select, Buoy will gather some information from your device (including your location and your alert message) and either send your alert to your response team immediately or schedule the alert with the Buoy server.
+
+7. If you pressed one of the immediate alert buttons, you will be shown safety information. If it is safe to do so, you can read through this information and/or take one of the suggested actions immediately. Otherwise, you can simply ignore this screen. As long as you keep your device with you, your response team will be able to find you thanks to its GPS or other location-aware beacon.
+
+8. You can also close the safety information window at any time. When you do, you will see that behind the safety information window, a private, temporary chat room has been loaded in the background. When one of your team members responds to your alert, they will join you in this chat room.
+
+9. In addition to the chat room, behind the safety information window is also a real-time map. (The map can be accessed at any time by clicking or tapping the "Show Map" button. Tapping the same button again hides the map.) On the map, a red pin shows the initial location of the device that sent out the alert. Your profile's gravatar shows your current position. As responders respond to your alert, their gravatars will also be added to the map.
+
+10. When a responder clicks on a notification from the alert you sent (either by email, SMS/txt message, or whatever other notification mechanism they prefer), they will be shown your alert message along with a map. They can click on the red pin to get turn-by-turn directions from their current location to the emergency alert signal. If they choose to respond, they click on the "Respond" button and will automatically be added to the group chat shown earlier.
+
+11. When a responder clicks the "Respond" button, they will automatically be added to the same live chat room that the alerter is in. They will also see the same map.
+
+12. The alerter and all current responders become aware of new responders as they are added to the chat room and the map. As people involved in the incident move in the physical world, the map shown to each of the other people also updates in near real time. Clicking on any of the user icons on the map reveals one-click access to both turn-by-turn directions to their location and one-click access to call them from your phone, Facetime, Skype, or other default calling app.
 
 == Change log ==
 
