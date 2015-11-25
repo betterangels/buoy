@@ -53,6 +53,12 @@
 .dashboard_page_better-angels_activate-alert .btn-success {
     width: 100%;
 }
+#submitting-alert-modal .modal-body {
+    text-align: center;
+}
+#submitting-alert-modal .modal-body .pulse-loader {
+    margin: 20px 0;
+}
 
 .dashboard_page_better-angels_incident-chat #alert-map { margin-bottom: 0; }
 .dashboard_page_better-angels_incident-chat #map-container,

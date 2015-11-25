@@ -202,9 +202,12 @@ var BUOY = (function () {
         jQuery(document).ready(function () {
             // Panic buttons (activate alert).
             jQuery('#activate-alert-form').on('submit', function (e) {
-                // TODO: Provide some UI feedback that we're submitting the form
-                jQuery(this).find('[type="submit"]').prop('disabled', true);
                 e.preventDefault();
+                jQuery(this).find('#activate-btn-submit').prop('disabled', true);
+                jQuery('#submitting-alert-modal').modal({
+                    'show': true,
+                    'backdrop': 'static'
+                });
                 activateAlert();
             });
             jQuery('#activate-msg-btn-submit').on('click', function () {
@@ -213,7 +216,13 @@ var BUOY = (function () {
             jQuery('#emergency-message-modal').on('shown.bs.modal', function () {
                   jQuery('#crisis-message').focus();
             })
-            jQuery('#emergency-message-modal').one('hidden.bs.modal', activateAlert);
+            jQuery('#emergency-message-modal button.btn-success').on('click', function () {
+                jQuery('#submitting-alert-modal').modal({
+                    'show': true,
+                    'backdrop': 'static'
+                });
+                activateAlert();
+            });
 
             if (jQuery('#scheduled-datetime').length) {
                 jQuery('#scheduled-datetime').datetimepicker({

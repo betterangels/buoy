@@ -297,6 +297,11 @@ class BetterAngelsPlugin {
                 null,
                 true
             );
+
+            wp_enqueue_style(
+                $this->prefix . 'pulse-loader',
+                plugins_url('includes/pulse-loader.css', __FILE__)
+            );
         }
     }
 

@@ -61,3 +61,13 @@ $options = get_option($this->prefix . 'settings');
         </div><!-- .modal-content -->
     </div><!-- .modal-dialog -->
 </div><!-- .modal -->
+<div id="submitting-alert-modal" class="modal" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p><?php esc_html_e('Detecting your location and sending alert&hellip;', 'better-angels');?></p>
+                <div class="pulse-loader"><?php esc_html_e('Loading&hellip;', 'better-angels');?></div>
+            </div>
+        </div><!-- .modal-content -->
+    </div><!-- .modal-dialog -->
+</div><!-- .modal -->
