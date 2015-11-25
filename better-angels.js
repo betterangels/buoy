@@ -80,6 +80,37 @@ var BUOY = (function () {
         navigator.geolocation.getCurrentPosition(postAlert, postAlert);
     };
 
+    var scheduleAlert = function (callback) {
+        var data = {
+            'action': jQuery('#activate-alert-form input[name="action"]')
+                .val()
+                .replace('_findme', '_schedule-alert'),
+            'msg': jQuery('#scheduled-crisis-message').val(),
+            'scheduled-datetime': jQuery('#scheduled-datetime').val()
+        };
+        jQuery.post(ajaxurl, data,
+            function (response) {
+                if (false === response.success) {
+                    for (k in response.data) {
+                        jQuery('#' + response.data[k].code).parent().addClass('has-error');
+                        jQuery('#' + response.data[k].code).attr('aria-invalid', true);
+                        jQuery('<div class="alert alert-danger" role="alert"><p>' + response.data[k].message + '</p></div>')
+                            .insertBefore('#' + response.data[k].code);
+                    }
+                } else {
+                    jQuery('#scheduled-alert-modal').find('.has-error').removeClass('has-error');
+                    jQuery('#scheduled-alert-modal').find('[aria-invalid]').removeAttr('aria-invalid');
+                    jQuery('#scheduled-alert-modal').find('div.alert[role="alert"]').remove();
+                    jQuery('#scheduled-alert-modal .modal-body > :first-child')
+                        .before('<div class="alert alert-success" role="alert"><p>' + response.data.message + '</p></div>');
+                    jQuery('#scheduled-alert-modal input, #scheduled-alert-modal textarea').val('');
+                }
+                callback();
+            },
+            'json'
+        );
+    }
+
     var postAlert = function (position) {
         var data = {
             'action': jQuery('#activate-alert-form input[name="action"]').val()
@@ -114,6 +145,7 @@ var BUOY = (function () {
         html += '</ul>';
         return html;
     };
+
     /**
      * Creates a google map centered on the given coordinates.
      *
@@ -226,8 +258,10 @@ var BUOY = (function () {
 
             if (jQuery('#scheduled-datetime').length) {
                 jQuery('#scheduled-datetime').datetimepicker({
+                    'lazyInit': true,
                     'lang': better_angels_vars.ietf_language_tag,
-                    'minDate': 0 // today is the earliest allowable date
+                    'minDate': 0, // today is the earliest allowable date
+                    'validateOnBlur': false
                 });
             }
             jQuery('#schedule-future-alert-btn').on('click', function () {
@@ -236,6 +270,15 @@ var BUOY = (function () {
             jQuery('#scheduled-alert-modal button.btn-success').on('click', function () {
                 jQuery(this).prop('disabled', true);
                 jQuery(this).html(better_angels_vars.i18n_scheduling_alert);
+                jQuery('#submitting-alert-modal').modal({
+                    'show': true,
+                    'backdrop': 'static'
+                });
+                scheduleAlert(function () {
+                    jQuery('#scheduled-alert-modal button.btn-success').prop('disabled', false);
+                    jQuery('#scheduled-alert-modal button.btn-success').html(better_angels_vars.i18n_schedule_alert);
+                    jQuery('#submitting-alert-modal').modal('hide');
+                });
             });
 
             // Show/hide incident map

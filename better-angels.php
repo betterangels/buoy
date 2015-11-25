@@ -36,6 +36,7 @@ class BetterAngelsPlugin {
         add_action('admin_menu', array($this, 'registerAdminMenu'));
         add_action('admin_notices', array($this, 'showAdminNotices'));
         add_action('wp_ajax_' . $this->prefix . 'findme', array($this, 'handleAlert'));
+        add_action('wp_ajax_' . $this->prefix . 'schedule-alert', array($this, 'handleScheduledAlert'));
         add_action('wp_ajax_' . $this->prefix . 'update-location', array($this, 'handleLocationUpdate'));
         add_action('show_user_profile', array($this, 'addProfileFields'));
         add_action('personal_options_update', array($this, 'updateProfileFields'));
@@ -302,6 +303,7 @@ class BetterAngelsPlugin {
             'i18n_directions' => __('Directions to here', 'better-angels'),
             'i18n_call' => __('Call', 'better-angels'),
             'i18n_responding_to_alert' => __('Responding to alert', 'better-angels'),
+            'i18n_schedule_alert' => __('Schedule alert', 'better-angels'),
             'i18n_scheduling_alert' => __('Scheduling alert', 'better-angels')
         );
     }
@@ -456,13 +458,18 @@ class BetterAngelsPlugin {
         // These values should always be hard-coded.
         $post_args['post_type'] = str_replace('-', '_', $this->prefix) . 'alert';
         $post_args['post_content'] = ''; // Empty content
-        $post_args['post_status'] = 'publish'; // TODO: Should we use a custom status to restrict access here?
         $post_args['ping_status'] = 'closed';
         $post_args['comment_status'] = 'closed';
 
+        if (empty($post_args['post_status'])) {
+            $post_args['post_status'] = 'publish';
+        }
+
         $alert_id = wp_insert_post($post_args);
         if (!is_wp_error($alert_id)) {
-            update_post_meta($alert_id, $this->prefix . 'incident_hash', $this->getIncidentHash());
+            if ($this->getIncidentHash()) {
+                update_post_meta($alert_id, $this->prefix . 'incident_hash', $this->getIncidentHash());
+            }
             if ($geodata) {
                 update_post_meta($alert_id, 'geo_latitude', $geodata['latitude']);
                 update_post_meta($alert_id, 'geo_longitude', $geodata['longitude']);
@@ -470,9 +477,43 @@ class BetterAngelsPlugin {
             // TODO: Should we explicitly mark this geodata privacy info?
             //       See https://codex.wordpress.org/Geodata#Geodata_Format
             //update_post_meta($alert_id, 'geo_public', 1);
-            update_post_meta($alert_id, $this->prefix . 'chat_room_name', $this->getChatRoomName());
+            if ($this->getChatRoomName()) {
+                update_post_meta($alert_id, $this->prefix . 'chat_room_name', $this->getChatRoomName());
+            }
         }
         return $alert_id;
+    }
+
+    private function alertSubject () {
+        return (empty($_POST['msg']))
+            ? $this->getCallForHelp(get_current_user_id())
+            : wp_strip_all_tags(stripslashes_deep($_POST['msg']));
+    }
+
+    public function handleScheduledAlert () {
+        $err = new WP_Error();
+        $when = strtotime(stripslashes_deep($_POST['scheduled-datetime']));
+        if (!$when) {
+            $err->add(
+                'scheduled-datetime',
+                __('Buoy could not understand the date and time you entered.', 'better-angels')
+            );
+        } else {
+            $alert_id = $this->newAlert(array(
+                'post_title' => $this->alertSubject(),
+                'post_status' => 'future',
+                'post_date' => date('Y-m-d H:i:s', $when)
+            ));
+        }
+
+        if (empty($err->errors)) {
+            wp_send_json_success(array(
+                'id' => $alert_id,
+                'message' => __('Your timed alert has been scheduled. Schedule another?', 'better-angels')
+            ));
+        } else {
+            wp_send_json_error($err);
+        }
     }
 
     /**
@@ -486,7 +527,7 @@ class BetterAngelsPlugin {
         $alert_position = (empty($_POST['pos'])) ? false : $_POST['pos']; // TODO: array_map and sanitize this?
         $me = wp_get_current_user();
         $guardians = $this->getGuardians(get_current_user_id());
-        $subject = (empty($_POST['msg'])) ? $this->getCallForHelp($me->ID) : wp_strip_all_tags(stripslashes_deep($_POST['msg']));
+        $subject = $this->alertSubject();
 
         // Set instance variables
         $this->setIncidentHash(serialize($me) . serialize($guardians) . time());
@@ -665,7 +706,7 @@ class BetterAngelsPlugin {
     }
 
     /**
-     * Gets all alert posts.
+     * Gets alert posts with an incident hash.
      *
      * @return array
      */
@@ -676,12 +717,25 @@ class BetterAngelsPlugin {
         ));
     }
 
+    /**
+     * Gets scheduled alert posts.
+     *
+     * @return array
+     */
+    public function getScheduledAlerts () {
+        return get_posts(array(
+            'post_type' => str_replace('-', '_', $this->prefix) . 'alert',
+            'post_status' => 'future'
+        ));
+    }
+
     public function addIncidentMenu () {
         global $wp_admin_bar;
 
         $alerts = array(
             'my_alerts' => array(),
-            'my_responses' => array()
+            'my_responses' => array(),
+            'my_scheduled_alerts' => array()
         );
         foreach ($this->getActiveAlerts() as $post) {
             if (get_current_user_id() == $post->post_author) {
@@ -690,8 +744,13 @@ class BetterAngelsPlugin {
                 $alerts['my_responses'][] = $post;
             }
         }
+        foreach ($this->getScheduledAlerts() as $post) {
+            if (get_current_user_id() == $post->post_author) {
+                $alerts['my_scheduled_alerts'][] = $post;
+            }
+        }
 
-        if (!empty($alerts['my_alerts']) || !empty($alerts['my_responses'])) {
+        if (!empty($alerts['my_alerts']) || !empty($alerts['my_responses']) || !empty($alerts['my_scheduled_alerts'])) {
             $wp_admin_bar->add_menu(array(
                 'id' => $this->prefix . 'active-incidents-menu',
                 'title' => __('Active alerts', 'better-angels')
@@ -731,6 +790,16 @@ class BetterAngelsPlugin {
                 'id' => $this->prefix . 'active-incident-' . $post->ID,
                 'title' => sprintf(__('Alert issued by %1$s on %2$s', 'better-angels'), $author->display_name, date($dtfmt, strtotime($post->post_date))),
                 'parent' => $this->prefix . 'my_responses',
+                'href' => $url
+            ));
+        }
+
+        foreach ($alerts['my_scheduled_alerts'] as $post) {
+            $url = admin_url('post.php?action=edit&post=' . $post->ID);
+            $wp_admin_bar->add_node(array(
+                'id' => $this->prefix . 'scheduled-alert-' . $post->ID,
+                'title' => sprintf(__('My scheduled alert on %1$s','better-angels'), date($dtfmt, strtotime($post->post_date))),
+                'parent' => $this->prefix . 'my_scheduled_alerts',
                 'href' => $url
             ));
         }
