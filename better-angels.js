@@ -342,6 +342,25 @@ var BUOY = (function () {
             }
             // Show buttons that need JavaScript to function.
             jQuery('#modal-features.hidden, #alert-map.hidden').removeClass('hidden');
+
+            // Enhance the WP Toolbar.
+            jQuery('#wp-admin-bar-better-angels_my_scheduled_alerts a').each(function () {
+                var a_el = jQuery(this);
+                a_el.on('click', function (e) {
+                    e.preventDefault();
+                    jQuery.post(a_el.attr('href'), {'action': 'better-angels_unschedule-alert'},
+                        function (response) {
+                            if (response.success) {
+                                a_el.remove();
+                                if (0 === countIncidentMenuItems()) {
+                                    jQuery('#wp-admin-bar-better-angels_active-incidents-menu').remove();
+                                }
+                            }
+                        },
+                        'json'
+                    );
+                });
+            });
         });
 
         jQuery(window).on('load', function () {
@@ -365,6 +384,10 @@ var BUOY = (function () {
             }
         });
 
+    };
+
+    var countIncidentMenuItems = function () {
+        return jQuery('#wp-admin-bar-better-angels_active-incidents-menu a').length;
     };
 
     return {

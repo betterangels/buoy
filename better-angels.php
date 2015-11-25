@@ -37,6 +37,7 @@ class BetterAngelsPlugin {
         add_action('admin_notices', array($this, 'showAdminNotices'));
         add_action('wp_ajax_' . $this->prefix . 'findme', array($this, 'handleAlert'));
         add_action('wp_ajax_' . $this->prefix . 'schedule-alert', array($this, 'handleScheduledAlert'));
+        add_action('wp_ajax_' . $this->prefix . 'unschedule-alert', array($this, 'handleUnscheduleAlert'));
         add_action('wp_ajax_' . $this->prefix . 'update-location', array($this, 'handleLocationUpdate'));
         add_action('show_user_profile', array($this, 'addProfileFields'));
         add_action('personal_options_update', array($this, 'updateProfileFields'));
@@ -516,6 +517,23 @@ class BetterAngelsPlugin {
         }
     }
 
+    public function handleUnscheduleAlert () {
+        if (isset($_GET[$this->prefix . 'nonce']) && wp_verify_nonce($_GET[$this->prefix . 'nonce'], $this->prefix . 'unschedule-alert')) {
+            $post = get_post($_GET['alert_id']);
+            if ($post && get_current_user_id() == $post->post_author) {
+                wp_delete_post($post->ID, true); // delete immediately
+                if (isset($_SERVER['HTTP_ACCEPT']) && false === strpos($_SERVER['HTTP_ACCEPT'], 'application/json')) {
+                    wp_safe_redirect(urldecode($_GET['r']));
+                    exit();
+                } else {
+                    wp_send_json_success();
+                }
+            }
+        } else {
+            wp_send_json_error();
+        }
+    }
+
     /**
      * Responds to requests activated from the main emergency alert button.
      *
@@ -720,13 +738,18 @@ class BetterAngelsPlugin {
     /**
      * Gets scheduled alert posts.
      *
+     * @param int $uid The WordPress user ID of an author's scheduled posts to look up.
      * @return array
      */
-    public function getScheduledAlerts () {
-        return get_posts(array(
+    public function getScheduledAlerts ($uid = false) {
+        $args = array(
             'post_type' => str_replace('-', '_', $this->prefix) . 'alert',
             'post_status' => 'future'
-        ));
+        );
+        if (false !== $uid) {
+            $args['author'] = $uid;
+        }
+        return get_posts($args);
     }
 
     public function addIncidentMenu () {
@@ -744,7 +767,7 @@ class BetterAngelsPlugin {
                 $alerts['my_responses'][] = $post;
             }
         }
-        foreach ($this->getScheduledAlerts() as $post) {
+        foreach ($this->getScheduledAlerts(get_current_user_id()) as $post) {
             if (get_current_user_id() == $post->post_author) {
                 $alerts['my_scheduled_alerts'][] = $post;
             }
@@ -795,10 +818,16 @@ class BetterAngelsPlugin {
         }
 
         foreach ($alerts['my_scheduled_alerts'] as $post) {
-            $url = admin_url('post.php?action=edit&post=' . $post->ID);
+            $url = wp_nonce_url(
+                admin_url('admin-ajax.php?action=' . $this->prefix . 'unschedule-alert&alert_id=' . $post->ID . '&r=' . esc_url($_SERVER['REQUEST_URI'])),
+                $this->prefix . 'unschedule-alert', $this->prefix . 'nonce'
+            );
             $wp_admin_bar->add_node(array(
                 'id' => $this->prefix . 'scheduled-alert-' . $post->ID,
-                'title' => sprintf(__('My scheduled alert on %1$s','better-angels'), date($dtfmt, strtotime($post->post_date))),
+                'title' => sprintf(__('Cancel scheduled alert for %1$s','better-angels'), date($dtfmt, strtotime($post->post_date))),
+                'meta' => array(
+                    'title' => __('Cancel this alert', 'better-angels')
+                ),
                 'parent' => $this->prefix . 'my_scheduled_alerts',
                 'href' => $url
             ));
