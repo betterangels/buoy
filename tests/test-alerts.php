@@ -4,6 +4,7 @@ class AlertsTest extends WP_UnitTestCase {
 
     public function setUp () {
         parent::setUp();
+        wp_set_current_user(username_exists('survivor'));
         $this->plugin = new BetterAngelsPlugin();
     }
 

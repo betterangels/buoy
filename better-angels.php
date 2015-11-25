@@ -42,8 +42,9 @@ class BetterAngelsPlugin {
         add_action('show_user_profile', array($this, 'addProfileFields'));
         add_action('personal_options_update', array($this, 'updateProfileFields'));
 
+        add_action('publish_' . str_replace('-', '_', $this->prefix) . 'alert', array($this, 'publishAlert'));
+
         add_action('added_user_meta', array($this, 'addedUserMeta'), 10, 4);
-        add_action('updated_user_meta', array($this, 'updatedUserMeta'), 10, 4);
 
         add_action($this->prefix . 'delete_old_alerts', array($this, 'deleteOldAlerts'));
 
@@ -442,12 +443,6 @@ class BetterAngelsPlugin {
     }
 
     /**
-     * Dispatches events to respond to user metadata updates.
-     */
-    public function updatedUserMeta ($meta_id, $object_id, $meta_key, $_meta_value) {
-    }
-
-    /**
      * Inserts a new alert (incident) as a custom post type in the WordPress database.
      *
      * @param array $post_args Arguments for the post type.
@@ -455,6 +450,14 @@ class BetterAngelsPlugin {
      * @return int Result of `wp_insert_post()` (int ID of new post on success, WP_Error on error.)
      */
     public function newAlert ($post_args, $geodata = false) {
+        // Set instance variables
+        $this->setIncidentHash(
+            serialize(wp_get_current_user())
+            . serialize($this->getGuardians(get_current_user_id()))
+            . time()
+        );
+        $this->setChatRoomName(hash('sha1', $this->getIncidentHash() . uniqid('', true)));
+
         // TODO: Do some validation on $post_args?
         // These values should always be hard-coded.
         $post_args['post_type'] = str_replace('-', '_', $this->prefix) . 'alert';
@@ -468,9 +471,8 @@ class BetterAngelsPlugin {
 
         $alert_id = wp_insert_post($post_args);
         if (!is_wp_error($alert_id)) {
-            if ($this->getIncidentHash()) {
-                update_post_meta($alert_id, $this->prefix . 'incident_hash', $this->getIncidentHash());
-            }
+            update_post_meta($alert_id, $this->prefix . 'incident_hash', $this->getIncidentHash());
+            update_post_meta($alert_id, $this->prefix . 'chat_room_name', $this->getChatRoomName());
             if ($geodata) {
                 update_post_meta($alert_id, 'geo_latitude', $geodata['latitude']);
                 update_post_meta($alert_id, 'geo_longitude', $geodata['longitude']);
@@ -478,9 +480,6 @@ class BetterAngelsPlugin {
             // TODO: Should we explicitly mark this geodata privacy info?
             //       See https://codex.wordpress.org/Geodata#Geodata_Format
             //update_post_meta($alert_id, 'geo_public', 1);
-            if ($this->getChatRoomName()) {
-                update_post_meta($alert_id, $this->prefix . 'chat_room_name', $this->getChatRoomName());
-            }
         }
         return $alert_id;
     }
@@ -543,32 +542,55 @@ class BetterAngelsPlugin {
     public function handleAlert () {
         // Collect info from the browser via Ajax request
         $alert_position = (empty($_POST['pos'])) ? false : $_POST['pos']; // TODO: array_map and sanitize this?
-        $me = wp_get_current_user();
-        $guardians = $this->getGuardians(get_current_user_id());
-        $subject = $this->alertSubject();
 
-        // Set instance variables
-        $this->setIncidentHash(serialize($me) . serialize($guardians) . time());
-        $this->setChatRoomName(hash('sha1', $this->getIncidentHash() . uniqid('', true)));
+        // Create and publish the new alert.
+        $this->newAlert(array('post_title' => $this->alertSubject()), $alert_position);
 
-        $alert_id = $this->newAlert(array('post_title' => $subject), $alert_position);
+        // Construct the redirect URL to the alerter's chat room
+        $next_url = wp_nonce_url(
+            admin_url(
+                '?page=' . $this->prefix . 'incident-chat'
+                . '&' . $this->prefix . 'incident_hash=' . $this->getIncidentHash()
+            ),
+            $this->prefix . 'chat', $this->prefix . 'nonce'
+        );
 
+        if (isset($_SERVER['HTTP_ACCEPT'])) {
+            $accepts = explode(',', $_SERVER['HTTP_ACCEPT']);
+        }
+        if ($accepts && 'application/json' === array_shift($accepts)) {
+            wp_send_json_success($next_url);
+        } else {
+            wp_safe_redirect(html_entity_decode($next_url));
+        }
+    }
+
+    /**
+     * Runs whenever an alert is published. Sends notifications to an alerter's
+     * response team informing them of the alert.
+     *
+     * @param int $post_id The WordPress post ID of the published alert.
+     */
+    public function publishAlert ($post_id) {
+        $incident_hash = get_post_meta($post_id, $this->prefix . 'incident_hash', true);
         $responder_link = admin_url(
             '?page=' . $this->prefix . 'review-alert'
-            . '&' . $this->prefix . 'incident_hash=' . $this->getIncidentHash()
+            . '&' . $this->prefix . 'incident_hash=' . $incident_hash
         );
         $responder_short_link = home_url(
             '?' . str_replace('_', '-', $this->prefix) . 'alert='
-            . substr($this->getIncidentHash(), 0, 8)
+            . substr($incident_hash, 0, 8)
         );
 
+        $alerter = get_userdata(get_post_field('post_author', $post_id));
+        $guardians = $this->getGuardians($alerter->ID);
         foreach ($guardians as $guardian) {
-            // TODO: Wrap this "send an alert" procedure into its own function?
             $sms = preg_replace('/[^0-9]/', '', get_user_meta($guardian->ID, $this->prefix . 'sms', true));
             $sms_provider = get_user_meta($guardian->ID, $this->prefix . 'sms_provider', true);
             $headers = array(
-                'From: "' . $me->display_name . '" <' . $me->user_email . '>'
+                'From: "' . $alerter->display_name . '" <' . $alerter->user_email . '>'
             );
+            $subject = get_post_field('post_title', $post_id);
 
             // TODO: Write a more descriptive message.
             wp_mail($guardian->user_email, $subject, $responder_link, $headers);
@@ -599,24 +621,6 @@ class BetterAngelsPlugin {
                     $headers
                 );
             }
-        }
-
-        // Construct the redirect URL to the alerter's chat room
-        $next_url = wp_nonce_url(
-            admin_url(
-                '?page=' . $this->prefix . 'incident-chat'
-                . '&' . $this->prefix . 'incident_hash=' . $this->getIncidentHash()
-            ),
-            $this->prefix . 'chat', $this->prefix . 'nonce'
-        );
-
-        if (isset($_SERVER['HTTP_ACCEPT'])) {
-            $accepts = explode(',', $_SERVER['HTTP_ACCEPT']);
-        }
-        if ($accepts && 'application/json' === array_shift($accepts)) {
-            wp_send_json_success($next_url);
-        } else {
-            wp_safe_redirect(html_entity_decode($next_url));
         }
     }
 
