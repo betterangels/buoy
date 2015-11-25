@@ -4,7 +4,7 @@
         value="<?php print esc_attr($this->prefix)?>findme"
     />
 
-    <button id="activate-msg-btn-submit" class="btn hidden">
+    <button id="activate-msg-btn-submit" class="btn hidden" type="button">
         <img src="<?php print plugins_url('../img/chat-bubble-1.svg', __FILE__);?>" alt="<?php esc_attr_e('Send emergency message', 'better-angels')?>" />
     </button>
     <button id="activate-btn-submit" class="btn">
