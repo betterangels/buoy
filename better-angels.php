@@ -573,6 +573,7 @@ class BetterAngelsPlugin {
      */
     public function publishAlert ($post_id) {
         $incident_hash = get_post_meta($post_id, $this->prefix . 'incident_hash', true);
+        if (empty($incident_hash)) { $incident_hash = $this->getIncidentHash(); }
         $responder_link = admin_url(
             '?page=' . $this->prefix . 'review-alert'
             . '&' . $this->prefix . 'incident_hash=' . $incident_hash
