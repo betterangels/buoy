@@ -34,7 +34,7 @@ Even if you don't code, there's a lot you can do to help make Buoy better.
 
 ## Donate
 
-You can support development and maintenance of Buoy by supporting its primary developer, maymay. Click [here to donate via PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TJLPJYXHSRBEE&lc=US&item_name=Inline%20Google%20Spreadsheet%20Viewer&item_number=Inline%20Google%20Spreadsheet%20Viewer&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted), or visit [Cyberbusking.org](http://Cyberbusking.org/) for maymay's personal donation portal.
+You can support development and maintenance of Buoy by supporting its primary developer, maymay. Click [here to donate via PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TJLPJYXHSRBEE&lc=US&item_name=Better%20Angels%20Buoy&item_number=Better%20Angels%20Buoy&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted), or visit [Cyberbusking.org](http://Cyberbusking.org/) for maymay's personal donation portal.
 
 You can also support development of Buoy by supporting the following organizations who have helped make Buoy possible:
 

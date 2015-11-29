@@ -48,9 +48,9 @@ $options = get_option($this->prefix . 'settings');
             <div class="modal-body">
                 <div class="form-group">
                     <div>
-                        <label for="scheduled-datetime"><?php esc_html_e('Send alert at', 'better-angels');?></label>
-                        <input id="scheduled-datetime" name="scheduled-datetime" class="form-control" type="datetime" />
-                        <p class="help-block"><?php esc_html_e('Enter a date and time at which your alert will be sent. You can either select from the pop-up options after clicking in the field, or type a natural-language English expression, such as "next Thursday" (meaning the upcoming Thursday at this time) or "+3 hours" (meaning three hours from now).', 'better-angels');?></p>
+                        <label for="scheduled-datetime-tz"><?php esc_html_e('Send alert at', 'better-angels');?></label>
+                        <input id="scheduled-datetime-tz" name="scheduled-datetime-tz" class="form-control" type="datetime" />
+                        <p class="help-block"><?php esc_html_e('Enter a date and time at which your alert will be sent. You can either select from the pop-up options after clicking in the field, or type a specific date and time in the "YYYY/MM/DD HH:mm" format.', 'better-angels');?></p>
                     </div>
                     <div>
                         <label for="scheduled-crisis-message"><?php esc_html_e('Crisis message', 'better-angels');?></label>

@@ -492,19 +492,28 @@ class BetterAngelsPlugin {
 
     public function handleScheduledAlert () {
         $err = new WP_Error();
-        $when = strtotime(stripslashes_deep($_POST['scheduled-datetime']));
-        if (!$when) {
+        $old_timezone = date_default_timezone_get();
+        date_default_timezone_set('UTC');
+        $when_utc = strtotime(stripslashes_deep($_POST['scheduled-datetime-utc']));
+        if (!$when_utc) {
             $err->add(
-                'scheduled-datetime',
+                'scheduled-datetime-utc',
                 __('Buoy could not understand the date and time you entered.', 'better-angels')
             );
         } else {
+            $dt = new DateTime("@$when_utc");
+            // TODO: This fails to offset the UTC time back to server-local time
+            //       correctly if the WP site is manually offset by a 30 minute
+            //       offset instead of an hourly offset.
+            $dt->setTimeZone(new DateTimeZone(wp_get_timezone_string()));
             $alert_id = $this->newAlert(array(
                 'post_title' => $this->alertSubject(),
                 'post_status' => 'future',
-                'post_date' => date('Y-m-d H:i:s', $when)
+                'post_date' => $dt->format('Y-m-d H:i:s'),
+                'post_date_gmt' => gmdate('Y-m-d H:i:s', $when_utc)
             ));
         }
+        date_default_timezone_set($old_timezone);
 
         if (empty($err->errors)) {
             wp_send_json_success(array(
@@ -1276,3 +1285,47 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
 }
 
 new BetterAngelsPlugin();
+
+/**
+ * Helpers.
+ */
+if (!function_exists('wp_get_timezone_string')) {
+    /**
+    * Helper to retrieve the timezone string for a site until
+    * a WP core method exists (see http://core.trac.wordpress.org/ticket/24730).
+    *
+    * Adapted from http://www.php.net/manual/en/function.timezone-name-from-abbr.php#89155
+    * Copied from WooCommerce code:
+    * https://github.com/woothemes/woocommerce/blob/5893875b0c03dda7b2d448d1a904ccfad3cdae3f/includes/wc-formatting-functions.php#L441-L485
+    *
+    * @return string valid PHP timezone string
+    */
+    function wp_get_timezone_string() {
+        // if site timezone string exists, return it
+        if ( $timezone = get_option( 'timezone_string' ) ) {
+            return $timezone;
+        }
+        // get UTC offset, if it isn't set then return UTC
+        if ( 0 === ( $utc_offset = get_option( 'gmt_offset', 0 ) ) ) {
+            return 'UTC';
+        }
+        // adjust UTC offset from hours to seconds
+        $utc_offset *= 3600;
+        // attempt to guess the timezone string from the UTC offset
+        $timezone = timezone_name_from_abbr( '', $utc_offset, 0 );
+        // last try, guess timezone string manually
+        if ( false === $timezone ) {
+            $is_dst = date( 'I' );
+            foreach ( timezone_abbreviations_list() as $abbr ) {
+                foreach ( $abbr as $city ) {
+                    if ( $city['dst'] == $is_dst && $city['offset'] == $utc_offset ) {
+                        return $city['timezone_id'];
+                    }
+                }
+            }
+            // fallback to UTC
+            return 'UTC';
+        }
+        return $timezone;
+    }
+}

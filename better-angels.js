@@ -86,7 +86,7 @@ var BUOY = (function () {
                 .val()
                 .replace('_findme', '_schedule-alert'),
             'msg': jQuery('#scheduled-crisis-message').val(),
-            'scheduled-datetime': jQuery('#scheduled-datetime').val()
+            'scheduled-datetime-utc': new Date(jQuery('#scheduled-datetime-tz').val()).toUTCString()
         };
         jQuery.post(ajaxurl, data,
             function (response) {
@@ -256,11 +256,12 @@ var BUOY = (function () {
                 activateAlert();
             });
 
-            if (jQuery('#scheduled-datetime').length) {
-                jQuery('#scheduled-datetime').datetimepicker({
+            if (jQuery('#scheduled-datetime-tz').length) {
+                jQuery('#scheduled-datetime-tz').datetimepicker({
                     'lazyInit': true,
                     'lang': better_angels_vars.ietf_language_tag,
                     'minDate': 0, // today is the earliest allowable date
+                    'mask': true,
                     'validateOnBlur': false
                 });
             }
