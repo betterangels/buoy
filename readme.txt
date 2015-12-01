@@ -16,15 +16,19 @@ Buoy is a private, enhanced [9-1-1](https://en.wikipedia.org/wiki/9-1-1) for you
 
 *For service providers*
 
-Anyone with a WordPress-powered website or blog can install the plugin to host an instance of the Buoy app for their community or constituents. Legal aid service providers, domestic, dating, and intimate partner violence prevention advocates, shelters, social groups, alternative medical and mental health collectives, and others can offer members of their community one-click emergency access to a network of trusted peers and/or on-call emergency responders.
+Anyone with a WordPress-powered website or blog can add the Buoy software (a 1-click automatic install) to their website, instantly enabling the site's membership to provide peer-based mutual-aid to one another. Moreover, legal aid service providers, domestic, dating, and intimate partner violence prevention advocates, shelters, social groups, alternative medical and mental health collectives, and others can offer members of their community one-click emergency access to a network of trusted peers and/or on-call emergency responders.
 
 *For victims and survivors*
 
-With Buoy, you are never more than one button press away from the people you trust most. There is no additional software to download or install. Simply bookmark a page with your smartphone's built-in Web browser to gain instant access to your personal emergency response team. Quickly send them your location with a pre-defined custom message, write a custom message, or schedule a timed alert (like a "safe call") for some time in the future.
+Buoy makes it easy to tell your friends where you are and what you need, even in the most dangerous or frightening scenarios. Tapping a single button will immediately notify the people you trust most that you need their help, give them a map showing your exact location, and even helps them coordinate with one another to quickly figure out how to help you best. With Buoy and a smartphone, you are never more than one button press away from the people you trust most. (We are even working to support old-school flipfones!)
+
+You do not need to download or install special software to use Buoy. Simply bookmark a page with your smartphone's built-in Web browser to gain instant access to your personal emergency response team. Quickly send them your location with a pre-defined custom message, write a custom message, or schedule a timed alert (like a "safe call") for some time in the future.
 
 The people you select as your emergency contacts ("response team") will get a notification showing them your location in the real world as well as the locations of any other responders to your call for help. If it's safe for you to do so, you can now coordinate with all responders in a live chat room, or responders can coordinate amongst themselves about how best to help you if you are unresponsive.
 
 **See the [screenshots](https://wordpress.org/plugins/buoy/screenshots/) for an example walkthrough of how Buoy works.**
+
+[Find a Buoy-enabled web site.](https://github.com/meitar/better-angels/wiki/List-of-Buoy-enabled-websites)
 
 == Installation ==
 

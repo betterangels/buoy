@@ -1,4 +1,4 @@
-# Better Angels' Buoy: A community-driven emergency dispatch system.
+# Better Angels' Buoy: A community-driven emergency dispatch system powered by friendship.
 
 | Branch   | Builds |
 | :------- |:------:|
@@ -14,23 +14,29 @@ Buoy is a private, enhanced [9-1-1](https://en.wikipedia.org/wiki/9-1-1) for you
 
 ## For service providers
 
-Anyone with a WordPress-powered website or blog can install the plugin to host an instance of the Buoy web-app for their community or constituents. Legal aid service providers, domestic, dating, and intimate partner violence prevention advocates, shelters, social groups, alternative medical and mental health collectives, and others can offer members of their community one-click emergency access to a network of trusted peers and/or on-call emergency responders.
+Anyone with a WordPress-powered website or blog can add the Buoy software (a 1-click automatic install) to their website, instantly enabling the site's membership to provide peer-based mutual-aid to one another. Moreover, legal aid service providers, domestic, dating, and intimate partner violence prevention advocates, shelters, social groups, alternative medical and mental health collectives, and others can offer members of their community one-click emergency access to a network of trusted peers and/or on-call emergency responders.
 
 ## For victims and survivors
 
-With Buoy, you are never more than one button press away from the people you trust most. There is no additional software to download or install. Simply bookmark a page with your smartphone's built-in Web browser to gain instant access to your personal emergency response team. Quickly send them your location with a pre-defined custom message, write a custom message, or schedule a timed alert (like a "safe call") for some time in the future.
+Buoy makes it easy to tell your friends where you are and what you need, even in the most dangerous or frightening scenarios. Tapping a single button will immediately notify the people you trust most that you need their help, give them a map showing your exact location, and even helps them coordinate with one another to quickly figure out how to help you best. With Buoy and a smartphone, you are never more than one button press away from the people you trust most. (We are even working to support old-school flipfones!)
+
+You do not need to download or install special software to use Buoy. Simply bookmark a page with your smartphone's built-in Web browser to gain instant access to your personal emergency response team. Quickly send them your location with a pre-defined custom message, write a custom message, or schedule a timed alert (like a "safe call") for some time in the future.
 
 The people you select as your emergency contacts ("response team") will get a notification showing them your location in the real world as well as the locations of any other responders to your call for help. If it's safe for you to do so, you can now coordinate with all responders in a live chat room, or responders can coordinate amongst themselves about how best to help you if you are unresponsive.
 
-# Installing
+**See the [screenshots](https://wordpress.org/plugins/buoy/screenshots/) for an example walkthrough of how Buoy works.**
+
+[Find a Buoy-enabled web site.](https://github.com/meitar/better-angels/wiki/List-of-Buoy-enabled-websites)
+
+# Installing Buoy for your community
 
 Installation is as simple as pressing "Install now" from your admin WordPress Dashboard. ([Learn more about installing WordPress plugins from WPBeginner.com](http://www.wpbeginner.com/beginners-guide/step-by-step-guide-to-install-a-wordpress-plugin-for-beginners/).) You can also find [Buoy hosted on the WordPress plugin repository](https://wordpress.org/plugins/buoy/).
 
 # Contributing
 
-Buoy is [free software](https://www.gnu.org/licenses/gpl-3.0.html). It was developed and is maintained primarily by a nomadic hacker named [maymay](https://maymay.net/) who has a lot of fucks to give about supporting survivors of any of capitalism's horrors, along with a growing group of volunteers who call themselves the Better Angels.
+Buoy is [free software](https://www.gnu.org/philosophy/free-sw.en.html "What is free software?") It was developed and is maintained primarily by a nomadic hacker named [maymay](https://maymay.net/) who has a lot of fucks to give about supporting survivors of any of capitalism's horrors, along with a growing group of volunteers who call themselves the Better Angels.
 
-Even if you don't code, there's a lot you can do to help make Buoy better.
+Even if you don't code, there's a lot you can do to help make Buoy better. Here are a few.
 
 ## Donate
 
