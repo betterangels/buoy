@@ -15,7 +15,6 @@ branches:
   only:
     - develop
     - master
-    - trunk
 
 env:
   - WP_VERSION=latest WP_MULTISITE=0
