@@ -14,7 +14,7 @@ var BUOY = (function () {
             }
             return;
         }
-        navigator.geolocation.getCurrentPosition(success, logGeoError);
+        navigator.geolocation.getCurrentPosition(success, logGeoError, {'timeout': 5000});
     };
 
     var updateMyLocation = function (position) {
@@ -77,7 +77,9 @@ var BUOY = (function () {
 
     var activateAlert = function () {
         // Always post an alert even if we fail to get geolocation.
-        navigator.geolocation.getCurrentPosition(postAlert, postAlert);
+        navigator.geolocation.getCurrentPosition(postAlert, postAlert, {
+            'timeout': 5000
+        });
     };
 
     var scheduleAlert = function (callback) {
@@ -302,6 +304,11 @@ var BUOY = (function () {
             jQuery('#fit-map-to-markers-btn').on('click', function () {
                 map.fitBounds(marker_bounds);
             });
+            jQuery('#go-to-my-location').on('click', function (e) {
+                e.preventDefault();
+                map.panTo(map_markers[jQuery(this).data('user-id')].getPosition());
+                touchMap();
+            });
 
             // Show "safety information" on page load,
             // TODO: this should automatically be dismissed when another user
@@ -325,7 +332,8 @@ var BUOY = (function () {
                     },
                     function () {
                         jQuery(e.target).submit();
-                    }
+                    },
+                    { 'timeout': 5000 }
                 );
             });
 
@@ -333,7 +341,9 @@ var BUOY = (function () {
                 // TODO: Clear the watcher when failing to get position?
                 //       Then what? Keep trying? Show a dialog asking the user to
                 //       turn on location services?
-                geowatcher_id = navigator.geolocation.watchPosition(updateMyLocation, logGeoError);
+                geowatcher_id = navigator.geolocation.watchPosition(updateMyLocation, logGeoError, {
+                    'timeout': 5000
+                });
             }
 
             // Note: This works around GitHub issue #47.
