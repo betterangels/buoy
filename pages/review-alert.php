@@ -23,7 +23,13 @@ $respond_url = wp_nonce_url(
         </noscript>
     </div>
 </div>
-<h1><?php print sprintf(esc_html__('%1$s sent an alert', 'better-angels'), $alerter->display_name);?></h1>
+<h1><?php
+print sprintf(
+    esc_html__('%1$s sent an alert %2$s', 'better-angels'),
+    $alerter->display_name,
+    sprintf(_x('%s ago', '%s = human-readable time difference', 'better-angels'), human_time_diff(strtotime($alert_post->post_date), current_time('timestamp')))
+);
+?></h1>
 <blockquote id="crisis-message">
     <p>
         <?php print esc_html($alert_post->post_title);?>
