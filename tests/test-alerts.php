@@ -32,6 +32,17 @@ class AlertsTest extends WP_UnitTestCase {
         return $wp_post;
     }
 
+    public function test_get_alert_with_at_least_8_character_string () {
+        $id = $this->plugin->newAlert(array('post_title' => 'Test alert.'));
+        $h = get_post_meta($id, 'better-angels_incident_hash', true);
+
+        $short = substr($h, 0, 7);
+        $this->assertEmpty($this->plugin->getAlert($short));
+
+        $short = substr($h, 0, 8);
+        $this->assertObjectHasAttribute('ID', $this->plugin->getAlert($short));
+    }
+
     public function test_deleteOldAlertsIsScheduledAndUnscheduled () {
         $this->plugin->activate();
         $this->assertEquals('twicedaily', wp_get_schedule('better-angels_delete_old_alerts'));

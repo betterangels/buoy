@@ -722,25 +722,14 @@ class BetterAngelsPlugin {
     public function redirectShortUrl () {
         $get_param = str_replace('_', '-', $this->prefix) . 'alert';
         if (!empty($_GET[$get_param]) && 8 === strlen($_GET[$get_param])) {
-            $short_key = urldecode($_GET[$get_param]);
-            $args = array(
-              'meta_query' => array(
-                array( 
-                 'key'     => $this->prefix . 'incident_hash',
-                 'value'   => $short_key,
-                 'compare' => 'LIKE'
-                )
-              )
-            );
-            $posts = get_posts( $args );
-            $post_id = 
-            echo "Post count :" . count( $posts );
-            $full_hash = get_post_meta($post_id, $this->prefix . 'incident_hash', true);
-            if (substr($full_hash, 0, strlen($short_key))) {
+            $post = $this->getAlert(urldecode($_GET[$get_param]));
+            $full_hash = get_post_meta($post->ID, $this->prefix . 'incident_hash', true);
+            if ($full_hash) {
                 wp_safe_redirect(admin_url(
                     '?page=' . $this->prefix . 'review-alert'
                     . '&' . $this->prefix . 'incident_hash=' . urlencode($full_hash)
                 ));
+                exit();
             }
         }
     }
@@ -1177,11 +1166,19 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
         require_once 'pages/review-alert.php';
     }
 
+    /**
+     * Retrieves an alert post from the WordPress database.
+     *
+     * @param string $incident_hash An incident hash string, at least 8 characters long.
+     * @return WP_Post|null
+     */
     public function getAlert ($incident_hash) {
+        if (strlen($incident_hash) < 8) { return NULL; }
         $posts = get_posts(array(
             'post_type' => str_replace('-', '_', $this->prefix) . 'alert',
             'meta_key' => $this->prefix . 'incident_hash',
-            'meta_value' => $incident_hash
+            'meta_value' => "^$incident_hash",
+            'meta_compare' => 'REGEXP'
         ));
         return array_pop($posts);
     }
