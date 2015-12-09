@@ -723,16 +723,24 @@ class BetterAngelsPlugin {
         $get_param = str_replace('_', '-', $this->prefix) . 'alert';
         if (!empty($_GET[$get_param]) && 8 === strlen($_GET[$get_param])) {
             $short_key = urldecode($_GET[$get_param]);
-            $posts = $this->getActiveAlerts();
-            foreach ($posts as $post) {
-                $full_hash = get_post_meta($post->ID, $this->prefix . 'incident_hash', true);
-                if (substr($full_hash, 0, strlen($short_key))) {
-                    wp_safe_redirect(admin_url(
-                        '?page=' . $this->prefix . 'review-alert'
-                        . '&' . $this->prefix . 'incident_hash=' . urlencode($full_hash)
-                    ));
-                    exit();
-                }
+            $args = array(
+              'meta_query' => array(
+                array( 
+                 'key'     => $this->prefix . 'incident_hash',
+                 'value'   => $short_key,
+                 'compare' => 'LIKE'
+                )
+              )
+            );
+            $posts = get_posts( $args );
+            $post_id = 
+            echo "Post count :" . count( $posts );
+            $full_hash = get_post_meta($post_id, $this->prefix . 'incident_hash', true);
+            if (substr($full_hash, 0, strlen($short_key))) {
+                wp_safe_redirect(admin_url(
+                    '?page=' . $this->prefix . 'review-alert'
+                    . '&' . $this->prefix . 'incident_hash=' . urlencode($full_hash)
+                ));
             }
         }
     }
