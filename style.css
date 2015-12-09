@@ -12,6 +12,9 @@
 .dashboard_page_better-angels_incident-chat #wpbody-content {
     height: calc(100vh - 32px); /* 32px is height of WP's fixed-position toolbar */
 }
+.dashboard_page_better-angels_incident-chat #wpcontent {
+    padding: 0;
+}
 .dashboard_page_better-angels_activate-alert #activate-msg-btn-submit,
 .dashboard_page_better-angels_activate-alert #schedule-future-alert-btn,
 .dashboard_page_better-angels_activate-alert #activate-btn-submit {
@@ -67,6 +70,7 @@
 }
 .dashboard_page_better-angels_incident-chat #map-container {
      display: none;
+     padding: 0;
  }
 .dashboard_page_better-angels_incident-chat #map,
 .dashboard_page_better-angels_review-alert #map {
