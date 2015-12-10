@@ -2,6 +2,7 @@
 $options = get_option($this->prefix . 'settings');
 ?>
 <form id="activate-alert-form" action="<?php print esc_attr(admin_url('admin-ajax.php'));?>" method="POST">
+    <?php wp_nonce_field($this->prefix . 'activate-alert', $this->prefix . 'nonce');?>
     <input type="hidden"
         name="action"
         value="<?php print esc_attr($this->prefix)?>findme"

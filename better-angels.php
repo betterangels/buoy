@@ -306,7 +306,8 @@ class BetterAngelsPlugin {
             'i18n_call' => __('Call', 'better-angels'),
             'i18n_responding_to_alert' => __('Responding to alert', 'better-angels'),
             'i18n_schedule_alert' => __('Schedule alert', 'better-angels'),
-            'i18n_scheduling_alert' => __('Scheduling alert', 'better-angels')
+            'i18n_scheduling_alert' => __('Scheduling alert', 'better-angels'),
+            'update_location_nonce' => wp_create_nonce($this->prefix . 'update-location')
         );
     }
 
@@ -491,6 +492,7 @@ class BetterAngelsPlugin {
     }
 
     public function handleScheduledAlert () {
+        check_ajax_referer($this->prefix . 'activate-alert', $this->prefix . 'nonce');
         $err = new WP_Error();
         $old_timezone = date_default_timezone_get();
         date_default_timezone_set('UTC');
@@ -549,6 +551,8 @@ class BetterAngelsPlugin {
      * TODO: Currently responds to both Ajax and non-JS form submissions. Again, refactor needed.
      */
     public function handleAlert () {
+        check_ajax_referer($this->prefix . 'activate-alert', $this->prefix . 'nonce');
+
         // Collect info from the browser via Ajax request
         $alert_position = (empty($_POST['pos'])) ? false : $_POST['pos']; // TODO: array_map and sanitize this?
 
@@ -639,6 +643,7 @@ class BetterAngelsPlugin {
      * Sends back the location of all responders to this alert.
      */
     public function handleLocationUpdate () {
+        check_ajax_referer($this->prefix . 'update-location', $this->prefix . 'nonce');
         $new_position = $_POST['pos'];
         $alert_post = $this->getAlert($_POST['incident_hash']);
         $me = wp_get_current_user();

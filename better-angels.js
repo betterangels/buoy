@@ -21,7 +21,8 @@ var BUOY = (function () {
         var data = {
             'action': 'better-angels_update-location',
             'pos': position.coords,
-            'incident_hash': incident_hash
+            'incident_hash': incident_hash,
+            'better-angels_nonce': better_angels_vars.update_location_nonce
         };
         jQuery.post(ajaxurl, data,
             function (response) {
@@ -88,7 +89,8 @@ var BUOY = (function () {
                 .val()
                 .replace('_findme', '_schedule-alert'),
             'msg': jQuery('#scheduled-crisis-message').val(),
-            'scheduled-datetime-utc': new Date(jQuery('#scheduled-datetime-tz').val()).toUTCString()
+            'scheduled-datetime-utc': new Date(jQuery('#scheduled-datetime-tz').val()).toUTCString(),
+            'better-angels_nonce': jQuery('#better-angels_nonce').val()
         };
         jQuery.post(ajaxurl, data,
             function (response) {
@@ -115,7 +117,8 @@ var BUOY = (function () {
 
     var postAlert = function (position) {
         var data = {
-            'action': jQuery('#activate-alert-form input[name="action"]').val()
+            'action': jQuery('#activate-alert-form input[name="action"]').val(),
+            'better-angels_nonce': jQuery('#better-angels_nonce').val()
         };
         if (Object.keys(position).length) {
             data.pos = position.coords;
