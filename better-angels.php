@@ -306,7 +306,8 @@ class BetterAngelsPlugin {
             'i18n_call' => __('Call', 'better-angels'),
             'i18n_responding_to_alert' => __('Responding to alert', 'better-angels'),
             'i18n_schedule_alert' => __('Schedule alert', 'better-angels'),
-            'i18n_scheduling_alert' => __('Scheduling alert', 'better-angels')
+            'i18n_scheduling_alert' => __('Scheduling alert', 'better-angels'),
+            'update_location_nonce' => wp_create_nonce($this->prefix . 'update-location')
         );
     }
 
@@ -491,6 +492,7 @@ class BetterAngelsPlugin {
     }
 
     public function handleScheduledAlert () {
+        check_ajax_referer($this->prefix . 'activate-alert', $this->prefix . 'nonce');
         $err = new WP_Error();
         $old_timezone = date_default_timezone_get();
         date_default_timezone_set('UTC');
@@ -549,6 +551,8 @@ class BetterAngelsPlugin {
      * TODO: Currently responds to both Ajax and non-JS form submissions. Again, refactor needed.
      */
     public function handleAlert () {
+        check_ajax_referer($this->prefix . 'activate-alert', $this->prefix . 'nonce');
+
         // Collect info from the browser via Ajax request
         $alert_position = (empty($_POST['pos'])) ? false : $_POST['pos']; // TODO: array_map and sanitize this?
 
@@ -639,6 +643,7 @@ class BetterAngelsPlugin {
      * Sends back the location of all responders to this alert.
      */
     public function handleLocationUpdate () {
+        check_ajax_referer($this->prefix . 'update-location', $this->prefix . 'nonce');
         $new_position = $_POST['pos'];
         $alert_post = $this->getAlert($_POST['incident_hash']);
         $me = wp_get_current_user();
@@ -722,17 +727,14 @@ class BetterAngelsPlugin {
     public function redirectShortUrl () {
         $get_param = str_replace('_', '-', $this->prefix) . 'alert';
         if (!empty($_GET[$get_param]) && 8 === strlen($_GET[$get_param])) {
-            $short_key = urldecode($_GET[$get_param]);
-            $posts = $this->getActiveAlerts();
-            foreach ($posts as $post) {
-                $full_hash = get_post_meta($post->ID, $this->prefix . 'incident_hash', true);
-                if (substr($full_hash, 0, strlen($short_key))) {
-                    wp_safe_redirect(admin_url(
-                        '?page=' . $this->prefix . 'review-alert'
-                        . '&' . $this->prefix . 'incident_hash=' . urlencode($full_hash)
-                    ));
-                    exit();
-                }
+            $post = $this->getAlert(urldecode($_GET[$get_param]));
+            $full_hash = get_post_meta($post->ID, $this->prefix . 'incident_hash', true);
+            if ($full_hash) {
+                wp_safe_redirect(admin_url(
+                    '?page=' . $this->prefix . 'review-alert'
+                    . '&' . $this->prefix . 'incident_hash=' . urlencode($full_hash)
+                ));
+                exit();
             }
         }
     }
@@ -1169,11 +1171,19 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
         require_once 'pages/review-alert.php';
     }
 
+    /**
+     * Retrieves an alert post from the WordPress database.
+     *
+     * @param string $incident_hash An incident hash string, at least 8 characters long.
+     * @return WP_Post|null
+     */
     public function getAlert ($incident_hash) {
+        if (strlen($incident_hash) < 8) { return NULL; }
         $posts = get_posts(array(
             'post_type' => str_replace('-', '_', $this->prefix) . 'alert',
             'meta_key' => $this->prefix . 'incident_hash',
-            'meta_value' => $incident_hash
+            'meta_value' => "^$incident_hash",
+            'meta_compare' => 'REGEXP'
         ));
         return array_pop($posts);
     }
