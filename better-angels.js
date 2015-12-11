@@ -22,7 +22,7 @@ var BUOY = (function () {
             'action': 'better-angels_update-location',
             'pos': position.coords,
             'incident_hash': incident_hash,
-            'better-angels_nonce': better_angels_vars.update_location_nonce
+            'better-angels_nonce': better_angels_vars.incident_nonce
         };
         jQuery.post(ajaxurl, data,
             function (response) {
@@ -311,6 +311,36 @@ var BUOY = (function () {
                 e.preventDefault();
                 map.panTo(map_markers[jQuery(this).data('user-id')].getPosition());
                 touchMap();
+            });
+
+            // Upload media for incident
+            jQuery('#upload-media-btn').on('click', function (e) {
+                e.preventDefault();
+                jQuery(this).next().click();
+            });
+            jQuery('#upload-media-btn').next().on('change', function (e) {
+                var upload_url = ajaxurl + '?action=better-angels_upload-media';
+                upload_url    += '&better-angels_nonce=' + better_angels_vars.incident_nonce;
+                upload_url    += '&better-angels_incident_hash=' + jQuery('#map-container').data('incident-hash');
+                file_list = this.files;
+                for (var i = 0; i < file_list.length; i++) {
+                    var fd = new FormData();
+                    fd.append(file_list[i].name, file_list[i]);
+                    jQuery.ajax({
+                        'type': "POST",
+                        'url': upload_url,
+                        'data': fd,
+                        'processData': false,
+                        'contentType': false,
+                        'success': function (response) {
+                            var li = jQuery('#incident-media-group ul.dropdown-menu li.' + response.data.media_type);
+                            li.find('ul').append(
+                                jQuery('<li id="incident-media-' + response.data.id + '" />').append(response.data.html)
+                            );
+                            li.find('.badge').html(parseInt(li.find('.badge').html()) + 1);
+                        }
+                    });
+                }
             });
 
             // Show "safety information" on page load,
