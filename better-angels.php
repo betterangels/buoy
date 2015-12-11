@@ -33,6 +33,7 @@ class BetterAngelsPlugin {
         add_action('wp_before_admin_bar_render', array($this, 'addIncidentMenu'));
         add_action('admin_enqueue_scripts', array($this, 'enqueueAdminScripts'));
         add_action('admin_enqueue_scripts', array($this, 'enqueueMapsScripts'));
+        add_action('admin_head-dashboard_page_' . $this->prefix . 'activate-alert', array($this, 'doAdminHeadActivateAlert'));
         add_action('admin_menu', array($this, 'registerAdminMenu'));
         add_action('admin_notices', array($this, 'showAdminNotices'));
         add_action('wp_ajax_' . $this->prefix . 'findme', array($this, 'handleAlert'));
@@ -186,6 +187,22 @@ class BetterAngelsPlugin {
         }
     }
 
+    /**
+     * The "activate alert" screen is intended to be the web app "install"
+     * screen for Buoy. We insert special mobile browser specific tags in
+     * order to create a native-like "installer" for the user. We only want
+     * to do this on this specific screen.
+     */
+    public function doAdminHeadActivateAlert () {
+        print '<meta name="mobile-web-app-capable" content="yes" />';       // Android/Chrome
+        print '<meta name="apple-mobile-web-app-capable" content="yes" />'; // Apple/Safari
+        print '<meta name="apple-mobile-web-app-status-bar-style" content="black" />';
+        print '<meta name="apple-mobile-web-app-title" content="' . esc_attr('Buoy', 'better-angels') . '" />';
+        print '<link rel="apple-touch-icon" href="' . plugins_url('img/apple-touch-icon-152x152.png', __FILE__) . '" />';
+        // TODO: This isn't showing up, figure out why.
+        //print '<link rel="apple-touch-startup-image" href="' . plugins_url('img/apple-touch-startup.png', __FILE__) . '">';
+    }
+
     public function registerAdminMenu () {
         add_options_page(
             __('Buoy Settings', 'better-angels'),
@@ -297,6 +314,8 @@ class BetterAngelsPlugin {
         $locale_parts = explode('_', get_locale());
         return array(
             'ietf_language_tag' => array_shift($locale_parts),
+            'i18n_install_btn_title' => __('Install Buoy', 'better-angels'),
+            'i18n_install_btn_content' => __('Tap this button to install Buoy in your device, then choose "Add to home screen" from the menu.', 'better-angels'),
             'i18n_map_title' => __('Incident Map', 'better-angels'),
             'i18n_hide_map' => __('Hide Map', 'better-angels'),
             'i18n_show_map' => __('Show Map', 'better-angels'),
@@ -334,6 +353,16 @@ class BetterAngelsPlugin {
             'dashboard_page_' . $this->prefix . 'incident-chat'
         );
         if ($this->isAppPage($hook, $to_hook)) {
+            wp_enqueue_script(
+                $this->prefix . 'stay-standalone',
+                plugins_url('includes/stay-standalone.js', __FILE__)
+            );
+
+            wp_enqueue_script(
+                $this->prefix . 'install-webapp',
+                plugins_url('includes/install-webapp.js', __FILE__)
+            );
+
             wp_enqueue_style(
                 $this->prefix . 'bootstrap',
                 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'

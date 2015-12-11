@@ -434,11 +434,30 @@ var BUOY = (function () {
         return jQuery('#wp-admin-bar-better-angels_active-incidents-menu a').length;
     };
 
+    var installWebApp = function () {
+        jQuery('body').append('<button id="install-webapp-btn"></button>');
+        jQuery('#install-webapp-btn').attr({
+                'data-toggle' : 'popover',
+                'data-trigger': 'focus',
+                'data-content': better_angels_vars.i18n_install_btn_content,
+                'title': better_angels_vars.i18n_install_btn_title
+            })
+            .popover({
+                'placement': 'top'
+            })
+            .popover('show');
+    };
+
     return {
-        'init': init
+        'init': init,
+        'installWebApp': installWebApp
     };
 })();
 
 jQuery(document).ready(function () {
     BUOY.init();
+});
+
+jQuery(document).on('install.ios', function () {
+    BUOY.installWebApp();
 });
