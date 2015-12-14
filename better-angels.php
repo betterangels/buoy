@@ -271,7 +271,8 @@ class BetterAngelsPlugin {
     }
 
     public function addInstallerScripts () {
-        if (empty(get_user_meta(get_current_user_id(), $this->prefix . 'installer-dismissed', true))) {
+        $x = get_user_meta(get_current_user_id(), $this->prefix . 'installer-dismissed', true);
+        if (empty($x)) {
             wp_enqueue_script(
                 $this->prefix . 'install-webapp',
                 plugins_url('includes/install-webapp.js', __FILE__)
