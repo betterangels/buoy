@@ -41,6 +41,7 @@ class BetterAngelsPlugin {
         add_action('wp_ajax_' . $this->prefix . 'unschedule-alert', array($this, 'handleUnscheduleAlert'));
         add_action('wp_ajax_' . $this->prefix . 'update-location', array($this, 'handleLocationUpdate'));
         add_action('wp_ajax_' . $this->prefix . 'upload-media', array($this, 'handleMediaUpload'));
+        add_action('wp_ajax_' . $this->prefix . 'dismiss-installer', array($this, 'handleDismissInstaller'));
         add_action('show_user_profile', array($this, 'addProfileFields'));
         add_action('personal_options_update', array($this, 'updateProfileFields'));
 
@@ -259,13 +260,28 @@ class BetterAngelsPlugin {
             array($this, 'renderIncidentChatPage')
         );
 
-        add_dashboard_page(
+        $hook = add_dashboard_page(
             __('Activate Alert', 'better-angels'),
             __('Activate Alert', 'better-angels'),
             'read', // give access to users of the Subscribers role
             $this->prefix . 'activate-alert',
             array($this, 'renderActivateAlertPage')
         );
+        add_action('load-' . $hook, array($this, 'addInstallerScripts'));
+    }
+
+    public function addInstallerScripts () {
+        if (empty(get_user_meta(get_current_user_id(), $this->prefix . 'installer-dismissed', true))) {
+            wp_enqueue_script(
+                $this->prefix . 'install-webapp',
+                plugins_url('includes/install-webapp.js', __FILE__)
+            );
+
+            wp_enqueue_style(
+                $this->prefix . 'install-webapp',
+                plugins_url('includes/install-webapp.css', __FILE__)
+            );
+        }
     }
 
     public function maybeRedirect () {
@@ -316,6 +332,7 @@ class BetterAngelsPlugin {
             'ietf_language_tag' => array_shift($locale_parts),
             'i18n_install_btn_title' => __('Install Buoy', 'better-angels'),
             'i18n_install_btn_content' => __('Tap this button to install Buoy in your device, then choose "Add to home screen" from the menu.', 'better-angels'),
+            'i18n_dismiss' => __('Dismiss', 'better-angels'),
             'i18n_map_title' => __('Incident Map', 'better-angels'),
             'i18n_hide_map' => __('Hide Map', 'better-angels'),
             'i18n_show_map' => __('Show Map', 'better-angels'),
@@ -332,6 +349,17 @@ class BetterAngelsPlugin {
     }
 
     public function enqueueAdminScripts ($hook) {
+        // Always enqueue this script to ensure iOS Webapp-style launches
+        // remain within the webapp capable shell. Otherwise, navigating
+        // to a page outside "our app" (like the WP profile page) will make
+        // any subsequent navigation return to the built-in iOS Mobile Safari
+        // browser, which is a confusing user experience for a user who has
+        // "installed" Buoy.
+        wp_enqueue_script(
+            $this->prefix . 'stay-standalone',
+            plugins_url('includes/stay-standalone.js', __FILE__)
+        );
+
         $plugin_data = get_plugin_data(__FILE__);
         wp_enqueue_style(
             $this->prefix . 'style',
@@ -353,16 +381,6 @@ class BetterAngelsPlugin {
             'dashboard_page_' . $this->prefix . 'incident-chat'
         );
         if ($this->isAppPage($hook, $to_hook)) {
-            wp_enqueue_script(
-                $this->prefix . 'stay-standalone',
-                plugins_url('includes/stay-standalone.js', __FILE__)
-            );
-
-            wp_enqueue_script(
-                $this->prefix . 'install-webapp',
-                plugins_url('includes/install-webapp.js', __FILE__)
-            );
-
             wp_enqueue_style(
                 $this->prefix . 'bootstrap',
                 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'
@@ -712,6 +730,12 @@ class BetterAngelsPlugin {
                 ),
                 'html' => wp_get_attachment_image($id)
             ));
+    }
+
+    public function handleDismissInstaller () {
+        check_ajax_referer($this->prefix . 'incident-nonce', $this->prefix . 'nonce');
+
+        update_user_meta(get_current_user_id(), $this->prefix . 'installer-dismissed', true);
     }
 
     /**

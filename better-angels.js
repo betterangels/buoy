@@ -439,13 +439,23 @@ var BUOY = (function () {
         jQuery('#install-webapp-btn').attr({
                 'data-toggle' : 'popover',
                 'data-trigger': 'focus',
+                'data-html': true,
                 'data-content': better_angels_vars.i18n_install_btn_content,
                 'title': better_angels_vars.i18n_install_btn_title
+                         + '<button id="dismiss-installer-btn" class="btn btn-sm btn-primary">'
+                         + better_angels_vars.i18n_dismiss + ' &times;</button>'
             })
             .popover({
                 'placement': 'top'
             })
             .popover('show');
+        jQuery('#dismiss-installer-btn').on('click', function () {
+            jQuery('#install-webapp-btn').popover('hide');
+            jQuery.post(ajaxurl, {
+                'action': 'better-angels_dismiss-installer',
+                'better-angels_nonce': better_angels_vars.incident_nonce,
+            });
+        });
     };
 
     return {
