@@ -19,8 +19,16 @@ $auto_show_modal = ($curr_user->ID === $alerter->ID) ? 'auto-show-modal' : '';
                 <li><a id="go-to-my-location" href="#" role="button" data-user-id="<?php print esc_attr($alerter->ID);?>"><?php esc_html_e('Go to my location', 'better-angels');?></a></li>
             </ul>
         </div>
-        <div class="btn-group btn-group-lg" role="group">
-            <button type="button" class="btn btn-default"><?php esc_html_e('Upload media', 'better-angels');?></button>
+        <div id="incident-media-group" class="btn-group btn-group-lg" role="group">
+            <button id="upload-media-btn" type="button" class="btn btn-default"><?php esc_html_e('Upload media', 'better-angels');?></button>
+            <input type="file" multiple="multiple" accept="audio/*,video/*,image/*" style="display:none;" />
+            <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" type="button">
+                <span class="caret"></span>
+                <span class="sr-only"><?php esc_html_e('Toggle incident media', 'better-angels');?></span>
+            </button>
+            <ul class="dropdown-menu">
+                <?php print $this->getIncidentMediaList($alert_post->ID);?>
+            </ul>
         </div>
     </div><!-- /.btn-toolbar -->
 </div><!-- /.well.well-sm -->
