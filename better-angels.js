@@ -120,7 +120,7 @@ var BUOY = (function () {
             'action': jQuery('#activate-alert-form input[name="action"]').val(),
             'better-angels_nonce': jQuery('#better-angels_nonce').val()
         };
-        if (Object.keys(position).length) {
+        if (position.coords) {
             data.pos = position.coords;
         }
         if (jQuery('#crisis-message').val()) {
