@@ -33,12 +33,14 @@ class BetterAngelsPlugin {
         add_action('wp_before_admin_bar_render', array($this, 'addIncidentMenu'));
         add_action('admin_enqueue_scripts', array($this, 'enqueueAdminScripts'));
         add_action('admin_enqueue_scripts', array($this, 'enqueueMapsScripts'));
+        add_action('admin_head-dashboard_page_' . $this->prefix . 'activate-alert', array($this, 'doAdminHeadActivateAlert'));
         add_action('admin_menu', array($this, 'registerAdminMenu'));
         add_action('admin_notices', array($this, 'showAdminNotices'));
         add_action('wp_ajax_' . $this->prefix . 'findme', array($this, 'handleAlert'));
         add_action('wp_ajax_' . $this->prefix . 'schedule-alert', array($this, 'handleScheduledAlert'));
         add_action('wp_ajax_' . $this->prefix . 'unschedule-alert', array($this, 'handleUnscheduleAlert'));
         add_action('wp_ajax_' . $this->prefix . 'update-location', array($this, 'handleLocationUpdate'));
+        add_action('wp_ajax_' . $this->prefix . 'upload-media', array($this, 'handleMediaUpload'));
         add_action('show_user_profile', array($this, 'addProfileFields'));
         add_action('personal_options_update', array($this, 'updateProfileFields'));
 
@@ -185,6 +187,22 @@ class BetterAngelsPlugin {
         }
     }
 
+    /**
+     * The "activate alert" screen is intended to be the web app "install"
+     * screen for Buoy. We insert special mobile browser specific tags in
+     * order to create a native-like "installer" for the user. We only want
+     * to do this on this specific screen.
+     */
+    public function doAdminHeadActivateAlert () {
+        print '<meta name="mobile-web-app-capable" content="yes" />';       // Android/Chrome
+        print '<meta name="apple-mobile-web-app-capable" content="yes" />'; // Apple/Safari
+        print '<meta name="apple-mobile-web-app-status-bar-style" content="black" />';
+        print '<meta name="apple-mobile-web-app-title" content="' . esc_attr('Buoy', 'better-angels') . '" />';
+        print '<link rel="apple-touch-icon" href="' . plugins_url('img/apple-touch-icon-152x152.png', __FILE__) . '" />';
+        // TODO: This isn't showing up, figure out why.
+        //print '<link rel="apple-touch-startup-image" href="' . plugins_url('img/apple-touch-startup.png', __FILE__) . '">';
+    }
+
     public function registerAdminMenu () {
         add_options_page(
             __('Buoy Settings', 'better-angels'),
@@ -296,6 +314,8 @@ class BetterAngelsPlugin {
         $locale_parts = explode('_', get_locale());
         return array(
             'ietf_language_tag' => array_shift($locale_parts),
+            'i18n_install_btn_title' => __('Install Buoy', 'better-angels'),
+            'i18n_install_btn_content' => __('Tap this button to install Buoy in your device, then choose "Add to home screen" from the menu.', 'better-angels'),
             'i18n_map_title' => __('Incident Map', 'better-angels'),
             'i18n_hide_map' => __('Hide Map', 'better-angels'),
             'i18n_show_map' => __('Show Map', 'better-angels'),
@@ -307,7 +327,7 @@ class BetterAngelsPlugin {
             'i18n_responding_to_alert' => __('Responding to alert', 'better-angels'),
             'i18n_schedule_alert' => __('Schedule alert', 'better-angels'),
             'i18n_scheduling_alert' => __('Scheduling alert', 'better-angels'),
-            'update_location_nonce' => wp_create_nonce($this->prefix . 'update-location')
+            'incident_nonce' => wp_create_nonce($this->prefix . 'incident-nonce')
         );
     }
 
@@ -333,6 +353,16 @@ class BetterAngelsPlugin {
             'dashboard_page_' . $this->prefix . 'incident-chat'
         );
         if ($this->isAppPage($hook, $to_hook)) {
+            wp_enqueue_script(
+                $this->prefix . 'stay-standalone',
+                plugins_url('includes/stay-standalone.js', __FILE__)
+            );
+
+            wp_enqueue_script(
+                $this->prefix . 'install-webapp',
+                plugins_url('includes/install-webapp.js', __FILE__)
+            );
+
             wp_enqueue_style(
                 $this->prefix . 'bootstrap',
                 'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'
@@ -643,7 +673,7 @@ class BetterAngelsPlugin {
      * Sends back the location of all responders to this alert.
      */
     public function handleLocationUpdate () {
-        check_ajax_referer($this->prefix . 'update-location', $this->prefix . 'nonce');
+        check_ajax_referer($this->prefix . 'incident-nonce', $this->prefix . 'nonce');
         $new_position = $_POST['pos'];
         $alert_post = $this->getAlert($_POST['incident_hash']);
         $me = wp_get_current_user();
@@ -663,6 +693,25 @@ class BetterAngelsPlugin {
         }
         $data = array($alerter_info);
         wp_send_json_success(array_merge($data, $this->getResponderInfo($alert_post)));
+    }
+
+    public function handleMediaUpload () {
+        check_ajax_referer($this->prefix . 'incident-nonce', $this->prefix . 'nonce');
+
+        $post = $this->getAlert($_GET[$this->prefix . 'incident_hash']);
+        $keys = array_keys($_FILES);
+        $k  = array_shift($keys);
+        $id = media_handle_upload($k, $post->ID);
+        $m = wp_get_attachment_metadata($id);
+        return (is_wp_error($id))
+            ? wp_send_json_error($id)
+            : wp_send_json_success(array(
+                'id' => $id,
+                'media_type' => substr(
+                    $m['sizes']['thumbnail']['mime-type'], 0, strpos($m['sizes']['thumbnail']['mime-type'], '/')
+                ),
+                'html' => wp_get_attachment_image($id)
+            ));
     }
 
     /**
@@ -1237,6 +1286,51 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
             }
         }
         require_once 'pages/incident-chat.php';
+    }
+
+    /**
+     * Returns an HTML structure containing nested lists and list items
+     * referring to any media attached to the given post ID.
+     *
+     * @param int $post_id The post ID from which to fetch attached media.
+     * @return string HTML ready for insertion into an `<ul>` element.
+     */
+    private function getIncidentMediaList ($post_id) {
+        $html = '';
+
+        $posts = array(
+            'video' => get_attached_media('video', $post_id),
+            'image' => get_attached_media('image', $post_id),
+            'audio' => get_attached_media('audio', $post_id)
+        );
+
+        foreach ($posts as $type => $set) {
+            $html .= '<li class="' . esc_attr($type) . '">';
+            switch ($type) {
+                case 'video':
+                    $html .= esc_html('Video attachments', 'better-angels');
+                    break;
+                case 'image':
+                    $html .= esc_html('Image attachments', 'better-angels');
+                    break;
+                case 'audio':
+                    $html .= esc_html('Audio attachments', 'better-angels');
+                    break;
+            }
+            $html .= ' <span class="badge">' . count($set) . '</span>';
+            $html .= '<ul>';
+
+            foreach ($set as $post) {
+                $html .= '<li id="incident-media-'. $post->ID .'">';
+                $html .= wp_get_attachment_image($post->ID);
+                $html .= '</li>';
+            }
+
+            $html .= '</ul>';
+            $html .= '</li>';
+        }
+
+        return $html;
     }
 
     public function renderChooseAngelsPage () {

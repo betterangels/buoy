@@ -22,7 +22,7 @@ var BUOY = (function () {
             'action': 'better-angels_update-location',
             'pos': position.coords,
             'incident_hash': incident_hash,
-            'better-angels_nonce': better_angels_vars.update_location_nonce
+            'better-angels_nonce': better_angels_vars.incident_nonce
         };
         jQuery.post(ajaxurl, data,
             function (response) {
@@ -120,7 +120,7 @@ var BUOY = (function () {
             'action': jQuery('#activate-alert-form input[name="action"]').val(),
             'better-angels_nonce': jQuery('#better-angels_nonce').val()
         };
-        if (Object.keys(position).length) {
+        if (position.coords) {
             data.pos = position.coords;
         }
         if (jQuery('#crisis-message').val()) {
@@ -313,6 +313,36 @@ var BUOY = (function () {
                 touchMap();
             });
 
+            // Upload media for incident
+            jQuery('#upload-media-btn').on('click', function (e) {
+                e.preventDefault();
+                jQuery(this).next().click();
+            });
+            jQuery('#upload-media-btn').next().on('change', function (e) {
+                var upload_url = ajaxurl + '?action=better-angels_upload-media';
+                upload_url    += '&better-angels_nonce=' + better_angels_vars.incident_nonce;
+                upload_url    += '&better-angels_incident_hash=' + jQuery('#map-container').data('incident-hash');
+                file_list = this.files;
+                for (var i = 0; i < file_list.length; i++) {
+                    var fd = new FormData();
+                    fd.append(file_list[i].name, file_list[i]);
+                    jQuery.ajax({
+                        'type': "POST",
+                        'url': upload_url,
+                        'data': fd,
+                        'processData': false,
+                        'contentType': false,
+                        'success': function (response) {
+                            var li = jQuery('#incident-media-group ul.dropdown-menu li.' + response.data.media_type);
+                            li.find('ul').append(
+                                jQuery('<li id="incident-media-' + response.data.id + '" />').append(response.data.html)
+                            );
+                            li.find('.badge').html(parseInt(li.find('.badge').html()) + 1);
+                        }
+                    });
+                }
+            });
+
             // Show "safety information" on page load,
             // TODO: this should automatically be dismissed when another user
             // enters the chat room.
@@ -404,11 +434,30 @@ var BUOY = (function () {
         return jQuery('#wp-admin-bar-better-angels_active-incidents-menu a').length;
     };
 
+    var installWebApp = function () {
+        jQuery('body').append('<button id="install-webapp-btn"></button>');
+        jQuery('#install-webapp-btn').attr({
+                'data-toggle' : 'popover',
+                'data-trigger': 'focus',
+                'data-content': better_angels_vars.i18n_install_btn_content,
+                'title': better_angels_vars.i18n_install_btn_title
+            })
+            .popover({
+                'placement': 'top'
+            })
+            .popover('show');
+    };
+
     return {
-        'init': init
+        'init': init,
+        'installWebApp': installWebApp
     };
 })();
 
 jQuery(document).ready(function () {
     BUOY.init();
+});
+
+jQuery(document).on('install.ios', function () {
+    BUOY.installWebApp();
 });
