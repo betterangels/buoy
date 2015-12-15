@@ -831,15 +831,34 @@ class BetterAngelsPlugin {
         $k  = array_shift($keys);
         $id = media_handle_upload($k, $post->ID);
         $m = wp_get_attachment_metadata($id);
-        return (is_wp_error($id))
-            ? wp_send_json_error($id)
-            : wp_send_json_success(array(
+        $this->debug_log(sprintf(
+            __('Uploaded media metadata: %s', 'better-angels'),
+            print_r($m, true)
+        ));
+        if (is_wp_error($id)) {
+            wp_send_json_error($id);
+        } else {
+            $mime_type = null;
+            if (isset($m['mime_type'])) {
+                $mime_type = $m['mime_type'];
+            } else if (isset($m['sizes'])) {
+                $mime_type = $m['sizes']['thumbnail']['mime-type'];
+            } else {
+                $mime_type = 'audio/*';
+            }
+            $media_type = substr($mime_type, 0, strpos($mime_type, '/'));
+            $html = $this->getIncidentMediaHtml($media_type, $id);
+            $resp = array(
                 'id' => $id,
-                'media_type' => substr(
-                    $m['sizes']['thumbnail']['mime-type'], 0, strpos($m['sizes']['thumbnail']['mime-type'], '/')
-                ),
-                'html' => wp_get_attachment_image($id)
+                'media_type' => ('application' === $media_type) ? 'audio' : $media_type,
+                'html' => $html
+            );
+            $this->debug_log(sprintf(
+                __('Sending JSON success message: %s', 'better-angels'),
+                print_r($resp, true)
             ));
+            wp_send_json_success($resp);
+        }
     }
 
     public function handleDismissInstaller () {
@@ -1433,10 +1452,41 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
     }
 
     /**
+     * Gets the correct HTML embeds/elements for a given media type.
+     *
+     * @param string $type One of 'video', 'audio', or 'image'
+     * @param int $post_id The WP post ID of the attachment media.
+     * @return string
+     */
+    private function getIncidentMediaHtml ($type, $post_id) {
+        $html = '';
+        switch ($type) {
+            case 'video':
+                $html .= wp_video_shortcode(array(
+                    'src' => wp_get_attachment_url($post_id)
+                ));;
+                break;
+            case 'image':
+                $html .= '<a href="' . wp_get_attachment_url($post_id) . '" target="_blank">';
+                $html .= wp_get_attachment_image($post_id);
+                $html .= '</a>';
+                break;
+            case 'audio':
+            default:
+                $html .= wp_audio_shortcode(array(
+                    'src' => wp_get_attachment_url($post_id)
+                ));
+                break;
+        }
+        return $html;
+    }
+
+    /**
      * Returns an HTML structure containing nested lists and list items
      * referring to any media attached to the given post ID.
      *
      * @param int $post_id The post ID from which to fetch attached media.
+     * @uses BetterAngelsPlugin::getIncidentMediaHtml()
      * @return string HTML ready for insertion into an `<ul>` element.
      */
     private function getIncidentMediaList ($post_id) {
@@ -1449,7 +1499,9 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
         );
 
         foreach ($posts as $type => $set) {
-            $html .= '<li class="' . esc_attr($type) . '">';
+            $html .= '<li class="' . esc_attr($type) . ' list-group">';
+            $html .= '<div class="list-group-item">';
+            $html .= '<h4 class="list-group-item-heading">';
             switch ($type) {
                 case 'video':
                     $html .= esc_html('Video attachments', 'better-angels');
@@ -1462,15 +1514,33 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
                     break;
             }
             $html .= ' <span class="badge">' . count($set) . '</span>';
+            $html .= '</h4>';
             $html .= '<ul>';
 
             foreach ($set as $post) {
-                $html .= '<li id="incident-media-'. $post->ID .'">';
-                $html .= wp_get_attachment_image($post->ID);
+                $this->debug_log(sprintf(
+                    __('Found attachment media: %1$s', 'better-angels'),
+                    print_r($post, true)
+                ));
+                $html .= '<li id="incident-media-'. $post->ID .'" class="list-group-item">';
+                $html .= '<h5 class="list-group-item-header">' . esc_html($post->post_title) . '</h5>';
+                $html .= $this->getIncidentMediaHtml($type, $post->ID);
+                $html .= '<p class="list-group-item-text">';
+                $html .= sprintf(
+                    esc_html_x('uploaded %1$s ago', 'Example: uploaded 5 mins ago', 'better-angels'),
+                    human_time_diff(strtotime($post->post_date_gmt))
+                );
+                $u = get_userdata($post->post_author);
+                $html .= ' ' . sprintf(
+                    esc_html_x('by %1$s', 'a byline, like "written by Bob"', 'better-angels'),
+                    $u->display_name
+                );
+                $html .= '</p>';
                 $html .= '</li>';
             }
 
             $html .= '</ul>';
+            $html .= '</div>';
             $html .= '</li>';
         }
 
