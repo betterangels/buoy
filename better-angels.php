@@ -18,6 +18,9 @@ class BetterAngelsPlugin {
     private $incident_hash; //< Hash of the current incident ("alert").
     private $chat_room_name; //< The name of the chat room for this incident.
 
+    private $default_alert_ttl_num = 2;
+    private $default_alert_ttl_multiplier = DAY_IN_SECONDS;
+
     private $Error; //< WP_Error object
 
     public function __construct () {
@@ -47,6 +50,7 @@ class BetterAngelsPlugin {
 
         add_action('publish_' . str_replace('-', '_', $this->prefix) . 'alert', array($this, 'publishAlert'));
 
+        add_action('update_option_' . $this->prefix . 'settings', array($this, 'updatedSettings'), 10, 2);
         add_action('added_user_meta', array($this, 'addedUserMeta'), 10, 4);
 
         add_action($this->prefix . 'delete_old_alerts', array($this, 'deleteOldAlerts'));
@@ -77,42 +81,113 @@ class BetterAngelsPlugin {
         if (false === $options || empty($options['safety_info'])) {
             $options['safety_info'] = file_get_contents(dirname(__FILE__) . '/includes/default-safety-information.html');
         }
+        if (!isset($options['alert_ttl_num']) || is_null($options['alert_ttl_num']) || 0 === $options['alert_ttl_num']) {
+            $options['alert_ttl_num'] = $this->default_alert_ttl_num;
+        }
+        if (!isset($options['alert_ttl_multiplier']) || is_null($options['alert_ttl_multiplier']) || 0 === $options['alert_ttl_multiplier']) {
+            $options['alert_ttl_multiplier'] = DAY_IN_SECONDS;
+        }
         update_option($this->prefix . 'settings', $options);
 
-        if (!wp_next_scheduled($this->prefix . 'delete_old_alerts')) {
-            wp_schedule_event(
-                time() + HOUR_IN_SECONDS,
-                'twicedaily',
-                $this->prefix . 'delete_old_alerts'
-            );
+        $this->updateSchedules(
+            '',
+            intval($options['alert_ttl_num']) . ' ' . $this->time_multiplier_to_unit($options['alert_ttl_multiplier'])
+        );
+    }
+
+    private function time_multiplier_to_unit ($num) {
+        switch ($num) {
+            case HOUR_IN_SECONDS:
+                return 'hours';
+            case WEEK_IN_SECONDS:
+                return 'weeks';
+            case DAY_IN_SECONDS:
+            default:
+                return 'days';
         }
     }
 
     public function deactivate () {
+        $options = get_option($this->prefix . 'settings');
         do_action($this->prefix . 'delete_old_alerts');
-        wp_clear_scheduled_hook($this->prefix . 'delete_old_alerts');
+        wp_clear_scheduled_hook($this->prefix . 'delete_old_alerts');       // clear hook with no args
+        wp_clear_scheduled_hook($this->prefix . 'delete_old_alerts', array( // and also with explicit args
+            intval($options['alert_ttl_num']) . ' ' . $this->time_multiplier_to_unit($options['alert_ttl_multiplier'])
+        ));
     }
 
     /**
-     * Deletes posts older than a certain threshold from the database.
+     * Deletes posts older than a certain threshold and possibly their children
+     * (media attachments) from the database.
      *
-     * @param string $threshold A strtotime()-compatible string indicating some time in the past. Defaults to '-2 days'.
+     * @param string $threshold A strtotime()-compatible string indicating some time in the past.
+     * @uses get_option() to check the value of this plugin's `delete_old_incident_media` setting for whether to delete attachments (child posts), too.
+     * @return void
      */
     public function deleteOldAlerts ($threshold = '-2 days') {
-        $threshold = (empty($threshold)) ? '-2 days' : $threshold;
         $wp_query_args = array(
             'post_type' => str_replace('-', '_', $this->prefix) . 'alert',
             'date_query' => array(
-                'column' => 'post_date_gmt',
+                'column' => 'post_date',
                 'before' => $threshold,
                 'inclusive' => true
             ),
             'fields' => 'ids'
         );
         $query = new WP_Query($wp_query_args);
+        $options = get_option($this->prefix . 'settings');
         foreach ($query->posts as $post_id) {
-            wp_delete_post($post_id, true); // delete immediately
+            $attached_posts_by_type = array();
+            $types = array('image', 'audio', 'video');
+            if (!empty($options['delete_old_incident_media'])) {
+                foreach ($types as $type) {
+                    $attached_posts_by_type[$type] = get_attached_media($type, $post_id);
+                }
+                foreach ($attached_posts_by_type as $type => $posts) {
+                    foreach ($posts as $post) {
+                        if (!wp_delete_post($post->ID, true)) {
+                            $this->debug_log(sprintf(
+                                __('Failed to delete attachment post %1$s (child of %2$s) during %3$s', 'better-angels'),
+                                $post->ID,
+                                $post_id,
+                                __FUNCTION__ . '()'
+                            ));
+                        }
+                    }
+                }
+            }
+            if (!wp_delete_post($post_id, true)) {
+                $this->debug_log(sprintf(
+                    __('Failed to delete post with ID %1$s during %2$s', 'better-angels'),
+                    $post_id,
+                    __FUNCTION__ . '()'
+                ));
+            }
         }
+    }
+
+    /**
+     * Prints a message to the WordPress wp-content/debug.log file
+     * if the plugin's "detailed debugging" setting is enabled.
+     *
+     * @param string $message
+     * @return void
+     */
+    private function debug_log ($message) {
+        $options = get_option($this->prefix . 'settings');
+        if (!empty($options['debug'])) {
+            error_log($this->error_msg($message));
+        }
+    }
+
+    /**
+     * Prepares an error message for logging.
+     *
+     * @param string $message
+     * @return string
+     */
+    private function error_msg ($message) {
+        return '[' . __CLASS__ . ']: ' . $message;
     }
 
     public function registerL10n () {
@@ -479,6 +554,31 @@ class BetterAngelsPlugin {
         $call_for_help = wp_strip_all_tags(get_user_meta($user_id, $this->prefix . 'call_for_help', true));
         return (empty($call_for_help))
             ? __('Please help!', 'better-angels') : $call_for_help;
+    }
+
+    /**
+     * Handles modifying various WordPress settings based on a plugin settings update.
+     *
+     * @param array $old
+     * @param array $new
+     * @return void
+     */
+    public function updatedSettings ($old, $new) {
+        $old_str = intval($old['alert_ttl_num']) . ' ' . $this->time_multiplier_to_unit($old['alert_ttl_multiplier']);
+        $new_str = intval($new['alert_ttl_num']) . ' ' . $this->time_multiplier_to_unit($new['alert_ttl_multiplier']);
+        $this->updateSchedules($old_str, $new_str);
+    }
+
+    private function updateSchedules ($old_str, $new_str) {
+        if (wp_next_scheduled($this->prefix . 'delete_old_alerts', array($old_str))) {
+            wp_clear_scheduled_hook($this->prefix . 'delete_old_alerts', array($old_str));
+        }
+        wp_schedule_event(
+            time() + HOUR_IN_SECONDS,
+            'hourly',
+            $this->prefix . 'delete_old_alerts',
+            array($new_str)
+        );
     }
 
     /**
@@ -943,7 +1043,17 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
                 case 'safety_info':
                     $safe_input[$k] = force_balance_tags($v);
                     break;
+                case 'alert_ttl_num':
+                    if ($v > 0) {
+                        $safe_input[$k] = intval($v);
+                    } else {
+                        $safe_input[$k] = $this->default_alert_ttl_num;
+                    }
+                    break;
+                case 'alert_ttl_multiplier':
                 case 'future_alerts':
+                case 'delete_old_incident_media':
+                case 'debug':
                     $safe_input[$k] = intval($v);
                     break;
             }
