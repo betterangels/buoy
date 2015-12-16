@@ -43,40 +43,47 @@ class AlertsTest extends WP_UnitTestCase {
         $this->assertObjectHasAttribute('ID', $this->plugin->getAlert($short));
     }
 
-    public function test_deleteOldAlertsIsScheduledAndUnscheduled () {
+    public function test_activation_schedules_hourly_delete_old_alerts_hook () {
         $this->plugin->activate();
-        $this->assertEquals('twicedaily', wp_get_schedule('better-angels_delete_old_alerts'));
+        $this->assertEquals('hourly', wp_get_schedule('better-angels_delete_old_alerts', array('-2 days')));
+    }
 
+    /**
+     * @depends test_activation_schedules_hourly_delete_old_alerts_hook
+     */
+    public function test_deactivation_unschedules_delete_old_alerts_hook () {
         $this->plugin->deactivate();
-        $this->assertFalse(wp_get_schedule('better-angels_delete_old_alerts'));
+        $this->assertFalse(wp_get_schedule('better-angels_delete_old_alerts', array('-2 days')));
     }
 
     public function test_deleteOldAlerts () {
+        $this->plugin->activate(); // sets up the hook schedule defaults
+
         $geodata = array(
             'latitude'  => '40.4381307',
             'longitude' => '-3.8199645'
         );
         $post_data = array(
             'post_title' => 'An alert three days ago.',
-            'post_date_gmt' => gmdate('Y-m-d H:i:s', strtotime('-3 days'))
+            'post_date' => date('Y-m-d H:i:s', strtotime('-3 days'))
         );
         $id_3_days_ago = $this->plugin->newAlert($post_data, $geodata);
 
         $post_data['post_title'] = 'An alert two days ago.';
-        $post_data['post_date_gmt'] = gmdate('Y-m-d H:i:s', strtotime('-2 days'));
+        $post_data['post_date'] = date('Y-m-d H:i:s', strtotime('-2 days'));
         $id_2_days_ago = $this->plugin->newAlert($post_data, $geodata);
 
         $post_data['post_title'] = 'An alert one day ago.';
-        $post_data['post_date_gmt'] = gmdate('Y-m-d H:i:s', strtotime('-1 day'));
+        $post_data['post_date'] = date('Y-m-d H:i:s', strtotime('-1 day'));
         $id_1_day_ago  = $this->plugin->newAlert($post_data, $geodata);
 
-        do_action('better-angels_delete_old_alerts');
+        do_action('better-angels_delete_old_alerts'); // no args, read default threshold from database
 
         $this->assertNull(get_post($id_3_days_ago));
         $this->assertNull(get_post($id_2_days_ago));
         $this->assertNotNull(get_post($id_1_day_ago));
 
-        $this->plugin->deleteOldAlerts('-1 day');
+        do_action('better-angels_delete_old_alerts', '-1 day');
 
         $this->assertNull(get_post($id_1_day_ago));
     }

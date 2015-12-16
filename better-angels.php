@@ -91,7 +91,7 @@ class BetterAngelsPlugin {
 
         $this->updateSchedules(
             '',
-            intval($options['alert_ttl_num']) . ' ' . $this->time_multiplier_to_unit($options['alert_ttl_multiplier'])
+            $this->get_alert_ttl_string($options['alert_ttl_num'], $options['alert_ttl_multiplier'])
         );
     }
 
@@ -112,7 +112,7 @@ class BetterAngelsPlugin {
         do_action($this->prefix . 'delete_old_alerts');
         wp_clear_scheduled_hook($this->prefix . 'delete_old_alerts');       // clear hook with no args
         wp_clear_scheduled_hook($this->prefix . 'delete_old_alerts', array( // and also with explicit args
-            intval($options['alert_ttl_num']) . ' ' . $this->time_multiplier_to_unit($options['alert_ttl_multiplier'])
+            $this->get_alert_ttl_string($options['alert_ttl_num'], $options['alert_ttl_multiplier'])
         ));
     }
 
@@ -124,7 +124,11 @@ class BetterAngelsPlugin {
      * @uses get_option() to check the value of this plugin's `delete_old_incident_media` setting for whether to delete attachments (child posts), too.
      * @return void
      */
-    public function deleteOldAlerts ($threshold = '-2 days') {
+    public function deleteOldAlerts ($threshold) {
+        $options = get_option($this->prefix . 'settings');
+        $threshold = empty($threshold)
+            ? $this->get_alert_ttl_string($options['alert_ttl_num'], $options['alert_ttl_multiplier'])
+            : $threshold;
         $wp_query_args = array(
             'post_type' => str_replace('-', '_', $this->prefix) . 'alert',
             'date_query' => array(
@@ -135,7 +139,6 @@ class BetterAngelsPlugin {
             'fields' => 'ids'
         );
         $query = new WP_Query($wp_query_args);
-        $options = get_option($this->prefix . 'settings');
         foreach ($query->posts as $post_id) {
             $attached_posts_by_type = array();
             $types = array('image', 'audio', 'video');
@@ -564,9 +567,15 @@ class BetterAngelsPlugin {
      * @return void
      */
     public function updatedSettings ($old, $new) {
-        $old_str = intval($old['alert_ttl_num']) . ' ' . $this->time_multiplier_to_unit($old['alert_ttl_multiplier']);
-        $new_str = intval($new['alert_ttl_num']) . ' ' . $this->time_multiplier_to_unit($new['alert_ttl_multiplier']);
-        $this->updateSchedules($old_str, $new_str);
+        $this->updateSchedules(
+            $this->get_alert_ttl_string($old['alert_ttl_num'], $old['alert_ttl_multiplier']),
+            $this->get_alert_ttl_string($new['alert_ttl_num'], $new['alert_ttl_multiplier'])
+        );
+    }
+
+    private function get_alert_ttl_string ($num, $multiplier, $past = true) {
+        $str = intval($num) . ' ' . $this->time_multiplier_to_unit($multiplier);
+        return ($past) ? '-' . $str : $str;
     }
 
     private function updateSchedules ($old_str, $new_str) {
