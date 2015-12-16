@@ -322,7 +322,7 @@ var BUOY = (function () {
                 var upload_url = ajaxurl + '?action=better-angels_upload-media';
                 upload_url    += '&better-angels_nonce=' + better_angels_vars.incident_nonce;
                 upload_url    += '&better-angels_incident_hash=' + jQuery('#map-container').data('incident-hash');
-                file_list = this.files;
+                var file_list = this.files;
                 for (var i = 0; i < file_list.length; i++) {
                     var fd = new FormData();
                     fd.append(file_list[i].name, file_list[i]);
