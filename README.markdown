@@ -4,7 +4,6 @@
 | :------- |:------:|
 | `master` | [![Build Status for master branch](https://travis-ci.org/meitar/better-angels.svg?branch=master)](https://travis-ci.org/meitar/better-angels) |
 | `develop` | [![Build Status for develop branch](https://travis-ci.org/meitar/better-angels.svg?branch=develop)](https://travis-ci.org/meitar/better-angels) |
-| `trunk` | [![Build Status for trunk branch](https://travis-ci.org/meitar/better-angels.svg?branch=trunk)](https://travis-ci.org/meitar/better-angels) |
 
 Buoy is a private, enhanced [9-1-1](https://en.wikipedia.org/wiki/9-1-1) for your website. It is free software created by the Better Angels collective as a [WordPress](https://wordpress.org/) plugin and is designed to quickly connect people in need with trusted friends, family members, advocates, and other allies in times of crisis.
 
@@ -32,9 +31,11 @@ The people you select as your emergency contacts ("response team") will get a no
 
 Installation is as simple as pressing "Install now" from your admin WordPress Dashboard. ([Learn more about installing WordPress plugins from WPBeginner.com](http://www.wpbeginner.com/beginners-guide/step-by-step-guide-to-install-a-wordpress-plugin-for-beginners/).) You can also find [Buoy hosted on the WordPress plugin repository](https://wordpress.org/plugins/buoy/).
 
+Read the [Buoy Administration Guide](https://github.com/meitar/better-angels/wiki/Buoy-Administration-Guide) for more details.
+
 # Contributing
 
-Buoy is [free software](https://www.gnu.org/philosophy/free-sw.en.html "What is free software?") It was developed and is maintained primarily by a nomadic hacker named [maymay](https://maymay.net/) who has a lot of fucks to give about supporting survivors of any of capitalism's horrors, along with a growing group of volunteers who call themselves the Better Angels.
+Buoy is [free software](https://www.gnu.org/philosophy/free-sw.en.html "What is free software?"). It was developed and is maintained primarily by a nomadic hacker named [maymay](https://maymay.net/) who has a lot of fucks to give about supporting survivors of any of capitalism's horrors, along with a growing group of volunteers who call themselves the Better Angels.
 
 Even if you don't code, there's a lot you can do to help make Buoy better. Here are a few.
 

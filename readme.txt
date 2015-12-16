@@ -8,7 +8,7 @@ Stable tag: 0.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-A community-driven emergency dispatch system. Buoy is a private, enhanced 9-1-1 for your community.
+A community-based crisis response system. Buoy is a private, enhanced 9-1-1 for your community.
 
 == Description ==
 
@@ -42,7 +42,19 @@ Buoy can also be installed manually by following these instructions:
 
 Once activated, each user who wants to use Buoy must define their personal response team (list their chosen emergency contacts) in the "My Team" settings page before they can actually send an alert. See the [screenshots](https://wordpress.org/plugins/buoy/screenshots/) for a brief walkthrough of how to configure Buoy after it is installed.
 
+Read the [Buoy Administration Guide](https://github.com/meitar/better-angels/wiki/Buoy-Administration-Guide) for more information on how to administer a Buoy for your community.
+
 == Frequently Asked Questions ==
+
+= Where do I get Buoy? I don't see it in the app store. =
+
+Buoy is not an app, it is a tool that adds emergency dispatch services to websites. To use Buoy, you must have a user account on some community-run website, such as those provided by addiction recovery support groups, domestic violence shelters, local volunteer medical collectives, or similar.
+
+If you don't know of any such groups, take a look through our [List of Buoy-enabled websites](https://github.com/meitar/better-angels/wiki/List-of-Buoy-enabled-websites). Maybe there's a group near you!
+
+If not, consider starting such a group in your town. Reach out to collectives such as [Cop Watch](http://wecopwatch.org/), a local legal aid service provider, [Critical Resistance](http://criticalresistance.org/), [SMART Recovery](http://smartrecovery.org/), the [NCADV](http://www.ncadv.org/), the [Black Cross Health Collective](http://www.blackcrosscollective.org/), or other similar organizations and ask them how you can start a chapter in your neighborhood.
+
+Then get in touch with the [Better Angels](https://github.com/meitar/better-angels/wiki/About-Better-Angels) (that's us!) and we'll help you install and set up Buoy for your community.
 
 = Does Buoy track my location? =
 
