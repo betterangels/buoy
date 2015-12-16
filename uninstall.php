@@ -26,6 +26,7 @@ foreach (get_users() as $usr) {
     delete_user_meta($usr->ID, 'better-angels_sms');
     delete_user_meta($usr->ID, 'better-angels_sms_provider');
     delete_user_meta($usr->ID, 'better-angels_pronoun');
+    delete_user_meta($usr->ID, 'better-angels_installer-dismissed');
 
     // Delete extra metadata of this user's guardian memberships.
     delete_metadata('users', null, 'better-angels_guardian_' . $usr->ID . '_info', null, true);
