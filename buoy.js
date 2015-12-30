@@ -379,7 +379,7 @@ var BUOY = (function () {
 
             // Note: This works around GitHub issue #47.
             // Could be removed after WebKit and/or Bootstrap fixes this in their libs.
-            if (jQuery('.dashboard_page_buoy_chat, .dashboard_page_buoy_activate-alert').length) {
+            if (jQuery('.dashboard_page_buoy_chat, .dashboard_page_buoy_activate_alert').length) {
                 jQuery('body').append(jQuery('.modal').detach());
             }
             // Show buttons that need JavaScript to function.
