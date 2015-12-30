@@ -1,25 +1,23 @@
-<?php
-$options = get_option($this->prefix . 'settings');
-?>
+<?php $options = WP_Buoy_Settings::get_instance();?>
 <form id="activate-alert-form" action="<?php print esc_attr(admin_url('admin-ajax.php'));?>" method="POST">
-    <?php wp_nonce_field($this->prefix . 'activate-alert', $this->prefix . 'nonce');?>
+    <?php wp_nonce_field(parent::$prefix . '_new_alert', parent::$prefix . '_nonce');?>
     <input type="hidden"
         name="action"
-        value="<?php print esc_attr($this->prefix)?>findme"
+        value="<?php print esc_attr(parent::$prefix)?>_new_alert"
     />
 
     <div id="modal-features" class="hidden">
-        <?php if (isset($options['future_alerts'])) : ?>
+        <?php if ($options->get('future_alerts')) : ?>
         <button id="schedule-future-alert-btn" class="btn" type="button">
-            <img src="<?php print plugins_url('../img/stock_alarm.svg', __FILE__);?>" alt="<?php esc_attr_e('Schedule timed alert', 'better-angels');?>" />
+            <img src="<?php print esc_attr(plugins_url('../img/stock_alarm.svg', __FILE__));?>" alt="<?php esc_attr_e('Schedule timed alert', 'buoy');?>" />
         </button>
         <?php endif; ?>
         <button id="activate-msg-btn-submit" class="btn" type="button">
-            <img src="<?php print plugins_url('../img/chat-bubble-1.svg', __FILE__);?>" alt="<?php esc_attr_e('Send emergency message', 'better-angels')?>" />
+            <img src="<?php print esc_attr(plugins_url('../img/chat-bubble-1.svg', __FILE__));?>" alt="<?php esc_attr_e('Send emergency message', 'buoy')?>" />
         </button>
     </div>
     <button id="activate-btn-submit" class="btn">
-        <img src="<?php print plugins_url('../img/life-ring.svg', __FILE__);?>" alt="<?php esc_attr_e('Activate alert', 'better-angels')?>" />
+        <img src="<?php print esc_attr(plugins_url('../img/life-ring.svg', __FILE__));?>" alt="<?php esc_attr_e('Activate alert', 'buoy')?>" />
     </button>
 </form>
 
@@ -27,14 +25,14 @@ $options = get_option($this->prefix . 'settings');
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="<?php esc_attr_e('Close', 'better-angels');?>"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="emergency-message-modal-label"><?php esc_html_e('Message to my team', 'better-angels');?></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="<?php esc_attr_e('Close', 'buoy');?>"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="emergency-message-modal-label"><?php esc_html_e('Message to my team', 'buoy');?></h4>
             </div>
             <div class="modal-body">
                 <textarea id="crisis-message"></textarea>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal"><?php esc_html_e('Send', 'better-angels');?></button>
+                <button type="button" class="btn btn-success" data-dismiss="modal"><?php esc_html_e('Send', 'buoy');?></button>
             </div>
         </div><!-- .modal-content -->
     </div><!-- .modal-dialog -->
@@ -43,25 +41,25 @@ $options = get_option($this->prefix . 'settings');
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="<?php esc_attr_e('Close', 'better-angels');?>"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="scheduled-alert-modal-label"><?php esc_html_e('Schedule a timed alert', 'better-angels');?></h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="<?php esc_attr_e('Close', 'buoy');?>"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="scheduled-alert-modal-label"><?php esc_html_e('Schedule a timed alert', 'buoy');?></h4>
             </div>
             <div class="modal-body">
                 <div class="form-group">
                     <div>
-                        <label for="scheduled-datetime-tz"><?php esc_html_e('Send alert at', 'better-angels');?></label>
+                        <label for="scheduled-datetime-tz"><?php esc_html_e('Send alert at', 'buoy');?></label>
                         <input id="scheduled-datetime-tz" name="scheduled-datetime-tz" class="form-control" type="datetime-local" />
-                        <p class="help-block"><?php esc_html_e('Enter a date and time at which your alert will be sent. You can either select from the pop-up options after clicking in the field, or type a specific date and time in the "YYYY/MM/DD HH:mm" format.', 'better-angels');?></p>
+                        <p class="help-block"><?php esc_html_e('Enter a date and time at which your alert will be sent. You can either select from the pop-up options after clicking in the field, or type a specific date and time in the "YYYY/MM/DD HH:mm" format.', 'buoy');?></p>
                     </div>
                     <div>
-                        <label for="scheduled-crisis-message"><?php esc_html_e('Crisis message', 'better-angels');?></label>
+                        <label for="scheduled-crisis-message"><?php esc_html_e('Crisis message', 'buoy');?></label>
                         <textarea id="scheduled-crisis-message" class="form-control"></textarea>
-                        <p class="help-block"><?php esc_html_e('Briefly provide an explanation of where you expect to be and what you think you will need from your response team. This message will be sent to your response team at the time you specified unless you cancel the alert.', 'better-angels');?></p>
+                        <p class="help-block"><?php esc_html_e('Briefly provide an explanation of where you expect to be and what you think you will need from your response team. This message will be sent to your response team at the time you specified unless you cancel the alert.', 'buoy');?></p>
                     </div>
                 </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" data-dismiss="modal"><?php esc_html_e('Schedule alert', 'better-angels');?></button>
+                <button type="button" class="btn btn-success" data-dismiss="modal"><?php esc_html_e('Schedule alert', 'buoy');?></button>
             </div>
         </div><!-- .modal-content -->
     </div><!-- .modal-dialog -->
@@ -70,8 +68,8 @@ $options = get_option($this->prefix . 'settings');
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
-                <p><?php esc_html_e('Detecting your location and sending alert&hellip;', 'better-angels');?></p>
-                <div class="pulse-loader"><?php esc_html_e('Loading&hellip;', 'better-angels');?></div>
+                <p><?php esc_html_e('Detecting your location and sending alert&hellip;', 'buoy');?></p>
+                <div class="pulse-loader"><?php esc_html_e('Loading&hellip;', 'buoy');?></div>
             </div>
         </div><!-- .modal-content -->
     </div><!-- .modal-dialog -->

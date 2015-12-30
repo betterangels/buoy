@@ -4,6 +4,7 @@
  * a user interface that prompts for native-live installation.
  */
 var BUOY_INSTALLER = (function () {
+
     this.system;
     this.installed;
 
@@ -46,6 +47,7 @@ var BUOY_INSTALLER = (function () {
     return {
         'init': init
     };
+
 })();
 
 jQuery(document).ready(function () {

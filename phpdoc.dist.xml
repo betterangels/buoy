@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<phpdoc>
+    <title>Buoy (plugin for WordPress)</title>
+    <parser>
+        <default-package-name>WordPress</default-package-name>
+        <target>docs</target>
+    </parser>
+    <transformer>
+        <target>docs</target>
+    </transformer>
+    <files>
+        <directory>.</directory>
+        <ignore>tests/*</ignore>
+        <ignore>includes/vendor/*</ignore>
+    </files>
+</phpdoc>

@@ -19,10 +19,10 @@ var BUOY = (function () {
 
     var updateMyLocation = function (position) {
         var data = {
-            'action': 'better-angels_update-location',
+            'action': 'buoy_update_location',
             'pos': position.coords,
             'incident_hash': incident_hash,
-            'better-angels_nonce': better_angels_vars.incident_nonce
+            'buoy_nonce': buoy_vars.incident_nonce
         };
         jQuery.post(ajaxurl, data,
             function (response) {
@@ -85,12 +85,10 @@ var BUOY = (function () {
 
     var scheduleAlert = function (callback) {
         var data = {
-            'action': jQuery('#activate-alert-form input[name="action"]')
-                .val()
-                .replace('_findme', '_schedule-alert'),
+            'action': jQuery('#activate-alert-form input[name="action"]').val(),
             'msg': jQuery('#scheduled-crisis-message').val(),
             'scheduled-datetime-utc': new Date(jQuery('#scheduled-datetime-tz').val()).toUTCString(),
-            'better-angels_nonce': jQuery('#better-angels_nonce').val()
+            'buoy_nonce': jQuery('#buoy_nonce').val()
         };
         jQuery.post(ajaxurl, data,
             function (response) {
@@ -118,7 +116,7 @@ var BUOY = (function () {
     var postAlert = function (position) {
         var data = {
             'action': jQuery('#activate-alert-form input[name="action"]').val(),
-            'better-angels_nonce': jQuery('#better-angels_nonce').val()
+            'buoy_nonce': jQuery('#buoy_nonce').val()
         };
         if (position.coords) {
             data.pos = position.coords;
@@ -144,7 +142,7 @@ var BUOY = (function () {
                         jQuery('<a>')
                         .attr('href', data[key])
                         .attr('target', '_blank')
-                        .html(better_angels_vars['i18n_' + key])
+                        .html(buoy_vars['i18n_' + key])
                     ).html() + '</li>';
         }
         html += '</ul>';
@@ -165,7 +163,7 @@ var BUOY = (function () {
 
         if (mark_coords) {
             var infowindow = new google.maps.InfoWindow({
-                'content': '<p>' + better_angels_vars.i18n_crisis_location + '</p>'
+                'content': '<p>' + buoy_vars.i18n_crisis_location + '</p>'
                            + infoWindowContent({
                                'directions': 'https://maps.google.com/?saddr=Current+Location&daddr=' + encodeURIComponent(coords.lat) + ',' + encodeURIComponent(coords.lng)
                            })
@@ -173,7 +171,7 @@ var BUOY = (function () {
             var marker = new google.maps.Marker({
                 'position': new google.maps.LatLng(coords.lat, coords.lng),
                 'map': map,
-                'title': better_angels_vars.i18n_crisis_location
+                'title': buoy_vars.i18n_crisis_location
             });
             this.map_markers.incident = marker;
             marker_bounds.extend(new google.maps.LatLng(coords.lat, coords.lng));
@@ -226,7 +224,7 @@ var BUOY = (function () {
             var my_marker = new google.maps.Marker({
                 'position': my_geo,
                 'map': map,
-                'title': better_angels_vars.i18n_my_location,
+                'title': buoy_vars.i18n_my_location,
                 'icon': jQuery('#map-container').data('my-avatar-url')
             });
             marker_bounds.extend(my_geo);
@@ -264,7 +262,7 @@ var BUOY = (function () {
             if (jQuery('#scheduled-datetime-tz').length) {
                 jQuery('#scheduled-datetime-tz').datetimepicker({
                     'lazyInit': true,
-                    'lang': better_angels_vars.ietf_language_tag,
+                    'lang': buoy_vars.ietf_language_tag,
                     'minDate': 0, // today is the earliest allowable date
                     'mask': true,
                     'validateOnBlur': false
@@ -275,14 +273,14 @@ var BUOY = (function () {
             });
             jQuery('#scheduled-alert-modal button.btn-success').on('click', function () {
                 jQuery(this).prop('disabled', true);
-                jQuery(this).html(better_angels_vars.i18n_scheduling_alert);
+                jQuery(this).html(buoy_vars.i18n_scheduling_alert);
                 jQuery('#submitting-alert-modal').modal({
                     'show': true,
                     'backdrop': 'static'
                 });
                 scheduleAlert(function () {
                     jQuery('#scheduled-alert-modal button.btn-success').prop('disabled', false);
-                    jQuery('#scheduled-alert-modal button.btn-success').html(better_angels_vars.i18n_schedule_alert);
+                    jQuery('#scheduled-alert-modal button.btn-success').html(buoy_vars.i18n_schedule_alert);
                     jQuery('#submitting-alert-modal').modal('hide');
                 });
             });
@@ -292,7 +290,7 @@ var BUOY = (function () {
                 var map_container = jQuery('#map-container');
                 if (map_container.is(':visible')) {
                     map_container.slideUp();
-                    this.textContent = better_angels_vars.i18n_show_map;
+                    this.textContent = buoy_vars.i18n_show_map;
                 } else {
                     map_container.slideDown({
                         'complete': function () {
@@ -300,7 +298,7 @@ var BUOY = (function () {
                             map.fitBounds(marker_bounds);
                         }
                     });
-                    this.textContent = better_angels_vars.i18n_hide_map;
+                    this.textContent = buoy_vars.i18n_hide_map;
                 }
             });
 
@@ -319,9 +317,9 @@ var BUOY = (function () {
                 jQuery(this).next().click();
             });
             jQuery('#upload-media-btn').next().on('change', function (e) {
-                var upload_url = ajaxurl + '?action=better-angels_upload-media';
-                upload_url    += '&better-angels_nonce=' + better_angels_vars.incident_nonce;
-                upload_url    += '&better-angels_incident_hash=' + jQuery('#map-container').data('incident-hash');
+                var upload_url = ajaxurl + '?action=buoy_upload_media';
+                upload_url    += '&buoy_nonce=' + buoy_vars.incident_nonce;
+                upload_url    += '&buoy_hash=' + jQuery('#map-container').data('incident-hash');
                 var file_list = this.files;
                 for (var i = 0; i < file_list.length; i++) {
                     var fd = new FormData();
@@ -356,7 +354,7 @@ var BUOY = (function () {
             jQuery('#incident-response-form').one('submit', function (e) {
                 e.preventDefault();
                 jQuery(e.target).find('input[type="submit"]').prop('disabled', true);
-                jQuery(e.target).find('input[type="submit"]').val(better_angels_vars.i18n_responding_to_alert);
+                jQuery(e.target).find('input[type="submit"]').val(buoy_vars.i18n_responding_to_alert);
                 navigator.geolocation.getCurrentPosition(
                     function (position) {
                         jQuery('#incident-response-form input[name$="location"]')
@@ -370,7 +368,7 @@ var BUOY = (function () {
                 );
             });
 
-            if (jQuery('.dashboard_page_better-angels_incident-chat').length) {
+            if (jQuery('.dashboard_page_buoy_chat').length) {
                 // TODO: Clear the watcher when failing to get position?
                 //       Then what? Keep trying? Show a dialog asking the user to
                 //       turn on location services?
@@ -381,23 +379,23 @@ var BUOY = (function () {
 
             // Note: This works around GitHub issue #47.
             // Could be removed after WebKit and/or Bootstrap fixes this in their libs.
-            if (jQuery('.dashboard_page_better-angels_incident-chat, .dashboard_page_better-angels_activate-alert').length) {
+            if (jQuery('.dashboard_page_buoy_chat, .dashboard_page_buoy_activate-alert').length) {
                 jQuery('body').append(jQuery('.modal').detach());
             }
             // Show buttons that need JavaScript to function.
             jQuery('#modal-features.hidden, #alert-map.hidden').removeClass('hidden');
 
             // Enhance the WP Toolbar.
-            jQuery('#wp-admin-bar-better-angels_my_scheduled_alerts a').each(function () {
+            jQuery('#wp-admin-bar-buoy_my_scheduled_alerts a').each(function () {
                 var a_el = jQuery(this);
                 a_el.on('click', function (e) {
                     e.preventDefault();
-                    jQuery.post(a_el.attr('href'), {'action': 'better-angels_unschedule-alert'},
+                    jQuery.post(a_el.attr('href'), {'action': 'buoy_unschedule_alert'},
                         function (response) {
                             if (response.success) {
                                 a_el.remove();
                                 if (0 === countIncidentMenuItems()) {
-                                    jQuery('#wp-admin-bar-better-angels_active-incidents-menu').remove();
+                                    jQuery('#wp-admin-bar-buoy-alert-menu').remove();
                                 }
                             }
                         },
@@ -408,13 +406,13 @@ var BUOY = (function () {
         });
 
         jQuery(window).on('load', function () {
-            if (jQuery('.dashboard_page_better-angels_incident-chat #map, .dashboard_page_better-angels_review-alert #map').length) {
+            if (jQuery('.dashboard_page_buoy_chat #map, .dashboard_page_buoy_review_alert #map').length) {
                 this.emergency_location = {
                     'lat': parseFloat(jQuery('#map-container').data('incident-latitude')),
                     'lng': parseFloat(jQuery('#map-container').data('incident-longitude'))
                 };
                 if (isNaN(this.emergency_location.lat) || isNaN(this.emergency_location.lng)) {
-                    jQuery('<div class="notice error is-dismissible"><p>' + better_angels_vars.i18n_missing_crisis_location + '</p></div>')
+                    jQuery('<div class="notice error is-dismissible"><p>' + buoy_vars.i18n_missing_crisis_location + '</p></div>')
                         .insertBefore('#map-container');
                     navigator.geolocation.getCurrentPosition(function (pos) {
                         initMap({'lat': pos.coords.latitude, 'lng': pos.coords.longitude}, false);
@@ -423,7 +421,7 @@ var BUOY = (function () {
                     initMap(this.emergency_location, true);
                 }
             }
-            if (jQuery('.dashboard_page_better-angels_review-alert #map').length) {
+            if (jQuery('.dashboard_page_buoy_review_alert #map').length) {
                 addMarkerForCurrentLocation();
             }
         });
@@ -431,7 +429,7 @@ var BUOY = (function () {
     };
 
     var countIncidentMenuItems = function () {
-        return jQuery('#wp-admin-bar-better-angels_active-incidents-menu a').length;
+        return jQuery('#wp-admin-bar-buoy-alert-menu a').length;
     };
 
     var installWebApp = function () {
@@ -440,10 +438,10 @@ var BUOY = (function () {
                 'data-toggle' : 'popover',
                 'data-trigger': 'focus',
                 'data-html': true,
-                'data-content': better_angels_vars.i18n_install_btn_content,
-                'title': better_angels_vars.i18n_install_btn_title
+                'data-content': buoy_vars.i18n_install_btn_content,
+                'title': buoy_vars.i18n_install_btn_title
                          + '<button id="dismiss-installer-btn" class="btn btn-sm btn-primary">'
-                         + better_angels_vars.i18n_dismiss + ' &times;</button>'
+                         + buoy_vars.i18n_dismiss + ' &times;</button>'
             })
             .popover({
                 'placement': 'top'
@@ -452,8 +450,8 @@ var BUOY = (function () {
         jQuery('#dismiss-installer-btn').on('click', function () {
             jQuery('#install-webapp-btn').popover('hide');
             jQuery.post(ajaxurl, {
-                'action': 'better-angels_dismiss-installer',
-                'better-angels_nonce': better_angels_vars.incident_nonce,
+                'action': 'buoy_dismiss_installer',
+                'buoy_nonce': buoy_vars.incident_nonce,
             });
         });
     };

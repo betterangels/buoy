@@ -2,7 +2,7 @@
 Contributors: meitar
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TJLPJYXHSRBEE&lc=US&item_name=Better%20Angels%20Buoy&item_number=Better%20Angels%20Buoy&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted
 Tags: community, emergency response
-Requires at least: 4.2
+Requires at least: 4.4
 Tested up to: 4.4
 Stable tag: 0.1
 License: GPLv3
@@ -43,6 +43,13 @@ Buoy can also be installed manually by following these instructions:
 Once activated, each user who wants to use Buoy must define their personal response team (list their chosen emergency contacts) in the "My Team" settings page before they can actually send an alert. See the [screenshots](https://wordpress.org/plugins/buoy/screenshots/) for a brief walkthrough of how to configure Buoy after it is installed.
 
 Read the [Buoy Administration Guide](https://github.com/meitar/better-angels/wiki/Buoy-Administration-Guide) for more information on how to administer a Buoy for your community.
+
+= Installation notes and troubleshooting =
+
+If you are having trouble installing Buoy, make sure the computer hosting your website meets the following minimum requirements:
+
+* PHP 5.3 or greater is installed.
+* You have installed or updated to the version of WordPress mentioned in the **Requires** field of this file.
 
 == Frequently Asked Questions ==
 

@@ -1,0 +1,622 @@
+# Copyright (C) 2015 Buoy (a Better Angels crisis response system)
+# This file is distributed under the same license as the Buoy (a Better Angels crisis response system) package.
+msgid ""
+msgstr ""
+"Project-Id-Version: Buoy (a Better Angels crisis response system) 0.1\n"
+"Report-Msgid-Bugs-To: http://wordpress.org/tag/buoy\n"
+"POT-Creation-Date: 2015-12-30 06:03:53+00:00\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"PO-Revision-Date: 2015-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+
+#: buoy.php:159
+msgid "Buoy requires at least PHP version %1$s. You have PHP version %2$s."
+msgstr ""
+
+#: buoy.php:166
+msgid ""
+"Buoy requires at least WordPress version %1$s. You have WordPress version "
+"%2$s."
+msgstr ""
+
+#: class-buoy-alert.php:158
+msgid "No alert with lookup \"%s\" found."
+msgstr ""
+
+#: class-buoy-alert.php:444
+msgid ""
+"WARNING! Your system does not have %s available to generate alert hashes."
+msgstr ""
+
+#: class-buoy-alert.php:459
+msgid "Incidents"
+msgstr ""
+
+#: class-buoy-alert.php:460
+msgid "A call for help."
+msgstr ""
+
+#: class-buoy-alert.php:548
+msgid "Active alerts"
+msgstr ""
+
+#: class-buoy-alert.php:571
+msgid "My alert on %2$s"
+msgstr ""
+
+#: class-buoy-alert.php:586
+msgid "Alert issued by %1$s on %2$s"
+msgstr ""
+
+#: class-buoy-alert.php:600
+msgid "Cancel scheduled alert for %1$s"
+msgstr ""
+
+#: class-buoy-alert.php:602
+msgid "Cancel this alert"
+msgstr ""
+
+#: class-buoy-alert.php:625 class-buoy-alert.php:626
+msgid "Activate Alert"
+msgstr ""
+
+#: class-buoy-alert.php:636 class-buoy-alert.php:637
+msgid "Respond to Alert"
+msgstr ""
+
+#: class-buoy-alert.php:645 class-buoy-alert.php:646
+msgid "Incident Chat"
+msgstr ""
+
+#: class-buoy-alert.php:692 class-buoy-alert.php:714
+#: class-buoy-settings.php:467 class-buoy-settings.php:477
+msgid "You do not have sufficient permissions to access this page."
+msgstr ""
+
+#: class-buoy-alert.php:896
+msgid "Install Buoy"
+msgstr ""
+
+#: class-buoy-alert.php:897
+msgid ""
+"Install Buoy by tapping this button, then choosing \"Add to home screen\" "
+"from the menu."
+msgstr ""
+
+#: class-buoy-alert.php:898
+msgid "Dismiss"
+msgstr ""
+
+#: class-buoy-alert.php:899
+msgid "Incident Map"
+msgstr ""
+
+#: class-buoy-alert.php:900
+msgid "Hide Map"
+msgstr ""
+
+#: class-buoy-alert.php:901 pages/incident-chat.php:10
+msgid "Show Map"
+msgstr ""
+
+#: class-buoy-alert.php:902
+msgid "Location of emergency alert signal"
+msgstr ""
+
+#: class-buoy-alert.php:903
+msgid "Emergency alert signal could not be pinpointed on a map."
+msgstr ""
+
+#: class-buoy-alert.php:904
+msgid "My location"
+msgstr ""
+
+#: class-buoy-alert.php:905
+msgid "Directions to here"
+msgstr ""
+
+#: class-buoy-alert.php:906
+msgid "Call"
+msgstr ""
+
+#: class-buoy-alert.php:907
+msgid "Responding to alert"
+msgstr ""
+
+#: class-buoy-alert.php:908 pages/activate-alert.php:62
+msgid "Schedule alert"
+msgstr ""
+
+#: class-buoy-alert.php:909
+msgid "Scheduling alert"
+msgstr ""
+
+#: class-buoy-alert.php:970
+msgid "Buoy could not understand the date and time you entered."
+msgstr ""
+
+#: class-buoy-alert.php:995
+msgid "Your timed alert has been scheduled. Schedule another?"
+msgstr ""
+
+#: class-buoy-alert.php:1214
+msgctxt "Example: uploaded 5 mins ago"
+msgid "uploaded %1$s ago"
+msgstr ""
+
+#: class-buoy-alert.php:1219
+msgctxt "a byline, like \"written by Bob\""
+msgid "by %1$s"
+msgstr ""
+
+#: class-buoy-notification.php:89 class-buoy-notification.php:119
+msgid "%1$s wants you to join %2$s crisis response team."
+msgstr ""
+
+#: class-buoy-notification.php:113
+msgid ""
+"%1$s invites you to join the Buoy emergency response alternative on %2$s!"
+msgstr ""
+
+#: class-buoy-notification.php:116
+msgid ""
+"Buoy is a community-based crisis response system. It is designed to connect "
+"people in need with trusted friends, family, and other nearby allies who can "
+"help. We believe that in situations where traditional emergency services are "
+"not available, reliable, trustworthy, or sufficient, communities can come "
+"together to aid each other in times of need."
+msgstr ""
+
+#: class-buoy-notification.php:123
+msgid "To join, sign up for an account here:"
+msgstr ""
+
+#: class-buoy-settings.php:216
+msgid "Failed to delete attachment post %1$s (child of %2$s) during %3$s"
+msgstr ""
+
+#: class-buoy-settings.php:227
+msgid "Failed to delete post with ID %1$s during %2$s"
+msgstr ""
+
+#: class-buoy-settings.php:350
+msgid "Error installing system cronjob for timed alerts."
+msgstr ""
+
+#: class-buoy-settings.php:361
+msgid "Error removing system crontab jobs for timed alerts."
+msgstr ""
+
+#: class-buoy-settings.php:415 pages/options.php:2
+msgid "Buoy Settings"
+msgstr ""
+
+#: class-buoy-settings.php:416
+msgid "Buoy"
+msgstr ""
+
+#: class-buoy-settings.php:424 class-buoy-settings.php:425
+#: pages/incident-chat.php:63 pages/options.php:10
+msgid "Safety information"
+msgstr ""
+
+#: class-buoy-team-membership-list-table.php:92
+msgid "Team Name"
+msgstr ""
+
+#: class-buoy-team-membership-list-table.php:93
+msgid "Alerter"
+msgstr ""
+
+#: class-buoy-team-membership-list-table.php:94
+#: class-buoy-team-membership-list-table.php:107
+msgid "Confirmed"
+msgstr ""
+
+#: class-buoy-team-membership-list-table.php:107
+msgid "Pending"
+msgstr ""
+
+#: class-buoy-team-membership-list-table.php:124
+#: class-buoy-team-membership-list-table.php:139
+msgid "Leave Team"
+msgstr ""
+
+#: class-buoy-team-membership-list-table.php:124
+#: class-buoy-team-membership-list-table.php:138
+msgid "Join Team"
+msgstr ""
+
+#: class-buoy-team-membership-list-table.php:133
+msgid "You are not on any teams."
+msgstr ""
+
+#: class-buoy-team.php:92
+msgid "Invalid state for membership."
+msgstr ""
+
+#: class-buoy-team.php:337
+msgid "My Teams"
+msgstr ""
+
+#: class-buoy-team.php:339
+msgid "Add New Team"
+msgstr ""
+
+#: class-buoy-team.php:340
+msgid "Edit Team"
+msgstr ""
+
+#: class-buoy-team.php:341
+msgid "Search Teams"
+msgstr ""
+
+#: class-buoy-team.php:343
+msgid "Groups of crisis responders"
+msgstr ""
+
+#: class-buoy-team.php:402 pages/add-team-member-meta-box.php:5
+msgid "Add a team member"
+msgstr ""
+
+#: class-buoy-team.php:412
+msgid "Current team members %s"
+msgstr ""
+
+#: class-buoy-team.php:423 class-buoy-team.php:789
+msgid "Default Team?"
+msgstr ""
+
+#: class-buoy-team.php:459
+msgid "This team is your default team."
+msgstr ""
+
+#: class-buoy-team.php:462
+msgid ""
+"No. You can make this team your default team from your %1$sTeams%2$s page."
+msgstr ""
+
+#: class-buoy-team.php:479 class-buoy-team.php:739 class-buoy-team.php:740
+msgid "Team membership"
+msgstr ""
+
+#: class-buoy-team.php:566
+msgid "Default team updated."
+msgstr ""
+
+#: class-buoy-team.php:787
+msgid "Members"
+msgstr ""
+
+#: class-buoy-team.php:788
+msgid "Confirmed Members"
+msgstr ""
+
+#: class-buoy-team.php:880
+msgid "Yes"
+msgstr ""
+
+#: class-buoy-team.php:934
+msgid "Make default"
+msgstr ""
+
+#: class-buoy-user.php:64
+msgid "Invalid user ID."
+msgstr ""
+
+#: class-buoy-user.php:148
+msgid "their"
+msgstr ""
+
+#: class-buoy-user.php:161
+msgid "Please help!"
+msgstr ""
+
+#: class-buoy-user.php:261
+msgid "You no longer have crisis responders."
+msgstr ""
+
+#: class-buoy-user.php:262
+msgid ""
+"Either you have removed the last of your Buoy crisis response team members, "
+"or they have all left your teams. You will not be able to send a Buoy alert "
+"to anyone until you add more people to your team(s)."
+msgstr ""
+
+#: pages/activate-alert.php:12
+msgid "Schedule timed alert"
+msgstr ""
+
+#: pages/activate-alert.php:16
+msgid "Send emergency message"
+msgstr ""
+
+#: pages/activate-alert.php:20
+msgid "Activate alert"
+msgstr ""
+
+#: pages/activate-alert.php:28 pages/activate-alert.php:44
+#: pages/incident-chat.php:62 pages/incident-chat.php:69
+msgid "Close"
+msgstr ""
+
+#: pages/activate-alert.php:29
+msgid "Message to my team"
+msgstr ""
+
+#: pages/activate-alert.php:35
+msgid "Send"
+msgstr ""
+
+#: pages/activate-alert.php:45
+msgid "Schedule a timed alert"
+msgstr ""
+
+#: pages/activate-alert.php:50
+msgid "Send alert at"
+msgstr ""
+
+#: pages/activate-alert.php:52
+msgid ""
+"Enter a date and time at which your alert will be sent. You can either "
+"select from the pop-up options after clicking in the field, or type a "
+"specific date and time in the \"YYYY/MM/DD HH:mm\" format."
+msgstr ""
+
+#: pages/activate-alert.php:55 pages/profile.php:53
+msgid "Crisis message"
+msgstr ""
+
+#: pages/activate-alert.php:57
+msgid ""
+"Briefly provide an explanation of where you expect to be and what you think "
+"you will need from your response team. This message will be sent to your "
+"response team at the time you specified unless you cancel the alert."
+msgstr ""
+
+#: pages/activate-alert.php:71
+msgid "Detecting your location and sending alert&hellip;"
+msgstr ""
+
+#: pages/activate-alert.php:72
+msgid "Loading&hellip;"
+msgstr ""
+
+#: pages/add-team-member-meta-box.php:12
+msgid "Michelle"
+msgstr ""
+
+#: pages/current-team-meta-box.php:5
+msgid "Remove team members"
+msgstr ""
+
+#: pages/current-team-meta-box.php:32
+msgid "confirmed"
+msgstr ""
+
+#: pages/current-team-meta-box.php:32
+msgid "pending"
+msgstr ""
+
+#: pages/incident-chat.php:8
+msgid "Incident toolbar"
+msgstr ""
+
+#: pages/incident-chat.php:13
+msgid "Toggle map actions"
+msgstr ""
+
+#: pages/incident-chat.php:16
+msgid "Zoom to fit"
+msgstr ""
+
+#: pages/incident-chat.php:18
+msgid "Go to my location"
+msgstr ""
+
+#: pages/incident-chat.php:22
+msgid "Upload media"
+msgstr ""
+
+#: pages/incident-chat.php:26
+msgid "Toggle incident media"
+msgstr ""
+
+#: pages/incident-chat.php:44 pages/review-alert.php:20
+msgid ""
+"To view a map of the crisis area, JavaScript must be enabled in your browser."
+msgstr ""
+
+#: pages/incident-chat.php:52
+msgid ""
+"To access the incident chat room, JavaScript must be enabled in your browser."
+msgstr ""
+
+#: pages/no-responders-available.php:3
+msgid ""
+"You have no team members. Before you can activate an alert, you must invite "
+"at least one other user to join one of %1$syour response teams%2$s and they "
+"must accept your invitation."
+msgstr ""
+
+#: pages/no-responders-available.php:8
+msgid "Click here to choose members for your response teams."
+msgstr ""
+
+#: pages/no-responders-available.php:10
+msgid "Choose team members"
+msgstr ""
+
+#: pages/options.php:5
+msgid "Configure site-wide Buoy options"
+msgstr ""
+
+#: pages/options.php:15
+msgid ""
+"Provide relevant safety information. This can include hotline phone numbers, "
+"links to nearby shelters or other support resources, and any other "
+"information you believe would be useful. When finished, press %1$sSave "
+"Changes%2$s at the bottom of this page."
+msgstr ""
+
+#: pages/options.php:31
+msgid "Enable timed alerts/safe calls"
+msgstr ""
+
+#: pages/options.php:40
+msgid ""
+"When checked, users will be able to schedule alerts to be sent some time in "
+"the future. This is sometimes known as a \"safe call,\" a way of alerting a "
+"response team to a potentially dangerous situation if the alerter is "
+"unreachable."
+msgstr ""
+
+#: pages/options.php:45
+msgid "Alert time to live"
+msgstr ""
+
+#: pages/options.php:59
+msgid "days"
+msgstr ""
+
+#: pages/options.php:60
+msgid "hours"
+msgstr ""
+
+#: pages/options.php:61
+msgid "weeks"
+msgstr ""
+
+#: pages/options.php:63
+msgid ""
+"Choose how long alerts are kept active. Alerts that were created before this "
+"threshold will be automatically deleted."
+msgstr ""
+
+#: pages/options.php:68
+msgid "Delete attached incident media when deleting old alerts?"
+msgstr ""
+
+#: pages/options.php:77
+msgid ""
+"When checked, any media (images, audio recordings, videos) attached to a "
+"Buoy Alert will be deleted along with the Alert itself when it expires."
+msgstr ""
+
+#: pages/options.php:83
+msgid "Plugin extras"
+msgstr ""
+
+#: pages/options.php:84
+msgid "Additional options to customize plugin behavior."
+msgstr ""
+
+#: pages/options.php:89
+msgid "Enable detailed debugging information?"
+msgstr ""
+
+#: pages/options.php:101
+msgid ""
+"Turn this on only if you are experiencing problems using this plugin, or if "
+"you were told to do so by someone helping you fix a problem (or if you "
+"really know what you are doing). When enabled, extremely detailed technical "
+"information is displayed as a WordPress admin notice when you take certain "
+"actions. If you have also enabled WordPress's built-in debugging (%1$s) and "
+"debug log (%2$s) feature, additional information will be sent to a log file "
+"(%3$s). This file may contain sensitive information, so turn this off and "
+"erase the debug log file when you have resolved the issue."
+msgstr ""
+
+#: pages/profile.php:1
+msgid "Buoy Preferences"
+msgstr ""
+
+#: pages/profile.php:7
+msgid "Gender pronoun (possessive)"
+msgstr ""
+
+#: pages/profile.php:16
+msgid ""
+"Your gender pronoun is a word you use to refer to yourself. The possessive "
+"construction of this word could be \"her,\" \"his,\" or \"their,\" for "
+"example. Leave this blank to use a gender-neutral default."
+msgstr ""
+
+#: pages/profile.php:22
+msgid "Phone number"
+msgstr ""
+
+#: pages/profile.php:32
+msgid "Optional, but will enable you to receive SMS/txt messages of alerts."
+msgstr ""
+
+#: pages/profile.php:38
+msgid "Phone company"
+msgstr ""
+
+#: pages/profile.php:47
+msgid "You must also enter a phone company for SMS/txt messages to work."
+msgstr ""
+
+#: pages/profile.php:64
+msgid ""
+"Your crisis message is the call for help you send to your emergency team "
+"members. Make this short enough to fit inside a txt message!"
+msgstr ""
+
+#: pages/profile.php:71
+msgid "Crisis response"
+msgstr ""
+
+#: pages/profile.php:81
+msgid "List me publicly as an available crisis responder"
+msgstr ""
+
+#: pages/profile.php:84
+msgid ""
+"Checking this box will add you to a directory of available crisis response "
+"team members on this Buoy. Leave this unchecked unless you are willing to "
+"advertise your presence here."
+msgstr ""
+
+#: pages/review-alert.php:27
+msgid "%1$s sent an alert %2$s"
+msgstr ""
+
+#: pages/review-alert.php:29
+msgctxt "%s = human-readable time difference"
+msgid "%s ago"
+msgstr ""
+
+#: pages/review-alert.php:47
+msgid "Respond"
+msgstr ""
+
+#. Plugin Name of the plugin/theme
+msgid "Buoy (a Better Angels crisis response system)"
+msgstr ""
+
+#. Plugin URI of the plugin/theme
+msgid "https://github.com/meitar/better-angels"
+msgstr ""
+
+#. Description of the plugin/theme
+msgid ""
+"A community-based crisis response system. <strong>Like this plugin? Please "
+"<a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;"
+"business=TJLPJYXHSRBEE&amp;lc=US&amp;item_name=Better%20Angels&amp;"
+"item_number=better-angels&amp;currency_code=USD&amp;bn=PP%2dDonationsBF"
+"%3abtn_donate_SM%2egif%3aNonHosted\" title=\"Send a donation to the "
+"developer of Better Angels Buoy\">donate</a>. &hearts; Thank you!</strong>"
+msgstr ""
+
+#. Author of the plugin/theme
+msgid "Maymay <bitetheappleback@gmail.com>"
+msgstr ""
+
+#. Author URI of the plugin/theme
+msgid "https://maymay.net/"
+msgstr ""
