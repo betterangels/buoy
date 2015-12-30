@@ -283,7 +283,9 @@ class BetterAngelsPlugin {
     }
 
     public function registerAdminMenu () {
-        add_options_page(
+        $hooks = array();
+
+        $hooks[] = add_options_page(
             __('Buoy Settings', 'better-angels'),
             __('Buoy', 'better-angels'),
             'manage_options',
@@ -291,7 +293,7 @@ class BetterAngelsPlugin {
             array($this, 'renderOptionsPage')
         );
 
-        $hook = add_menu_page(
+        $hooks[] = add_menu_page(
             __('Emergency Team', 'better-angels'),
             __('My Team', 'better-angels'),
             'read',
@@ -299,9 +301,8 @@ class BetterAngelsPlugin {
             array($this, 'renderChooseAngelsPage'),
             plugins_url('img/icon-bw-life-preserver.svg', __FILE__)
         );
-        add_action('load-' . $hook, array($this, 'addChooseAngelsHelpTabs'));
 
-        $hook = add_submenu_page(
+        $hooks[] = add_submenu_page(
             $this->prefix . 'choose-angels',
             __('Team membership', 'better-angels'),
             __('Team membership', 'better-angels'),
@@ -309,9 +310,8 @@ class BetterAngelsPlugin {
             $this->prefix . 'confirm-guardianship',
             array($this, 'renderTeamMembershipPage')
         );
-        add_action('load-' . $hook, array($this, 'addTeamMembershipPageHelpTabs'));
 
-        add_submenu_page(
+        $hooks[] = add_submenu_page(
             $this->prefix . 'choose-angels',
             __('Safety information', 'better-angels'),
             __('Safety information', 'better-angels'),
@@ -320,7 +320,7 @@ class BetterAngelsPlugin {
             array($this, 'renderSafetyInfoPage')
         );
 
-        add_submenu_page(
+        $hooks[] = add_submenu_page(
             null,
             __('Respond to Alert', 'better-angels'),
             __('Respond to Alert', 'better-angels'),
@@ -329,7 +329,7 @@ class BetterAngelsPlugin {
             array($this, 'renderReviewAlertPage')
         );
 
-        add_submenu_page(
+        $hooks[] = add_submenu_page(
             null,
             __('Incident Chat', 'better-angels'),
             __('Incident Chat', 'better-angels'),
@@ -338,7 +338,7 @@ class BetterAngelsPlugin {
             array($this, 'renderIncidentChatPage')
         );
 
-        $hook = add_dashboard_page(
+        $hooks[] = $hook = add_dashboard_page(
             __('Activate Alert', 'better-angels'),
             __('Activate Alert', 'better-angels'),
             'read', // give access to users of the Subscribers role
@@ -346,6 +346,10 @@ class BetterAngelsPlugin {
             array($this, 'renderActivateAlertPage')
         );
         add_action('load-' . $hook, array($this, 'addInstallerScripts'));
+
+        foreach ($hooks as $hook) {
+            add_action('load-' . $hook, array($this, 'addHelpTab'));
+        }
     }
 
     public function addInstallerScripts () {
@@ -1337,30 +1341,39 @@ esc_html__('Bouy is provided as free software, but sadly grocery stores do not o
         $this->setGuardianInfo($guardian_id, $user_id, $settings);
     }
 
-    public function addChooseAngelsHelpTabs () {
+    /**
+     * Loads the appropriate document from the localized `help` folder
+     * and inserts it as a help tab on the current screen.
+     *
+     * @return void
+     */
+    public function addHelpTab () {
         $screen = get_current_screen();
-        $html = '';
-        $html .= '<p>'. esc_html__('You can choose who to send emergency alerts to if you find yourself in a crisis situation. The people listed here will be notified of where you are and what you need when you activate an alert using Buoy, unless they have the word "fake" next to their name.', 'better-angels') . '</p>';
-        $html .= '<p>' . esc_html__('The people you trust must already have accounts on this website in order for you to add them to your team. If they do not yet have accounts here, or if you do not know their account name, contact them privately and ask them to sign up.', 'better-angels') . '</p>';
-        $html .= '<p>' . esc_html__('Your current team members are shown in the list below with a check mark next to their user name. A "pending" next to their name means they have not yet approved your invitation. A "fake" next to their name means they are not actually going to get alerts you send. Your team members must accept your invitation before your emergency alerts are sent to them.', 'better-angels') . '</p>';
-        $screen->add_help_tab(array(
-            'title' => __('About your Buoy personal emergency response team', 'better-angels'),
-            'id' => esc_html($this->prefix . 'about-choose-angels-help'),
-            'content' => $html
+        $this->debug_log(sprintf(
+            __('Loading help tab info for screen ID %s' ,'better-angels'),
+            print_r($screen, true)
         ));
-        $html = '';
-        $html .= '<p>' . esc_html__('To add a team member, type their user name in the "Add a team member" box. Alternatively, click or tap inside the box once to select it, then click or tap inside the box again to reveal a drop-down menu of active accounts you can add to your team. When you have entered the user name of the person you want to add to your team, click the "Save Changes" button at the bottom of this page.', 'better-angels') . '</p>';
-        $html .= '<p>' . esc_html__('If someone you know is pressuring you to add them to your team but you do not actually want them to get emergency alerts from you, check the "Add as fake team member" box to make them think they are on your team, but not actually send them any alerts.', 'better-angels') . '</p>';
-        $html .= '<p>' . esc_html__('To remove a person from your team, uncheck the checkbox next to their user name and click the "Save Changes" button at the bottom of this page. People you remove from your team will be able to see that you have removed them, so do not remove "fake" members until you feel it is safe for you to do so.', 'better-angels') . '</p>';
-        $screen->add_help_tab(array(
-            'title' => __('Adding and removing team members', 'better-angels'),
-            'id' => esc_html($this->prefix . 'add-remove-choose-angels-help'),
-            'content' => $html
-        ));
-    }
 
-    public function addTeamMembershipPageHelpTabs () {
-        // TODO: Write the help for this page.
+        if (!class_exists('Parsedown')) {
+            require_once plugin_dir_path(__FILE__) . 'includes/parsedown/Parsedown.php';
+        }
+
+        $Parsedown = new Parsedown();
+        $files = glob(plugin_dir_path(__FILE__) . 'help/' . get_locale() . "/{$screen->id}*.md");
+        $num = 1;
+        foreach ($files as $file) {
+            $lines = @file($file);
+            if ($lines) {
+                $title = wp_strip_all_tags($Parsedown->text(array_shift($lines)));
+                $html = $Parsedown->text(implode("\n", $lines));
+                $screen->add_help_tab(array(
+                    'title' => $title,
+                    'id' => esc_attr("{$screen->id}-help-tab-$num"),
+                    'content' => $html
+                ));
+            }
+            $num++;
+        }
     }
 
     public function renderActivateAlertPage () {
