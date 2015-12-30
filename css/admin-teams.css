@@ -1,0 +1,14 @@
+#menu-posts-buoy_team .wp-menu-image img {
+    margin: 5px;
+    padding: 0;
+    width: calc(100% - 10px);
+    background: gray;
+    border-radius: 5px;
+}
+
+#current-team .confirmed {
+    font-weight: bold;
+    padding-bottom: 1em;
+    border-bottom: 1px solid #E5E5E5;
+    margin-bottom: 1em;
+}

@@ -4,13 +4,10 @@ class BuoySettingsTest extends WP_UnitTestCase {
 
     public function setUp () {
         parent::setUp();
-        $this->plugin = new BetterAngelsPlugin();
     }
 
-    public function test_defaultSafetyInformationExists () {
-        $this->plugin->activate();
-        $options = get_option('better-angels_settings');
-        $this->assertNotEmpty($options['safety_info']);
+    public function test_default_safety_information_exists () {
+        $this->assertNotEmpty(WP_Buoy_Settings::get_instance()->get('safety_info'));
     }
 
 }
