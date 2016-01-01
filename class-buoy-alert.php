@@ -945,8 +945,16 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             $meta_input['geo_latitude'] = $alert_position['latitude'];
             $meta_input['geo_longitude'] = $alert_position['longitude'];
         }
-        if (isset($_POST['teams']) && is_array($_POST['teams'])) {
-            $meta_input[self::$prefix . '_teams'] = array_map('absint', $_POST['teams']);
+        if (isset($_POST[self::$prefix . '_teams']) && is_array($_POST[self::$prefix . '_teams'])) {
+            $my_teams = array_map('absint', $_POST[self::$prefix . '_teams']);
+            $valid_teams = array();
+            foreach ($my_teams as $team_id) {
+                $team = new WP_Buoy_Team($team_id);
+                if (get_current_user_id() == $team->wp_post->post_author) {
+                    $valid_teams[] = $team_id;
+                }
+            }
+            $meta_input[self::$prefix . '_teams'] = $valid_teams;
         }
         // Create and publish the new alert.
         $buoy_user = new WP_Buoy_User(get_current_user_id());

@@ -43,7 +43,7 @@
     max-width: 100%;
 }
 .dashboard_page_buoy_activate_alert #crisis-message {
-    height: 50vh;
+    height: 30vh;
     width: 100%;
 }
 .dashboard_page_buoy_activate_alert .btn-success {

@@ -1,9 +1,9 @@
 <?php $options = WP_Buoy_Settings::get_instance();?>
 <form id="activate-alert-form" action="<?php print esc_attr(admin_url('admin-ajax.php'));?>" method="POST">
-    <?php wp_nonce_field(parent::$prefix . '_new_alert', parent::$prefix . '_nonce');?>
+    <?php wp_nonce_field(self::$prefix . '_new_alert', self::$prefix . '_nonce');?>
     <input type="hidden"
         name="action"
-        value="<?php print esc_attr(parent::$prefix)?>_new_alert"
+        value="<?php print esc_attr(self::$prefix);?>_new_alert"
     />
 
     <div id="modal-features" class="hidden">
@@ -19,6 +19,9 @@
     <button id="activate-btn-submit" class="btn">
         <img src="<?php print esc_attr(plugins_url('../img/life-ring.svg', __FILE__));?>" alt="<?php esc_attr_e('Activate alert', 'buoy')?>" />
     </button>
+    <div id="choose-teams-panel" class="hidden">
+        <?php $buoy_user->renderChooseTeamsPanelHtml();?>
+    </div>
 </form>
 
 <div id="emergency-message-modal" class="modal" role="dialog" aria-labelledby="emergency-message-modal-label">
