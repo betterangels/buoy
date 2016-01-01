@@ -301,4 +301,55 @@ class WP_Buoy_User extends WP_Buoy_Plugin {
             ->save();
     }
 
+    /**
+     * Returns the HTML for a Bootstrap Panel of the user's teams.
+     *
+     * @return string
+     */
+    public function renderChooseTeamsPanelHtml () {
+        $teams = $this->get_teams();
+?>
+<div class="panel panel-default">
+    <div class="panel-heading" role="tab" id="">
+        <h3 class="panel-title">
+            <?php esc_html_e('Choose teams', 'buoy');?>
+        </h3>
+    </div>
+    <div class="panel-body">
+        <table class="table" summary="<?php esc_attr_e('Your teams with responders', 'buoy');?>">
+            <thead>
+                <tr>
+                    <th></th>
+                    <th><?php esc_html_e('Team name', 'buoy');?></th>
+                    <th><?php esc_html_e('Responders', 'buoy');?></th>
+                </tr>
+            </thead>
+            <tbody>
+<?php foreach ($teams as $team_id) : $team = new WP_Buoy_Team($team_id); if (!$team->has_responder()) { continue; } ?>
+                <tr>
+                    <td>
+                        <input type="checkbox"
+                            id="<?php print esc_attr(self::$prefix);?>_team-<?php print esc_attr($team_id);?>"
+                            name="<?php print esc_attr(self::$prefix);?>_teams[]"
+                            <?php checked($team->is_default());?>
+                            value="<?php print esc_attr($team_id);?>"
+                        />
+                    </td>
+                    <td>
+                        <label for="<?php print esc_attr(self::$prefix);?>_team-<?php print esc_attr($team_id);?>">
+                            <?php print esc_html($team->wp_post->post_title);?>
+                        </label>
+                    </td>
+                    <td>
+                        <?php print esc_html(count($team->get_confirmed_members()));?>
+                    </td>
+                </tr>
+<?php endforeach;?>
+            </tbody>
+        </table>
+    </div>
+</div>
+<?php
+    }
+
 }

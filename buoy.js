@@ -88,6 +88,9 @@ var BUOY = (function () {
             'action': jQuery('#activate-alert-form input[name="action"]').val(),
             'msg': jQuery('#scheduled-crisis-message').val(),
             'scheduled-datetime-utc': new Date(jQuery('#scheduled-datetime-tz').val()).toUTCString(),
+            'buoy_teams': jQuery('#choose-teams-panel :checked').map(function () {
+                return this.value;
+            }).get(),
             'buoy_nonce': jQuery('#buoy_nonce').val()
         };
         jQuery.post(ajaxurl, data,
@@ -123,6 +126,12 @@ var BUOY = (function () {
         }
         if (jQuery('#crisis-message').val()) {
             data.msg = jQuery('#crisis-message').val();
+        }
+        var teams = jQuery('#choose-teams-panel :checked').map(function () {
+            return this.value;
+        }).get();
+        if (teams.length) {
+            data.buoy_teams = teams;
         }
         jQuery.post(ajaxurl, data,
             function (response) {
@@ -246,6 +255,8 @@ var BUOY = (function () {
                 activateAlert();
             });
             jQuery('#activate-msg-btn-submit').on('click', function () {
+                jQuery('#choose-teams-panel').removeClass('hidden');
+                jQuery('#emergency-message-modal .modal-body').append(jQuery('#choose-teams-panel').detach());
                 jQuery('#emergency-message-modal').modal('show');
             });
             jQuery('#emergency-message-modal').on('shown.bs.modal', function () {
@@ -269,6 +280,8 @@ var BUOY = (function () {
                 });
             }
             jQuery('#schedule-future-alert-btn').on('click', function () {
+                jQuery('#choose-teams-panel').removeClass('hidden');
+                jQuery('#scheduled-alert-modal .modal-body').append(jQuery('#choose-teams-panel').detach());
                 jQuery('#scheduled-alert-modal').modal('show');
             });
             jQuery('#scheduled-alert-modal button.btn-success').on('click', function () {
