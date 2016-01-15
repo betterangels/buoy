@@ -714,11 +714,18 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function renderIncidentChatPage () {
-        $alert = new WP_Buoy_Alert(urldecode($_GET[self::$prefix . '_hash']));
+        try {
+            $alert = new WP_Buoy_Alert(urldecode($_GET[self::$prefix . '_hash']));
+        } catch (Exception $e) {
+            esc_html_e('You do not have sufficient permissions to access this page.', 'buoy');
+            return;
+        }
+
         if (!$alert->wp_post || !current_user_can('read') || !isset($_GET[self::$prefix . '_nonce']) || !wp_verify_nonce($_GET[self::$prefix . '_nonce'], self::$prefix . '_chat')) {
             esc_html_e('You do not have sufficient permissions to access this page.', 'buoy');
             return;
         }
+
         if (get_current_user_id() != $alert->wp_post->post_author) {
             $alert->add_responder(get_current_user_id());
             // TODO: Clean this up a bit, maybe the JavaScript should send JSON data?
@@ -731,6 +738,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
                 $alert->set_responder_geo(get_current_user_id(), $geo);
             }
         }
+
         require_once 'pages/incident-chat.php';
     }
 

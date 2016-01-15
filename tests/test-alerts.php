@@ -14,7 +14,7 @@
  *
  * @link https://make.wordpress.org/core/handbook/testing/automated-testing/phpunit/
  */
-class BuoyAlertsTest extends WP_UnitTestCase {
+class BuoyAlertsTest extends Buoy_UnitTestCase {
 
     /**
      * Sets up the testing environment before each test.
@@ -30,6 +30,14 @@ class BuoyAlertsTest extends WP_UnitTestCase {
      */
     public function test_alert_post_type_exists () {
         $this->assertTrue(post_type_exists('buoy_alert'));
+    }
+
+    /**
+     * Asking for a non-existent alert should throw an Exception.
+     */
+    public function test_unknown_alert_throws_exception () {
+        $this->setExpectedExceptionRegExp('Exception', '/^No alert with lookup "this alert does not exist" found.$/');
+        new WP_Buoy_Alert('this alert does not exist');
     }
 
     public function test_setting_up_new_alert_creates_chat_room_name () {
