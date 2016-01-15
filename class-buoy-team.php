@@ -334,11 +334,18 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
 
         $post_type = self::$prefix . '_team';
         register_post_type($post_type, array(
-            'label' => __('My Teams', 'buoy'),
             'labels' => array(
+                'name' => __('Crisis Response Teams', 'buoy'),
+                'singular_name' => __('Crisis Response Team', 'buoy'),
                 'add_new_item' => __('Add New Team', 'buoy'),
                 'edit_item' => __('Edit Team', 'buoy'),
-                'search_items' => __('Search Teams', 'Buoy')
+                'new_item' => __('New Team', 'buoy'),
+                'view_item' => __('View Team', 'buoy'),
+                'search_items' => __('Search Teams', 'Buoy'),
+                'not_found' => __('No teams found', 'Buoy'),
+                'not_found_in_trash' => __('No teams found in Trash', 'buoy'),
+                'all_items' => __('All Teams', 'buoy'),
+                'menu_name' => __('My Teams', 'buoy')
             ),
             'description' => __('Groups of crisis responders', 'buoy'),
             'public' => false,
