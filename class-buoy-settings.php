@@ -47,7 +47,7 @@ class WP_Buoy_Settings {
      *
      * @var array
      */
-    private $default;
+    private $_defaults;
 
     /**
      * Constructor.
@@ -57,10 +57,11 @@ class WP_Buoy_Settings {
     private function __construct () {
         $this->meta_key = WP_Buoy_Plugin::$prefix . '_settings';
         $this->options  = $this->get_options();
-        $this->default  = array(
+        $this->_defaults  = array(
             'alert_ttl_num' => 2,
             'alert_ttl_multiplier' => DAY_IN_SECONDS,
             'safety_info' => file_get_contents(plugin_dir_path(__FILE__) . 'includes/default-safety-information.html'),
+            'chat_system' => 'post_comments',
             'future_alerts' => false,
             'delete_old_incident_media' => false,
             'debug' => false
@@ -78,8 +79,15 @@ class WP_Buoy_Settings {
         return get_option($this->meta_key, null);
     }
 
-    public function __get ($name) {
-        return $this->$name;
+    /**
+     * Gets a default setting value.
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function get_defaults ($key = null) {
+        return (null === $key) ? $this->_defaults : $this->_defaults[$key];
     }
 
     /**
@@ -92,8 +100,10 @@ class WP_Buoy_Settings {
      * @return void
      */
     public function activate () {
-        foreach ($this->default as $k => $v) {
-            if (!$this->has($k)) { $this->set($k, $v); }
+        foreach ($this->_defaults as $k => $v) {
+            if (!$this->has($k)) {
+                $this->set($k, $v);
+            }
         }
         $this->save();
         $this->updateSchedules(
@@ -242,6 +252,8 @@ class WP_Buoy_Settings {
     }
 
     /**
+     * Registers WordPress hooks.
+     *
      * @return void
      */
     public static function register () {
@@ -283,11 +295,21 @@ class WP_Buoy_Settings {
         return self::$instance;
     }
 
+    /**
+     * Gets an option.
+     *
+     * @param string $key
+     * @param mixed $default
+     *
+     * @return mixed
+     */
     public function get ($key, $default = null) {
         return ($this->has($key)) ? $this->options[$key] : $default;
     }
 
     /**
+     * Sets an option name and value pair.
+     *
      * @return WP_Buoy_Settings
      */
     public function set ($key, $value) {
@@ -296,6 +318,10 @@ class WP_Buoy_Settings {
     }
 
     /**
+     * Checks whether or not an option is set.
+     *
+     * @param string $key
+     *
      * @return bool
      */
     public function has ($key) {
@@ -303,6 +329,8 @@ class WP_Buoy_Settings {
     }
 
     /**
+     * Saves current options to the database.
+     *
      * @return WP_Buoy_Settings
      */
     public function save () {
@@ -311,6 +339,8 @@ class WP_Buoy_Settings {
     }
 
     /**
+     * Deletes an option.
+     *
      * @return WP_Buoy_Settings
      */
     public function delete ($key) {
@@ -324,7 +354,7 @@ class WP_Buoy_Settings {
      * only one record in the WordPress options table in the database
      * to record all the plugin's settings.
      *
-     * @see https://codex.wordpress.org/Settings_API
+     * @link https://codex.wordpress.org/Settings_API
      *
      * @return void
      */
@@ -378,7 +408,7 @@ class WP_Buoy_Settings {
     /**
      * WordPress validation callback for the Settings API hook.
      *
-     * @see https://codex.wordpress.org/Settings_API
+     * @link https://codex.wordpress.org/Settings_API
      *
      * @return array
      */
@@ -396,8 +426,11 @@ class WP_Buoy_Settings {
                     if ($v > 0) {
                         $safe_input[$k] = intval($v);
                     } else {
-                        $safe_input[$k] = $options->default['alert_ttl_num'];
+                        $safe_input[$k] = $options->get_defaults('alert_ttl_num');
                     }
+                    break;
+                case 'chat_system':
+                    $safe_input[$k] = sanitize_text_field($v);
                     break;
                 case 'alert_ttl_multiplier':
                 case 'future_alerts':
@@ -411,9 +444,11 @@ class WP_Buoy_Settings {
     }
 
     /**
+     * Adds items to the Dashboard Admin menu.
+     *
      * @uses WP_Buoy_Plugin::addHelpTab()
      *
-     * @see https://developer.wordpress.org/reference/hooks/menu_order/
+     * @link https://developer.wordpress.org/reference/hooks/menu_order/
      *
      * @return void
      */
@@ -469,6 +504,8 @@ class WP_Buoy_Settings {
     }
 
     /**
+     * Displays the admin options page.
+     *
      * @return void
      */
     public static function renderOptionsPage () {
@@ -479,6 +516,8 @@ class WP_Buoy_Settings {
     }
 
     /**
+     * Displays the "Safety Info" page.
+     *
      * @return void
      */
     public static function renderSafetyInfoPage () {

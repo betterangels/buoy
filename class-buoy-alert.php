@@ -79,15 +79,6 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
     private $_chat_room_name;
 
     /**
-     * Array of postmeta keys to look for alert hash strings.
-     *
-     * For backwards-compatibility
-     *
-     * @var string[]
-     */
-    private $_hash_keys;
-
-    /**
      * Constructor.
      *
      * Retrieves an alert post as a WP_Buoy_Alert object, or an empty,
@@ -101,9 +92,6 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return WP_Buoy_Alert
      */
     public function __construct ($lookup = null) {
-        // Search for hashes in both keyspaces for back-compat.
-        $this->_hash_keys = array(self::$prefix . '_hash', self::$prefix . '_incident_hash');
-
         if (null !== $lookup) {
             return $this->load($lookup);
         }
@@ -124,14 +112,8 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
                 'post_type' => self::$prefix . '_alert',
                 'post_status' => array('publish', 'future'),
                 'meta_query' => array(
-                    'relation' => 'OR',
                     array(
-                        'key' => $this->_hash_keys[0],
-                        'value' => "^$lookup",
-                        'compare' => 'REGEXP'
-                    ),
-                    array(
-                        'key' => $this->_hash_keys[1],
+                        'key' => self::$prefix . '_hash',
                         'value' => "^$lookup",
                         'compare' => 'REGEXP'
                     )
@@ -145,7 +127,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             $this->wp_post = get_post($lookup);
         }
 
-        if ($this->wp_post) {
+        if ($this->wp_post && self::$prefix . '_alert' === $this->wp_post->post_type) {
             $this->set_hash();
             $this->set_chat_room_name();
             $this->_user = get_userdata($this->wp_post->post_author);
@@ -184,6 +166,8 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      *
      * @link https://developer.wordpress.org/reference/functions/wp_insert_post/
      *
+     * @uses WP_Buoy_Settings::get()
+     *
      * @param array $postarr Same as `wp_insert_post()`'s `$postarr` parameter.
      *
      * @return WP_Buoy_Alert
@@ -193,7 +177,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         $postarr['post_type']      = self::$prefix . '_alert';
         $postarr['post_content']   = ''; // empty content
         $postarr['ping_status']    = 'closed';
-        $postarr['comment_status'] = 'closed';
+        $postarr['comment_status'] = 'closed'; // always closed, but dynamically opened by filter
 
         $defaults = array(
             'post_status' => 'publish',
@@ -206,7 +190,8 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         $default_meta = array(
             self::$prefix . '_hash' => $this->make_hash(),
             self::$prefix . '_chat_room_name' => $this->make_chat_room_name(),
-            self::$prefix . '_teams' => array($alerter->get_default_team())
+            self::$prefix . '_teams' => array($alerter->get_default_team()),
+            self::$prefix . '_chat_system' => WP_Buoy_Settings::get_instance()->get('chat_system', 'post_comments')
         );
 
         if (!isset($postarr['meta_input'])) {
@@ -274,12 +259,9 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     private function set_hash () {
-        foreach ($this->_hash_keys as $k) {
-            $prev_hash = sanitize_text_field(get_post_meta($this->wp_post->ID, $k, true));
-            if ($prev_hash) {
-                $this->_hash = $prev_hash;
-                break;
-            }
+        $prev_hash = sanitize_text_field(get_post_meta($this->wp_post->ID, self::$prefix . '_hash', true));
+        if ($prev_hash) {
+            $this->_hash = $prev_hash;
         }
     }
 
@@ -299,6 +281,16 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      */
     public function get_chat_room_name () {
         return $this->_chat_room_name;
+    }
+
+    /**
+     * Gets this alert's chat room system provider.
+     *
+     * @return string
+     */
+    public function get_chat_system () {
+        $meta_key = self::$prefix . '_chat_system';
+        return $this->wp_post->$meta_key;
     }
 
     /**
@@ -456,7 +448,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         register_post_type(self::$prefix . '_alert', array(
             'label' => __('Incidents', 'buoy'),
             'description' => __('A call for help.', 'buoy'),
-            'supports' => array('title'),
+            'supports' => array('title', 'comments'),
             'has_archive' => false,
             'rewrite' => false,
             'can_export' => false,
@@ -475,6 +467,8 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         add_action('wp_ajax_' . self::$prefix . '_dismiss_installer', array(__CLASS__, 'handleDismissInstaller'));
 
         add_action('publish_' . self::$prefix . '_alert', array('WP_Buoy_Notification', 'publishAlert'), 10, 2);
+
+        add_filter('comments_open', array(__CLASS__, 'handleNewPostCommentChat'), 1, 2); // high priority
     }
 
     /**
@@ -509,6 +503,24 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
                 exit();
             }
         }
+    }
+
+    /**
+     * Alters the redirection URL after a "chat" comment is posted.
+     *
+     * @param string $location
+     * @param WP_Comment $comment
+     *
+     * @return string
+     */
+    public static function redirectChatComment ($location, $comment) {
+        $fragment = parse_url($location, PHP_URL_FRAGMENT);
+        $alert = new WP_Buoy_Alert($comment->comment_post_ID);
+        $new_location = plugins_url('pages/post-comments-chat.php', __FILE__) . '?hash=' . $alert->get_hash();
+        if ($fragment) {
+            $new_location .= "#$fragment";
+        }
+        return $new_location;
     }
 
     /**
@@ -1134,6 +1146,41 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             }
         }
         wp_send_json_error();
+    }
+
+    /**
+     * Hooks the new comment routine to allow a "comment" on Alerts.
+     *
+     * This is used to intercept the {@see https://developer.wordpress.org/reference/functions/wp_handle_comment_submission/ `wp_handle_comment_submission()`}
+     * function early in its processing and allow only comments with
+     * the required Buoy Alert "chat" nonces to go through.
+     *
+     * @link https://developer.wordpress.org/reference/functions/comments_open/
+     * @link https://developer.wordpress.org/reference/hooks/duplicate_comment_id/
+     *
+     * @uses $_POST
+     * @uses get_post()
+     * @uses wp_verify_nonce()
+     *
+     * @param bool $open
+     * @param int $post_id
+     *
+     * @return bool
+     */
+    public static function handleNewPostCommentChat ($open, $post_id) {
+        $post = get_post($post_id);
+        if (self::$prefix . '_alert' !== $post->post_type
+            || 'post_comments' !== $post->buoy_chat_system
+            || !isset($_POST[self::$prefix . '_chat_comment_nonce'])
+        ) { return $open; }
+
+        if (1 === wp_verify_nonce($_POST[self::$prefix . '_chat_comment_nonce'], self::$prefix . '_chat_comment')) {
+            add_filter('duplicate_comment_id', '__return_false');
+            add_filter('comment_post_redirect', array(__CLASS__, 'redirectChatComment'), 10, 2);
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**

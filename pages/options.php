@@ -80,6 +80,32 @@
     </tbody>
 </table>
 </fieldset>
+<fieldset id="integration-options"><legend><?php esc_html_e('Integration options', 'buoy');?></legend>
+<table class="form-table">
+    <tbody>
+        <tr>
+            <th>
+                <label for="<?php esc_attr_e(WP_Buoy_Plugin::$prefix);?>_chat_system">
+                    <?php esc_html_e('Default chat system provider', 'buoy');?>
+                </label>
+            </th>
+            <td>
+                <select
+                    id="<?php esc_attr_e(WP_Buoy_Plugin::$prefix);?>_chat_system"
+                    name="<?php esc_attr_e(WP_Buoy_Plugin::$prefix);?>_settings[chat_system]"
+                >
+                    <option value="post_comments" <?php selected($options->get('chat_system'), 'post_comments');?>><?php esc_html_e('Built-in (WordPress commenting system)');?></option>
+                    <option value="tlk.io" <?php selected($options->get('chat_system'), 'tlk.io');?>><?php esc_html_e('Tlk.io', 'buoy');?></option>
+                </select>
+                <p class="description"><?php print sprintf(
+                    esc_html__('Choose a default chat system. You can use the built-in WordPress commenting system, or the free %1$sTlk.io%2$s chat service as a chat room for alerts.'),
+                    '<a href="https://tlk.io/" target="_blank">', '</a>'
+                );?></p>
+            </td>
+        </tr>
+    </tbody>
+</table>
+</fieldset>
 <fieldset id="plugin-extras"><legend><?php esc_html_e('Plugin extras', 'buoy');?></legend>
 <table class="form-table" summary="<?php esc_attr_e('Additional options to customize plugin behavior.', 'buoy');?>">
     <tbody>

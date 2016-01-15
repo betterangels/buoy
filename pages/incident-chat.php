@@ -46,14 +46,45 @@ $auto_show_modal = ($curr_user->ID === $alerter->wp_user->ID) ? 'auto-show-modal
         </noscript>
     </div>
 </div>
-<div id="tlkio" data-channel="<?php print esc_attr($alert->get_chat_room_name());?>" data-nickname="<?php esc_attr_e($curr_user->display_name);?>" style="height:100%;">
-    <noscript>
-        <div class="notice error">
-            <p><?php esc_html_e('To access the incident chat room, JavaScript must be enabled in your browser.', 'buoy');?></p>
-        </div>
-    </noscript>
+
+<div id="alert-chat-room-container" style="height: 100%;">
+<?php if ('tlk.io' === $alert->get_chat_system()) { ?>
+    <div id="tlkio" data-channel="<?php print esc_attr($alert->get_chat_room_name());?>" data-nickname="<?php print esc_attr($curr_user->display_name);?>">
+        <noscript>
+            <div class="notice error">
+                <p><?php esc_html_e('To access the incident chat room, JavaScript must be enabled in your browser.', 'buoy');?></p>
+            </div>
+        </noscript>
+    </div>
+    <script async src="https://tlk.io/embed.js" type="text/javascript"></script>
+<?php } else if ('post_comments' === $alert->get_chat_system()) { ?>
+    <div id="comments-chat">
+        <iframe
+            src="<?php print esc_attr(plugins_url('post-comments-chat.php', __FILE__));?>?hash=<?php print esc_attr($alert->get_hash());?>"
+            name="<?php esc_attr_e(self::$prefix);?>_post_comments_chat"
+            width="100%"
+            allowfullscreen="allowfullscreen"
+            seamless="seamless"
+        >
+            <?php esc_html_e('To access the incident chat room, inline frames must be supported by your browser.', 'buoy');?>
+        </iframe>
+<?php
+add_filter('comments_open', '__return_true');
+ob_start();
+comment_form(array(
+    'logged_in_as' => '',
+    'title_reply' => '',
+    'submit_button' => '',
+    'comment_field' => '<input type="text" id="comment" name="comment" aria-requred="true" required="required" placeholder="' . $curr_user->display_name . '&hellip;" />',
+    'submit_field' => '<p class="form-submit">%1$s %2$s' .  wp_nonce_field(self::$prefix . '_chat_comment', self::$prefix . '_chat_comment_nonce', true, false) . '</p>'
+), $alert->wp_post->ID);
+$comment_form = ob_get_contents();
+ob_end_clean();
+print links_add_target($comment_form, self::$prefix . '_post_comments_chat', array('form'));
+?>
+    </div>
+<?php } ?>
 </div>
-<script async src="https://tlk.io/embed.js" type="text/javascript"></script>
 
 <div id="safety-information-modal" class="modal fade <?php esc_attr_e($auto_show_modal);?>" role="dialog" aria-labelledby="safety-information-modal-label">
     <div class="modal-dialog">
