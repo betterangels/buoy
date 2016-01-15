@@ -439,6 +439,7 @@ var BUOY = (function () {
             }
         });
 
+        jQuery('#commentform').removeAttr('novalidate');
     };
 
     var countIncidentMenuItems = function () {

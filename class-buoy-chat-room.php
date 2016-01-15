@@ -40,7 +40,6 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
         $this->_comments = get_comments(array(
             'post_id' => $this->_alert->wp_post->ID
         ));
-        add_filter(self::$prefix . '_post_comments_chat_room_meta_refresh', array(__CLASS__, 'filterMetaRefresh'));
     }
 
     /**
@@ -94,19 +93,51 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
     }
 
     /**
-     * Filters how quickly to refresh the chat room.
+     * Outputs the <meta> tag for refreshing the chat room automatically.
      *
-     * @param int $refresh Refresh rate (in seconds).
+     * @todo The default refresh rate could (should?) become an admin
+     *       option configurable via the plugin's settings page.
      *
-     * @return int
+     *       Is there a way to go to the #page-footer upon reresh by setting the url here?
+     *       Placing it in the meta tag here doesn't seem to work (browser ignores it?)
+     *
+     * @return void
      */
-    public static function filterMetaRefresh ($refresh) {
+    public static function renderMetaRefresh () {
+        /**
+         * Filters the chat room refresh rate.
+         */
+        $refresh = apply_filters(self::$prefix . '_chat_room_meta_refresh_rate', 5);
+
+        /**
+         * Filters the URL to which the chat room reloads to.
+         */
+        $url     = apply_filters(self::$prefix . '_chat_room_meta_refresh_url', $_SERVER['REQUEST_URI']);
+
+        $html = '<meta http-equiv="refresh" content="%1$s;url=%2$s" />';
         $options = WP_Buoy_Settings::get_instance();
         if ($options->get('debug')) {
-            return '';
-        } else {
-            return $refresh;
+            $refresh = '';
         }
+        print sprintf($html, $refresh, str_replace('&reset', '', $url));
+    }
+
+    /**
+     * Adds "do_form_reset" to the body class for new chat reloads.
+     *
+     * @link https://developer.wordpress.org/reference/hooks/body_class/
+     *
+     * @param string[] $classes
+     *
+     * @return string[]
+     */
+    public static function filterBodyClass ($classes) {
+        // If we're posting a new comment, then we tell the parent frame to
+        // reset the form field.
+        if (isset($_GET['reset'])) {
+            $classes[] = 'do_form_reset';
+        }
+        return $classes;
     }
 
     /**
@@ -137,6 +168,30 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
      */
     public function render () {
         global $buoy_chat_room;
+
+        // TODO: This should become a "real" template, but for now, we just
+        //       empty the major front-end template hooks so we have a clean
+        //       slate from which to define a simple HTML "template."
+        remove_all_actions('wp_head');
+        remove_all_actions('wp_footer');
+
+        add_action('wp_head', array(__CLASS__, 'renderMetaRefresh'), 10, 2);
+        add_action('wp_head', 'wp_print_styles');
+        add_action('wp_head', 'wp_print_head_scripts');
+        wp_enqueue_style(
+            self::$prefix . '-chat-room',
+            plugins_url('/templates/comments-chat-room.css', __FILE__),
+            array(),
+            null
+        );
+        wp_enqueue_script(
+            self::$prefix . '-chat-room',
+            plugins_url('/templates/comments-chat-room.js', __FILE__),
+            array(),
+            null
+        );
+
+        add_filter('body_class', array(__CLASS__, 'filterBodyClass'));
 
         require_once dirname(__FILE__) . '/templates/comments-chat-room.php';
 

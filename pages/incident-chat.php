@@ -70,13 +70,27 @@ $auto_show_modal = ($curr_user->ID === $alerter->wp_user->ID) ? 'auto-show-modal
         </iframe>
 <?php
 add_filter('comments_open', '__return_true');
+$submit_field  = '<div class="input-group">';
+$submit_field .= '<input type="text" id="comment" name="comment"';
+$submit_field .= ' class="form-control" aria-requred="true" required="required"';
+$submit_field .= ' placeholder="' . $curr_user->display_name . '&hellip;" />';
+$submit_field .= '<span class="input-group-btn">%1$s</span> %2$s';
+$submit_field .= wp_nonce_field(self::$prefix . '_chat_comment', self::$prefix . '_chat_comment_nonce', true, false);
+$submit_field .= '</div><!-- .input-group -->';
 ob_start();
 comment_form(array(
+    'comment_field' => '', // use the submit_field instead,
+    'label_submit' => esc_attr__('Send', 'buoy'),
+    'class_submit' => 'btn btn-success',
+    'id_submit' => 'submit-btn',
+    'name_submit' => 'submit-btn',
+    'submit_button' => '<button type="submit" class="%3$s" id="%2$s" name="%1$s">%4$s</button>',
+    'submit_field' => $submit_field,
     'logged_in_as' => '',
     'title_reply' => '',
-    'submit_button' => '',
-    'comment_field' => '<input type="text" id="comment" name="comment" aria-requred="true" required="required" placeholder="' . $curr_user->display_name . '&hellip;" />',
-    'submit_field' => '<p class="form-submit">%1$s %2$s' . wp_nonce_field(self::$prefix . '_chat_comment', self::$prefix . '_chat_comment_nonce', true, false) . '</p>'
+    'title_reply_before' => '',
+    'cancel_reply_before' => '',
+    'cancel_reply_link' => ' ',
 ), $alert->wp_post->ID);
 $comment_form = ob_get_contents();
 ob_end_clean();
