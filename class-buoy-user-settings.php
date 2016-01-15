@@ -37,7 +37,7 @@ class WP_Buoy_User_Settings {
      *
      * @var array
      */
-    private $default = array(
+    private $_defaults = array(
         // option name              => default/possible values
         'crisis_message'            => '',
         'default_team'              => false,
@@ -80,8 +80,15 @@ class WP_Buoy_User_Settings {
         $this->options = $this->get_options();
     }
 
-    public function __get ($name) {
-        return $this->$name;
+    /**
+     * Gets a user setting default, or all defaults.
+     *
+     * @param string $key
+     *
+     * @return mixed
+     */
+    public function get_defaults ($key = null) {
+        return (null === $key) ? $this->_defaults : $this->_defaults[$key];
     }
 
     /**
@@ -91,7 +98,7 @@ class WP_Buoy_User_Settings {
      */
     private function get_options () {
         $opts = array();
-        foreach ($this->default as $k => $v) {
+        foreach ($this->_defaults as $k => $v) {
             $opts[$k] = get_user_meta($this->user->ID, WP_Buoy_Plugin::$prefix . '_' . $k, true);
         }
         return $opts;
@@ -113,6 +120,9 @@ class WP_Buoy_User_Settings {
      * Sets a user option.
      *
      * Returns the current instance for chaining.
+     *
+     * @param string $key
+     * @param mixed $value
      *
      * @return WP_Buoy_User_Settings
      */
@@ -148,7 +158,7 @@ class WP_Buoy_User_Settings {
      * @return WP_Buoy_User_Settings
      */
     public function save () {
-        foreach ($this->default as $k => $v) {
+        foreach ($this->_defaults as $k => $v) {
             if ($this->has($k)) {
                 update_user_meta($this->user->ID, WP_Buoy_Plugin::$prefix . '_' . $k, $this->get($k));
             } else {
@@ -162,6 +172,8 @@ class WP_Buoy_User_Settings {
      * Removes an option from the current instance's $options array.
      *
      * Returns the current instance for chaining.
+     *
+     * @param string $key
      *
      * @return WP_Buoy_User_Settings
      */

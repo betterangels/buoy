@@ -268,7 +268,7 @@ class WP_Buoy_User extends WP_Buoy_Plugin {
      * @return void
      */
     public static function renderProfile ($profileuser) {
-        $options = new WP_Buoy_User_Settings($profileuser);
+        $usropt = new WP_Buoy_User_Settings($profileuser);
         require_once 'pages/profile.php';
     }
 
