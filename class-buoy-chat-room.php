@@ -247,7 +247,7 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
      */
     public static function filterCommentText ($comment_text) {
         // Detect any URLs that point to recognized images, and embed them.
-        $pat = '!\b(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*\.(jpg|JPG|jpeg|JPEG|gif|GIF|png|PNG))(?:\?([^#]*))?(?:#(.*))?\b!';
+        $pat = '!(?:([^:/?#\s]+):)?(?://([^/?#]*))?([^?#\s]*\.(jpe?g|JPE?G|gif|GIF|png|PNG))(?:\?([^#]*))?(?:#(.*))?!';
         $rep = '<a href="$0"><img src="$0" alt="[' . sprintf(esc_attr__('%1$s image from %2$s', 'buoy'), '.$4 ', '$2') . ']" style="max-width:100%;" /></a>';
         $comment_text = preg_replace($pat, $rep, $comment_text);
 
