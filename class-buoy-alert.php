@@ -1175,7 +1175,8 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         ) { return $open; }
 
         if (1 === wp_verify_nonce($_POST[self::$prefix . '_chat_comment_nonce'], self::$prefix . '_chat_comment')) {
-            add_filter('duplicate_comment_id', '__return_false');
+            add_filter('duplicate_comment_id', '__return_false'); // allow dupes
+            add_filter('pre_comment_approved', '__return_true');  // always approve
             add_filter('comment_post_redirect', array(__CLASS__, 'redirectChatComment'), 10, 2);
             return true;
         } else {

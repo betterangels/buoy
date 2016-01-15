@@ -97,3 +97,20 @@
         top: 102px;
     }
 }
+
+/**
+ * Styles for the built-in comments-as-chat-room.
+ *
+ * @group post_comments
+ */
+#comments-chat {
+    height: calc(100% - 40px);
+    display: flex;
+    flex-direction: column;
+}
+#comments-chat iframe {
+    flex-grow: 2;
+}
+#comments-chat #respond {
+    flex-grow: 1;
+}

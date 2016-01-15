@@ -24,42 +24,103 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
     private $_comments;
 
     /**
+     * The alert associatd with this chat room.
+     *
+     * @var WP_Buoy_Alert
+     */
+    private $_alert;
+
+    /**
      * Constructor.
      *
      * @param int|string $lookup
      */
     public function __construct ($lookup) {
-        $alert = new WP_Buoy_Alert($lookup);
-        $this->_comments = get_comments($alert->wp_post->ID);
+        $this->_alert = new WP_Buoy_Alert($lookup);
+        $this->_comments = get_comments(array(
+            'post_id' => $this->_alert->wp_post->ID
+        ));
+        add_filter(self::$prefix . '_post_comments_chat_room_meta_refresh', array(__CLASS__, 'filterMetaRefresh'));
+    }
+
+    /**
+     * Whether or not a given user is a responder for this alert.
+     *
+     * @param int $user_id
+     *
+     * @return bool
+     */
+    public function is_responder ($user_id) {
+        return $this->_alert->is_responder($user_id);
+    }
+
+    /**
+     * Whether or not a given user is the "owner" of the chat room.
+     *
+     * @param int $user_id
+     *
+     * @return bool
+     */
+    public function is_alerter ($user_id) {
+        return $user_id == $this->_alert->wp_post->post_author;
+    }
+
+    /**
+     * Retrieves the title of the alert for this chat room.
+     *
+     * @return string
+     */
+    public function get_title () {
+        return $this->_alert->wp_post->post_title;
     }
 
     /**
      * Gets the comment HTML.
      *
+     * @uses wp_parse_args()
+     * @uses wp_list_comments()
+     *
+     * @param array $args Arguments to pass to `wp_list_comments()`
+     *
      * @return string|void
      */
-    public function wp_list_comments () {
-        $this->_comments_html = wp_list_comments(array(
-            'format' => 'xhtml',
-            'reverse_top_level' => 'desc',
-            //'callback' => array(__CLASS__, 'renderComment')
-        ), $this->_comments);
+    public function list_comments ($args = array()) {
+        add_filter('comment_class', array(__CLASS__, 'filterCommentClass'), 10, 5);
+        $defaults = array(
+            'reverse_top_level' => 'desc'
+        );
+        $args = wp_parse_args($args, $defaults);
+        wp_list_comments($args, $this->_comments);
     }
 
     /**
-     * Renders an individual comment.
+     * Filters how quickly to refresh the chat room.
      *
-     * Used as a callback function from {@see https://developer.wordpress.org/reference/functions/wp_list_comments `wp_list_comments()`}.
+     * @param int $refresh Refresh rate (in seconds).
      *
-     * @param WP_Comment $comment
-     * @param array $args
-     * @param int $depth
-     *
-     * @return void
+     * @return int
      */
-    public static function renderComment ($comment, $args, $depth) {
-        print '<li>';
-        print $comment->comment_content;
+    public static function filterMetaRefresh ($refresh) {
+        $options = WP_Buoy_Settings::get_instance();
+        if ($options->get('debug')) {
+            return '';
+        } else {
+            return $refresh;
+        }
+    }
+
+    /**
+     * Adds our own class to each comment "chat message" output.
+     *
+     * @link https://developer.wordpress.org/reference/hooks/comment_class/
+     *
+     * @param string[] $classes
+     *
+     * @return string[]
+     */
+    public static function filterCommentClass ($classes) {
+        $classes[] = self::$prefix . '-chat-message';
+        return $classes;
     }
 
     /**
@@ -76,7 +137,11 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
      */
     public function render () {
         global $buoy_chat_room;
+
         require_once dirname(__FILE__) . '/templates/comments-chat-room.php';
+
+        do_action('shutdown');
+        exit();
     }
 
 }

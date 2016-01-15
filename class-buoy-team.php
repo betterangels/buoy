@@ -368,10 +368,13 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
 
         add_filter('enter_title_here', array(__CLASS__, 'filterTitlePlaceholder'), 10, 2);
 
-        wp_enqueue_style(
-            __CLASS__ . '-style',
-            plugins_url('css/admin-teams.css', __FILE__)
-        );
+        // TODO: This should probably be moved so it loads only where needed.
+        if (is_admin()) {
+            wp_enqueue_style(
+                __CLASS__ . '-style',
+                plugins_url('css/admin-teams.css', __FILE__)
+            );
+        }
 
         add_action('current_screen', array(__CLASS__, 'processTeamTableActions'));
 

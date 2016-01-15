@@ -17,9 +17,10 @@ require plugin_dir_path(dirname(__FILE__)) . 'class-buoy-chat-room.php';
 
 nocache_headers();
 
-if (isset($_GET['hash'])) {
+if (!empty($_GET['hash']) && get_current_user_id()) {
     $buoy_chat_room = new WP_Buoy_Chat_Room($_GET['hash']);
-    $buoy_chat_room->render();
-} else {
-    wp_die(__('You do not have sufficient permissions to access this page.', 'buoy'));
+    if ($buoy_chat_room->is_alerter(get_current_user_id()) || $buoy_chat_room->is_responder(get_current_user_id())) {
+        $buoy_chat_room->render();
+    }
 }
+wp_die(__('You do not have sufficient permissions to access this page.', 'buoy'));
