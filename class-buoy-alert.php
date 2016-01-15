@@ -523,6 +523,13 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
     public static function addAlertsMenu () {
         global $wp_admin_bar;
 
+        $wp_admin_bar->add_node(array(
+            'id' => 'new-' . self::$prefix . '-alert',
+            'title' => __('Alert', 'buoy'),
+            'parent' => 'new-content',
+            'href' => admin_url('index.php?page=' . self::$prefix . '_activate_alert')
+        ));
+
         $alerts = array(
             'my_alerts' => array(),
             'my_responses' => array(),
