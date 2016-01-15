@@ -653,8 +653,8 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         }
 
         // Add a new team member
-        $add_team_member_input = $_POST[self::$prefix . '_add_team_member'];
         if (isset($_POST[self::$prefix . '_add_team_member_nonce']) && wp_verify_nonce($_POST[self::$prefix . '_add_team_member_nonce'], self::$prefix . '_add_team_member')) {
+            $add_team_member_input = $_POST[self::$prefix . '_add_team_member'];
             $user_id = username_exists($add_team_member_input);
             if (false !== $user_id) {
                 if (!in_array($user_id, $team->get_member_ids())) {
