@@ -366,6 +366,8 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         add_action('load-post-new.php', array('WP_Buoy_Plugin', 'addHelpTab'));
         add_action('load-edit.php', array('WP_Buoy_Plugin', 'addHelpTab'));
 
+        add_filter('enter_title_here', array(__CLASS__, 'filterTitlePlaceholder'), 10, 2);
+
         wp_enqueue_style(
             __CLASS__ . '-style',
             plugins_url('css/admin-teams.css', __FILE__)
@@ -778,6 +780,23 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         $caps['edit_published_'   . self::$prefix . '_teams'] = true;
         $caps['delete_published_' . self::$prefix . '_teams'] = true;
         return $caps;
+    }
+
+    /**
+     * Sets the placeholder text for the "New Team" page.
+     *
+     * @link https://developer.wordpress.org/reference/hooks/enter_title_here/
+     *
+     * @param string $text
+     * @param WP_Post $post
+     *
+     * @return string
+     */
+    public static function filterTitlePlaceholder ($text, $post) {
+        if (self::$prefix . '_team' === $post->post_type) {
+            $text = __('Enter team name here', 'buoy');
+        }
+        return $text;
     }
 
     /**
