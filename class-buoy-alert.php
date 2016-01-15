@@ -1189,6 +1189,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             add_filter('duplicate_comment_id', '__return_false'); // allow dupes
             add_filter('comment_flood_filter', '__return_false'); // allow floods
             add_filter('pre_comment_approved', '__return_true');  // always approve
+            add_filter('comment_notification_recipients', '__return_false'); // don't email
             add_filter('comment_post_redirect', array(__CLASS__, 'redirectChatComment'), 10, 2);
             return true;
         } else {
