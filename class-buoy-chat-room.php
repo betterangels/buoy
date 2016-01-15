@@ -229,6 +229,38 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
     }
 
     /**
+     * Spruces up the comment text when displaying a comment.
+     *
+     * Chat messages are stored as comments in the WordPress database
+     * so this filter takes the text (typically a single line) and
+     * adds some basic expected functionality like turning links to
+     * images into inline images, and parsing simple markdown.
+     *
+     * @link https://developer.wordpress.org/reference/hooks/comment_text/
+     *
+     * @uses Parsedown::text()
+     * @uses links_add_target()
+     *
+     * @param string $comment_text
+     *
+     * @return string
+     */
+    public static function filterCommentText ($comment_text) {
+        // Detect any URLs that point to recognized images, and embed them.
+        $pat = '!\b(?:([^:/?#]+):)?(?://([^/?#]*))?([^?#]*\.(jpg|JPG|jpeg|JPEG|gif|GIF|png|PNG))(?:\?([^#]*))?(?:#(.*))?\b!';
+        $rep = '<a href="$0"><img src="$0" alt="[' . sprintf(esc_attr__('%1$s image from %2$s', 'buoy'), '.$4 ', '$2') . ']" style="max-width:100%;" /></a>';
+        $comment_text = preg_replace($pat, $rep, $comment_text);
+
+        // Finally, parse the result as markdown for more formatting
+        if (!class_exists('Parsedown')) {
+            require_once dirname(__FILE__) . '/includes/vendor/wp-screen-help-loader/vendor/parsedown/Parsedown.php';
+        }
+        $comment_text = Parsedown::instance()->text($comment_text);
+
+        return links_add_target($comment_text);
+    }
+
+    /**
      * Renders a chat room.
      *
      * @global $buoy_chat_room
@@ -268,6 +300,7 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
         );
 
         add_filter('body_class', array(__CLASS__, 'filterBodyClass'));
+        add_filter('comment_text', array(__CLASS__, 'filterCommentText'), 5); // early priority
 
         require_once dirname(__FILE__) . '/templates/comments-chat-room.php';
 
