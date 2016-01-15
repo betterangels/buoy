@@ -43,30 +43,24 @@ class WP_Buoy_User extends WP_Buoy_Plugin {
     /**
      * Constructor.
      *
-     * If the $user_id is invalid (doesn't refer to an existing user),
-     * a `WP_Error` will be returned with an `invalid-user-id` code.
-     *
-     * @see https://developer.wordpress.org/reference/classes/WP_Error/
-     *
      * @uses get_userdata()
-     * @uses WP_Error
      * @uses WP_Buoy_User_Settings
      *
      * @param int $user_id
      *
-     * @return WP_Buoy_User|WP_Error
+     * @return WP_Buoy_User
+     *
+     * @throws Exception if the provided `$user_id` does not reference a valid `WP_User` object.
      */
     public function __construct ($user_id) {
         $this->wp_user = get_userdata($user_id);
         if (false === $this->wp_user) {
-            return new WP_Error(
-                'invalid-user-id',
-                __('Invalid user ID.', 'buoy'),
+            throw new Exception(sprintf(
+                __('Invalid user ID: %s', 'buoy'),
                 $user_id
-            );
+            ));
         }
         $this->_options = new WP_Buoy_User_Settings($this->wp_user);
-        return $this;
     }
 
     /**

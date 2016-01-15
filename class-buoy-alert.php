@@ -107,8 +107,6 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         if (null !== $lookup) {
             return $this->load($lookup);
         }
-
-        return $this;
     }
 
     /**

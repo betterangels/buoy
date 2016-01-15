@@ -62,7 +62,6 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         $this->members = array_map('get_userdata', array_unique(get_post_meta($this->wp_post->ID, '_team_members')));
         $this->_invitees = array_unique(get_post_meta($this->wp_post->ID, '_invitees'));
         $this->author = get_userdata($this->wp_post->post_author);
-        return $this;
     }
 
     /**

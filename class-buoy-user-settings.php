@@ -78,7 +78,6 @@ class WP_Buoy_User_Settings {
         }
         $this->user = $user;
         $this->options = $this->get_options();
-        return $this;
     }
 
     public function __get ($name) {

@@ -10,7 +10,6 @@
     </transformer>
     <files>
         <directory>.</directory>
-        <ignore>tests/*</ignore>
         <ignore>includes/vendor/*</ignore>
     </files>
 </phpdoc>

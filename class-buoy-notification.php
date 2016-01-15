@@ -18,6 +18,8 @@ class WP_Buoy_Notification extends WP_Buoy_Plugin {
 
     /**
      * Constructor.
+     *
+     * @return WP_Buoy_Notification
      */
     public function __construct () {
     }

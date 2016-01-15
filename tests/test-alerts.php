@@ -1,12 +1,33 @@
 <?php
+/**
+ * Tests for Buoy Alerts
+ *
+ * @package WordPress\Plugin\WP_Buoy_Plugin\WP_Buoy_Alert\Tests
+ *
+ * @copyright Copyright (c) 2015-2016 by Meitar "maymay" Moscovitz
+ *
+ * @license https://www.gnu.org/licenses/gpl-3.0.en.html
+ */
 
-class AlertsTest extends WP_UnitTestCase {
+/**
+ * Buoy alerts testing class.
+ *
+ * @link https://make.wordpress.org/core/handbook/testing/automated-testing/phpunit/
+ */
+class BuoyAlertsTest extends WP_UnitTestCase {
 
+    /**
+     * Sets up the testing environment before each test.
+     *
+     * @link https://phpunit.de/manual/current/en/fixtures.html
+     */
     public function setUp () {
         parent::setUp();
-        wp_set_current_user(null, 'survivor');
     }
 
+    /**
+     * Ensures that WordPress recognizes what a "Buoy Alert" is.
+     */
     public function test_alert_post_type_exists () {
         $this->assertTrue(post_type_exists('buoy_alert'));
     }
@@ -23,12 +44,29 @@ class AlertsTest extends WP_UnitTestCase {
         $this->markTestIncomplete();
     }
 
-    public function test_activation_schedules_hourly_delete_old_alerts_hook () {
+    /**
+     * Checks (de)activating the plugin (un)schedules "old" alerts for
+     * deletion.
+     *
+     * It is important for Buoy alerts to be ephemeral in nature, not
+     * necessarily stored in a database for a long time. This test is
+     * used to make sure that merely activating the plugin is enough
+     * to tell the plugin to delete any incident data that was made
+     * 48 hours ago (or longer).
+     *
+     * This test also checks for the inverse: that this scheduled job
+     * is automatically removed whenever the plugin is deactivated.
+     *
+     * Note that this test does *not* ensure the alert data itself is
+     * deleted, only that the automatic job scheduler has the correct
+     * information.
+     *
+     * @ticket 21
+     */
+    public function test_schedule_and_unschedule_delete_old_alerts_hook_on_activation_and_deactivation () {
         WP_Buoy_Plugin::activate();
         $this->assertEquals('hourly', wp_get_schedule('buoy_delete_old_alerts', array('-2 days')));
-    }
 
-    public function test_deactivation_unschedules_delete_old_alerts_hook () {
         WP_Buoy_Plugin::deactivate();
         $this->assertFalse(wp_get_schedule('buoy_delete_old_alerts', array('-2 days')));
     }

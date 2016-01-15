@@ -63,7 +63,7 @@ class WP_Screen_Help_Loader {
      * @uses WP_Screen_Help_Loader::get_help_dir_path()
      * @uses get_current_screen()
      *
-     * @return void
+     * @return WP_Screen_Help_Loader
      */
     public function __construct ($path) {
         $this->_help_dir_path = $this->get_help_dir_path($path);

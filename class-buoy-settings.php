@@ -50,6 +50,8 @@ class WP_Buoy_Settings {
     private $default;
 
     /**
+     * Constructor.
+     *
      * @return WP_Buoy_Settings
      */
     private function __construct () {
@@ -63,7 +65,6 @@ class WP_Buoy_Settings {
             'delete_old_incident_media' => false,
             'debug' => false
         );
-        return $this;
     }
 
     /**
