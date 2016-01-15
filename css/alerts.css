@@ -109,8 +109,8 @@
     flex-direction: column;
 }
 #comments-chat iframe {
-    flex-grow: 2;
+    flex-grow: 1;
 }
 #comments-chat #respond {
-    flex-grow: 1;
+    height: 34px;
 }

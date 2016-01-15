@@ -1,4 +1,40 @@
 /**
  * Styles for the "front-end" of the built-in chat room.
  */
-.edit-link { display: none; }
+#chat-room .media-list {
+    margin: 0 5px 5px;
+}
+
+#chat-room .media-body {
+    position: relative;
+    border: 1px solid black;
+    padding: 5px;
+    border-radius: 10px;
+}
+#chat-room .media-on-left {
+    margin-right: 58px;
+}
+#chat-room .media-on-right {
+    margin-left: 58px;
+}
+#chat-room .media-right {
+    text-align: right;
+}
+#chat-room .media-on-left .media-body {
+    border-bottom-left-radius: 0;
+}
+#chat-room .media-on-right .media-body {
+    border-bottom-right-radius: 0;
+}
+#chat-room .media-body footer {
+    position: absolute;
+    bottom: 2px;
+    color: gray;
+    font-size: smaller;
+}
+#chat-room .media-on-right .media-body footer {
+    right: 5px;
+}
+#chat-room .media-object {
+    border-radius: 50%;
+}

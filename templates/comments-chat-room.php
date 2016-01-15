@@ -22,8 +22,8 @@
             <h1 class="site-title"><?php print esc_html($buoy_chat_room->get_title());?></h1>
         </header>
 
-        <section class="chat-messages">
-            <ul>
+        <section id="chat-room">
+            <ul class="media-list">
                 <?php $buoy_chat_room->list_comments();?>
             </ul>
         </section>

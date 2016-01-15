@@ -844,18 +844,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             true
         );
 
-        // Enqueue BootstrapCSS/JS framework.
-        wp_enqueue_style(
-            'bootstrap-css',
-            'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'
-        );
-        wp_enqueue_script(
-            'bootstrap-js',
-            'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js',
-            array(),
-            null,
-            true
-        );
+        self::enqueueBootstrapFramework();
 
         wp_enqueue_script(
             'google-maps-api',
@@ -869,6 +858,28 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         wp_enqueue_style(
             self::$prefix . '-pulse-loader',
             plugins_url('includes/pulse-loader.css', __FILE__)
+        );
+    }
+
+    /**
+     * Enqueues the Bootstrap framework CSS and JavaScript.
+     *
+     * @link https://getbootstrap.com/
+     *
+     * @return void
+     */
+    public static function enqueueBootstrapFramework () {
+        // Enqueue BootstrapCSS/JS framework.
+        wp_enqueue_style(
+            'bootstrap-css',
+            'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'
+        );
+        wp_enqueue_script(
+            'bootstrap-js',
+            'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js',
+            array(),
+            null,
+            true
         );
 
         if (is_ssl() || WP_Buoy_Settings::get_instance()->get('debug')) {

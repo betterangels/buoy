@@ -86,10 +86,84 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
     public function list_comments ($args = array()) {
         add_filter('comment_class', array(__CLASS__, 'filterCommentClass'), 10, 5);
         $defaults = array(
-            'reverse_top_level' => 'desc'
+            'reverse_top_level' => 'desc',
+            'callback' => array(__CLASS__, 'renderComment')
         );
         $args = wp_parse_args($args, $defaults);
         wp_list_comments($args, $this->_comments);
+    }
+
+    /**
+     * Renders an individual comment.
+     *
+     * @param WP_Comment $comment
+     * @param array $args
+     * @param int $depth
+     *
+     * @return void
+     */
+    public static function renderComment ($comment, $args, $depth) {
+        $side = (get_current_user_id() == $comment->user_id) ? 'right': 'left';
+?>
+<li id="comment-<?php print esc_attr($comment->comment_ID)?>" <?php comment_class("media media-on-$side", $comment);?>>
+<?php
+        switch ($side) {
+            case 'right': // Body first, then media.
+                WP_Buoy_Chat_Room::renderCommentBody($comment, $args, $depth);
+                WP_Buoy_Chat_Room::renderCommentMedia($side, $comment, $args, $depth);
+                break;
+            default: // Media first, then body.
+                WP_Buoy_Chat_Room::renderCommentMedia($side, $comment, $args, $depth);
+                WP_Buoy_Chat_Room::renderCommentBody($comment, $args, $depth);
+                break;
+        }
+?>
+</li>
+<?php
+    }
+
+    /**
+     * Renders an individual comment's media element.
+     *
+     * @param string $align Either `left` or `right`
+     * @param WP_Comment $comment
+     * @param array $args
+     * @param int $depth
+     *
+     * @return void
+     */
+    protected static function renderCommentMedia ($align, $comment, $args, $depth) {
+?>
+    <div class="media-<?php print esc_attr($align);?> media-bottom vcard">
+        <span class="comment-author fn"><?php comment_author($comment);?></span>
+        <a href="mailto:<?php print esc_attr(comment_author_email($comment));?>">
+            <?php print get_avatar($comment, 48, '', false, array(
+                'class' => 'media-object'
+            ));?>
+        </a>
+    </div>
+<?php
+    }
+
+    /**
+     * Renders an individual comment's body.
+     *
+     * @param WP_Comment $comment
+     * @param array $args
+     * @param int $depth
+     *
+     * @return void
+     */
+    protected static function renderCommentBody ($comment, $args, $depth) {
+        $time_ago = human_time_diff(get_comment_time('U'), current_time('timestamp')) . ' ' . __('ago');
+?>
+    <div class="media-body">
+        <?php comment_text($comment, $args);?>
+        <footer>
+            <time datetime="<?php print esc_attr(get_comment_time('c'));?>"><?php print esc_html($time_ago);?></time>
+        </footer>
+    </div>
+<?php
     }
 
     /**
@@ -117,7 +191,7 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
         $html = '<meta http-equiv="refresh" content="%1$s;url=%2$s" />';
         $options = WP_Buoy_Settings::get_instance();
         if ($options->get('debug')) {
-            $refresh = '';
+            return; // don't print anything
         }
         print sprintf($html, $refresh, str_replace('&reset', '', $url));
     }
@@ -178,6 +252,8 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
         add_action('wp_head', array(__CLASS__, 'renderMetaRefresh'), 10, 2);
         add_action('wp_head', 'wp_print_styles');
         add_action('wp_head', 'wp_print_head_scripts');
+
+        WP_Buoy_Alert::enqueueBootstrapFramework();
         wp_enqueue_style(
             self::$prefix . '-chat-room',
             plugins_url('/templates/comments-chat-room.css', __FILE__),
