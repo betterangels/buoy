@@ -1,18 +1,17 @@
 <?php
 /**
- * WordPress On-screen Help Loader
+ * WordPress Screen Help Loader class.
  *
  * @copyright Copyright (c) 2015-2016 by Meitar "maymay" Moscovitz
  *
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html
  *
- * @package WordPress\Plugin\WP_Buoy_Plugin\WP_Screen_Help_Loader
+ * @package WordPress\Plugin\WP_Screen_Help_Loader
  */
 
 if (!defined('ABSPATH')) { exit; } // Disallow direct HTTP access.
 
 /**
- *
  * Manages WordPress on-screen help tabs and sidebar content based on
  * a directory of markdown files.
  */
@@ -28,7 +27,7 @@ class WP_Screen_Help_Loader {
     /**
      * An instance of the Parsedown markdown parser.
      *
-     * @see http://parsedown.org/ The Parsedown parser's homepage.
+     * @link http://parsedown.org/ The Parsedown parser's homepage.
      *
      * @var Parsedown
      */
@@ -65,7 +64,7 @@ class WP_Screen_Help_Loader {
      *
      * @return WP_Screen_Help_Loader
      */
-    public function __construct ($path) {
+    public function __construct ($path = null) {
         $this->_help_dir_path = $this->get_help_dir_path($path);
         $this->_screen        = get_current_screen();
         $this->_tab_files     = $this->get_help_tab_files();
@@ -75,15 +74,23 @@ class WP_Screen_Help_Loader {
     /**
      * Get the directory containing localized help tab contents.
      *
+     * @uses get_template_directory()
      * @uses trailingslashit()
      * @uses get_locale()
      *
-     * @param string $path Relative path base. Defaults to `__FILE__`.
+     * @param string $path Relative path base. Defaults to the current WP template directory.
      *
      * @return string
      */
-    public function get_help_dir_path ($path = __FILE__) {
-        return trailingslashit(trailingslashit($path) . get_locale());
+    public function get_help_dir_path ($path = null) {
+        if (null === $path) {
+            $path = trailingslashit(get_template_directory()) . 'admin-help';
+        }
+        return apply_filters(
+            strtolower(__CLASS__) . '_help_dir_path',
+            trailingslashit(trailingslashit($path) . get_locale()),
+            $path
+        );
     }
 
     /**
@@ -130,13 +137,13 @@ class WP_Screen_Help_Loader {
      * @return @void
      */
     public function applyTabs () {
-        $num = 1;
         foreach ($this->_tab_files as $file) {
             $lines = (is_readable($file)) ? file($file) : false;
             if ($lines) {
+                $hash = hash('sha256', $file);
                 $args = array(
                     'title' => sanitize_text_field($this->get_parsedown()->text(array_shift($lines))),
-                    'id' => esc_attr("{$this->_screen->id}-help-tab-$num"),
+                    'id' => esc_attr("{$this->_screen->id}-help-tab-$hash"),
                     'content' => $this->get_parsedown()->text(implode("\n", $lines))
                 );
                 preg_match('/-([0-9]+)\.md$/i', $file, $m);
@@ -145,7 +152,6 @@ class WP_Screen_Help_Loader {
                 }
                 $this->_screen->add_help_tab($args);
             }
-            $num++;
         }
     }
 

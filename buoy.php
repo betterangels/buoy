@@ -108,7 +108,9 @@ class WP_Buoy_Plugin {
         require_once 'class-buoy-user.php';
         require_once 'class-buoy-alert.php';
 
-        require_once 'includes/class-wp-screen-help-loader.php';
+        if (!class_exists('WP_Screen_Help_Loader')) {
+            require_once 'includes/vendor/wp-screen-help-loader/class-wp-screen-help-loader.php';
+        }
 
         WP_Buoy_Settings::register();
         WP_Buoy_Team::register();

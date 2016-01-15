@@ -1,6 +1,6 @@
 # Buoy Help
 
-This directory contains the contents for the Better Angels' Buoy on-screen help tabs and a screen's help sidebar. Its contents are dynamically loaded by the [`WP_Screen_Help_Loader`](../includes/class-wp-screen-help-loader.php) class.
+This directory contains the contents for the Better Angels' Buoy on-screen help tabs and a screen's help sidebar. Its contents are dynamically loaded by the [WP Screen Help Loader](https://wordpress.org/plugins/wp-screen-help-loader/) plugin library.
 
 * Each help file is contained within a directory matching the [locale string of the WordPress installation](https://developer.wordpress.org/reference/functions/get_locale/).
 * File contents are standard [Markdown](https://daringfireball.net/projects/markdown/), and parsed into HTML at runtime.
