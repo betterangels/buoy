@@ -1,10 +1,9 @@
 <?php
 
-class GuardianTest extends WP_UnitTestCase {
+class BuoyRespondersTest extends Buoy_UnitTestCase {
 
     public function setUp () {
         parent::setUp();
-        wp_set_current_user(username_exists('survivor'));
     }
 
     public function test_add_a_guardian () {

@@ -18,7 +18,7 @@
  *
  * @link https://make.wordpress.org/core/handbook/testing/automated-testing/phpunit/
  */
-class BuoyUsersTest extends WP_UnitTestCase {
+class BuoyUsersTest extends Buoy_UnitTestCase {
 
     /**
      * Sets up the testing environment before each test.
