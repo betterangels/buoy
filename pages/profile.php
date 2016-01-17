@@ -85,23 +85,5 @@
                 );?></p>
             </td>
         </tr>
-        <tr>
-            <th>
-                <label for="<?php esc_html_e(self::$prefix);?>_gpg_pubkey">
-                    <?php esc_html_e('GPG/PGP public key', 'buoy');?>
-                </label>
-            </th>
-            <td>
-                <textarea
-                    id="<?php print esc_attr(self::$prefix);?>_gpg_pubkey"
-                    name="<?php print esc_attr(self::$prefix)?>_gpg_pubkey"
-                    ><?php print esc_textarea($usropt->get('gpg_pubkey'));?></textarea>
-                <p class="description">
-                    <?php print sprintf(
-                        esc_html__('Paste your GPG/PGP public key here to have Buoy encrypt alert notifications it sends you. Leave this blank if you do not want to get or know how to decrypt encrypted emails. (Note that this does not encrypt txt messages and, if you provided a mobile phone number, this option is of little added value.)', 'buoy')
-                    );?>
-                </p>
-            </td>
-        </tr>
     </tbody>
 </table>

@@ -217,8 +217,10 @@ class WP_Buoy_User extends WP_Buoy_Plugin {
      * @param mixed $default
      *
      * @return mixed
+     *
+     * @access private
      */
-    public function get_option ($name, $default = null) {
+    private function get_option ($name, $default = null) {
         return $this->_options->get($name, $default);
     }
 
@@ -286,7 +288,6 @@ class WP_Buoy_User extends WP_Buoy_Plugin {
         $options = new WP_Buoy_User_Settings($user_id);
         $options
             ->set('gender_pronoun_possessive', sanitize_text_field($_POST[self::$prefix.'_gender_pronoun_possessive']))
-            ->set('gpg_pubkey', implode("\n", array_map('sanitize_text_field', explode("\n", $_POST[self::$prefix . '_gpg_pubkey']))))
             ->set('phone_number', sanitize_text_field($_POST[self::$prefix . '_phone_number']))
             ->set('sms_provider', sanitize_text_field($_POST[self::$prefix . '_sms_provider']))
             ->set('crisis_message', sanitize_text_field($_POST[self::$prefix . '_crisis_message']))
