@@ -42,6 +42,7 @@ class WP_Buoy_User_Settings {
         'crisis_message'            => '',
         'default_team'              => false,
         'gender_pronoun_possessive' => '',
+        'gpg_pubkey'                => '',
         'installer_dismissed'       => false,
         'phone_number'              => '',
         'public_responder'          => false,

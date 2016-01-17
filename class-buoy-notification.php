@@ -159,6 +159,19 @@ class WP_Buoy_Notification extends WP_Buoy_Plugin {
             foreach ($team->get_confirmed_members() as $user_id) {
                 $responder = new WP_Buoy_User($user_id);
 
+                if ($keytxt = $responder->get_option('gpg_pubkey')) {
+                    if (!class_exists('GPG')) {
+                        require_once plugin_dir_path(__FILE__) . 'includes/vendor/php-gpg/GPG.php';
+                    }
+                    $gpg = new GPG();
+                    try {
+                        $pub_key = @new GPG_Public_Key($keytxt);
+                        $responder_link = $gpg->encrypt($pub_key, $responder_link);
+                    } catch (Exception $e) {
+                        self::debug_log($e->getMessage());
+                    }
+                }
+
                 // TODO: Write a more descriptive message.
                 wp_mail($responder->wp_user->user_email, $subject, $responder_link, $headers);
 
