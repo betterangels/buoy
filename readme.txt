@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TJLPJ
 Tags: community, emergency response
 Requires at least: 4.4
 Tested up to: 4.4.1
-Stable tag: 0.1
+Stable tag: 0.1.1
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -106,6 +106,10 @@ For instance:
 13. The alerter and all current responders become aware of new responders as they are added to the chat room and the map. As people involved in the incident move in the physical world, the map shown to each of the other people also updates in near real time. Clicking on any of the user icons on the map reveals one-click access to both turn-by-turn directions to their location and one-click access to call them from your phone, Facetime, Skype, or other default calling app.
 
 == Change log ==
+
+* Version 0.1.1:
+
+* [Bugfix](https://github.com/meitar/better-angels/issues/119): Work around `Fatal error` when accessing [Theme Customizer](https://codex.wordpress.org/Appearance_Customize_Screen) on some installs.
 
 * Version 0.1:
     * Initial prototype.
