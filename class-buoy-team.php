@@ -921,6 +921,10 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
      * @return void
      */
     public static function filterTeamPostsList ($query) {
+        // @ticket 119
+        if (!function_exists('get_current_screen')) {
+            require_once ABSPATH . 'wp-admin/includes/screen.php';
+        }
         if (is_admin() && $screen = get_current_screen()) {
             if ('edit-' . self::$prefix .'_team' === $screen->id && current_user_can('edit_' . self::$prefix . '_teams')) {
                 $query->set('author', get_current_user_id());
