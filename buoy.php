@@ -73,6 +73,8 @@ class WP_Buoy_Plugin {
         add_action('admin_head', array(__CLASS__, 'addHelpSidebar'));
         add_action('admin_head-dashboard_page_' . self::$prefix . '_activate_alert', array(__CLASS__, 'renderWebAppHTML'));
 
+        add_action('wp_ajax_nopriv_' . self::$prefix . '_webapp_manifest', array(__CLASS__, 'renderWebAppManifest'));
+
         register_activation_hook(__FILE__, array(__CLASS__, 'activate'));
         register_deactivation_hook(__FILE__, array(__CLASS__, 'deactivate'));
     }
@@ -258,6 +260,18 @@ class WP_Buoy_Plugin {
     }
 
     /**
+     * Prints the Web App manifest file.
+     *
+     * @link https://developer.wordpress.org/reference/hooks/wp_ajax_nopriv__requestaction/
+     *
+     * @return void
+     */
+    public static function renderWebAppManifest () {
+        require_once 'pages/manifest.json.php';
+        exit();
+    }
+
+    /**
      * Prints meta tag indicators for native-like functionality.
      *
      * The "activate alert" screen is intended to be the web app "install"
@@ -268,8 +282,12 @@ class WP_Buoy_Plugin {
      * @return void
      */
     public static function renderWebAppHTML () {
-        print '<meta name="mobile-web-app-capable" content="yes" />';       // Android/Chrome
-        print '<meta name="apple-mobile-web-app-capable" content="yes" />'; // Apple/Safari
+        // Android/Chrome
+        print '<meta name="mobile-web-app-capable" content="yes" />';
+        print '<link rel="manifest" href="' . admin_url('admin-ajax.php?action=' . self::$prefix . '_webapp_manifest') . '" />';
+
+        // Apple/Safari
+        print '<meta name="apple-mobile-web-app-capable" content="yes" />';
         print '<meta name="apple-mobile-web-app-status-bar-style" content="black" />';
         print '<meta name="apple-mobile-web-app-title" content="' . esc_attr('Buoy', 'buoy') . '" />';
         print '<link rel="apple-touch-icon" href="' . plugins_url('img/apple-touch-icon-152x152.png', __FILE__) . '" />';
