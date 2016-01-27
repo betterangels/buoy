@@ -32,4 +32,20 @@ class BuoyTeamsTest extends Buoy_UnitTestCase {
         $this->assertTrue(post_type_exists('buoy_team'));
     }
 
+    /**
+     * Ensures the drop-down list of available responders outputs the correct values.
+     *
+     * @ticket 121
+     */
+    public function test_add_team_member_meta_box_datalist_option_value_matches_user_login () {
+        $post = $this->factory->post->create_and_get();
+        $admin = $this->factory->user->create_and_get(array('role' => 'administrator'));
+        $user = $this->factory->user->create_and_get(array('role' => 'subscriber'));
+
+        wp_set_current_user($admin->ID);
+        WP_Buoy_Team::renderAddTeamMemberMetaBox($post->ID);
+
+        $this->expectOutputRegex('/<option value="' . $user->user_login . '"\s*\/>/');
+    }
+
 }
