@@ -1,4 +1,4 @@
-=== Plugin Name ===
+=== Buoy ===
 Contributors: meitar
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TJLPJYXHSRBEE&lc=US&item_name=Better%20Angels%20Buoy&item_number=Better%20Angels%20Buoy&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted
 Tags: community, emergency response
@@ -107,12 +107,19 @@ For instance:
 
 == Change log ==
 
-* Version 0.1.1:
+= Version 0.1.1 =
+
+This is a bugfix and maintenance release.
 
 * [Bugfix](https://github.com/meitar/better-angels/issues/119): Work around `Fatal error` when accessing [Theme Customizer](https://codex.wordpress.org/Appearance_Customize_Screen) on some installs.
+* [Bugfix](https://github.com/meitar/better-angels/issues/120): Fatal error during uninstallation.
+* [Bugfix](https://github.com/meitar/better-angels/issues/121): Drop-down of available crisis responders produced incorrect autocomplete output.
+* [Bugfix](https://github.com/meitar/better-angels/issues/129): Automatically show map if it is hidden when activating a mapping sub-menu item.
+* [Bugfix](https://github.com/meitar/better-angels/issues/135): "Go to my location" button pans to correct user when viewing incident map.
 
-* Version 0.1:
-    * Initial prototype.
+= Version 0.1 =
+
+* Initial prototype.
 
 == Other notes ==
 
