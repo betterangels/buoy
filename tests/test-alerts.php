@@ -99,4 +99,13 @@ class BuoyAlertsTest extends Buoy_UnitTestCase {
         $this->markTestIncomplete();
     }
 
+    /**
+     * Ensures that the "Go to my location" button refers to the current user.
+     *
+     * @ticket 135
+     */
+    public function test_go_to_my_location_references_current_user_id () {
+        $this->markTestIncomplete();
+    }
+
 }
