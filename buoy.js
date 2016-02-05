@@ -315,11 +315,18 @@ var BUOY = (function () {
                 }
             });
 
-            jQuery('#fit-map-to-markers-btn').on('click', function () {
+            jQuery('#fit-map-to-markers-btn').on('click', function (e) {
+                e.preventDefault();
+                if (jQuery('#map-container').is(':hidden')) {
+                    jQuery('#toggle-incident-map-btn').click();
+                }
                 map.fitBounds(marker_bounds);
             });
             jQuery('#go-to-my-location').on('click', function (e) {
                 e.preventDefault();
+                if (jQuery('#map-container').is(':hidden')) {
+                    jQuery('#toggle-incident-map-btn').click();
+                }
                 map.panTo(map_markers[jQuery(this).data('user-id')].getPosition());
                 touchMap();
             });
