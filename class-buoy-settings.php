@@ -91,6 +91,15 @@ class WP_Buoy_Settings {
     }
 
     /**
+     * Gets the name of the meta key in which options are stored.
+     *
+     * @return string
+     */
+    public function get_meta_key () {
+        return $this->meta_key;
+    }
+
+    /**
      * Saves default plugin options to the database when the plugin
      * is activated by a user without overwriting existing values.
      * 

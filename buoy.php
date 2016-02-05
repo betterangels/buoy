@@ -7,7 +7,7 @@
  * * Plugin Name: Buoy (a Better Angels crisis response system)
  * * Plugin URI: https://github.com/meitar/better-angels
  * * Description: A community-based crisis response system. <strong>Like this plugin? Please <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=TJLPJYXHSRBEE&amp;lc=US&amp;item_name=Better%20Angels&amp;item_number=better-angels&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted" title="Send a donation to the developer of Better Angels Buoy">donate</a>. &hearts; Thank you!</strong>
- * * Version: 0.1
+ * * Version: 0.1.1
  * * Author: Maymay <bitetheappleback@gmail.com>
  * * Author URI: https://maymay.net/
  * * License: GPL-3
@@ -72,6 +72,8 @@ class WP_Buoy_Plugin {
         add_action('admin_enqueue_scripts', array(__CLASS__, 'enqueueFrontEndScripts'));
         add_action('admin_head', array(__CLASS__, 'addHelpSidebar'));
         add_action('admin_head-dashboard_page_' . self::$prefix . '_activate_alert', array(__CLASS__, 'renderWebAppHTML'));
+
+        add_action('wp_ajax_nopriv_' . self::$prefix . '_webapp_manifest', array(__CLASS__, 'renderWebAppManifest'));
 
         register_activation_hook(__FILE__, array(__CLASS__, 'activate'));
         register_deactivation_hook(__FILE__, array(__CLASS__, 'deactivate'));
@@ -258,6 +260,18 @@ class WP_Buoy_Plugin {
     }
 
     /**
+     * Prints the Web App manifest file.
+     *
+     * @link https://developer.wordpress.org/reference/hooks/wp_ajax_nopriv__requestaction/
+     *
+     * @return void
+     */
+    public static function renderWebAppManifest () {
+        require_once 'pages/manifest.json.php';
+        exit();
+    }
+
+    /**
      * Prints meta tag indicators for native-like functionality.
      *
      * The "activate alert" screen is intended to be the web app "install"
@@ -268,8 +282,12 @@ class WP_Buoy_Plugin {
      * @return void
      */
     public static function renderWebAppHTML () {
-        print '<meta name="mobile-web-app-capable" content="yes" />';       // Android/Chrome
-        print '<meta name="apple-mobile-web-app-capable" content="yes" />'; // Apple/Safari
+        // Android/Chrome
+        print '<meta name="mobile-web-app-capable" content="yes" />';
+        print '<link rel="manifest" href="' . admin_url('admin-ajax.php?action=' . self::$prefix . '_webapp_manifest') . '" />';
+
+        // Apple/Safari
+        print '<meta name="apple-mobile-web-app-capable" content="yes" />';
         print '<meta name="apple-mobile-web-app-status-bar-style" content="black" />';
         print '<meta name="apple-mobile-web-app-title" content="' . esc_attr('Buoy', 'buoy') . '" />';
         print '<link rel="apple-touch-icon" href="' . plugins_url('img/apple-touch-icon-152x152.png', __FILE__) . '" />';

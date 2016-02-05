@@ -27,7 +27,7 @@ foreach ($posts as $post) {
 }
 
 // Delete plugin options.
-delete_option(WP_Buoy_Settings::get_instance()->meta_key);
+delete_option(WP_Buoy_Settings::get_instance()->get_meta_key());
 
 foreach (get_users() as $usr) {
     // Delete all custom user profile data.

@@ -23,7 +23,7 @@ if (!current_user_can('list_users')) {
 $users = get_users($args);
 foreach ($users as $usr) {
     if ($usr->ID !== get_current_user_id()) {
-        print "<option value=\"{$usr->user_nicename}\" />{$usr->display_name}</options>";
+        print "<option value=\"{$usr->user_login}\" />{$usr->display_name}</options>";
     }
 }
 ?>

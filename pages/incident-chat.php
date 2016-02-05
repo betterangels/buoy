@@ -15,7 +15,7 @@ $auto_show_modal = ($curr_user->ID === $alerter->wp_user->ID) ? 'auto-show-modal
             <ul class="dropdown-menu">
                 <li><a id="fit-map-to-markers-btn" role="button" href="#"><?php esc_html_e('Zoom to fit', 'buoy');?></a></li>
                 <li role="separator" class="divider"></li>
-                <li><a id="go-to-my-location" href="#" role="button" data-user-id="<?php print esc_attr($alerter->wp_user->ID);?>"><?php esc_html_e('Go to my location', 'buoy');?></a></li>
+                <li><a id="go-to-my-location" href="#" role="button" data-user-id="<?php print esc_attr(get_current_user_id());?>"><?php esc_html_e('Go to my location', 'buoy');?></a></li>
             </ul>
         </div>
         <div id="incident-media-group" class="btn-group btn-group-lg" role="group">
