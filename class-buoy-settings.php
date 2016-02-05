@@ -410,6 +410,8 @@ class WP_Buoy_Settings {
      *
      * @link https://codex.wordpress.org/Settings_API
      *
+     * @param array $input
+     *
      * @return array
      */
     public static function validateSettings ($input) {
