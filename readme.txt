@@ -3,8 +3,8 @@ Contributors: meitar
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TJLPJYXHSRBEE&lc=US&item_name=Better%20Angels%20Buoy&item_number=Better%20Angels%20Buoy&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted
 Tags: community, emergency response
 Requires at least: 4.4
-Tested up to: 4.4.1
-Stable tag: 0.1.1
+Tested up to: 4.4.2
+Stable tag: 0.1.2
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -106,6 +106,13 @@ For instance:
 13. The alerter and all current responders become aware of new responders as they are added to the chat room and the map. As people involved in the incident move in the physical world, the map shown to each of the other people also updates in near real time. Clicking on any of the user icons on the map reveals one-click access to both turn-by-turn directions to their location and one-click access to call them from your phone, Facetime, Skype, or other default calling app.
 
 == Change log ==
+
+= Version 0.1.2 =
+
+This is a bugfix and maintenance release.
+
+* New translations for Spanish, partial translations for German. To help translate Buoy into your language, [join our translation teams](https://www.transifex.com/cyberbusking/better-angels/).
+* [Bugfix](https://github.com/meitar/better-angels/issues/131): Tlk.io chat room is no longer vertically scrunched.
 
 = Version 0.1.1 =
 
