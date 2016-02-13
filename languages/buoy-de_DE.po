@@ -1,16 +1,20 @@
 # Copyright (C) 2016 Buoy (a Better Angels crisis response system)
 # This file is distributed under the same license as the Buoy (a Better Angels crisis response system) package.
+# Translators:
+# Homer S. <maste9@gmail.com>, 2015
 msgid ""
 msgstr ""
-"Project-Id-Version: Buoy (a Better Angels crisis response system) 0.1.1\n"
+"Project-Id-Version: Better Angels\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/buoy\n"
 "POT-Creation-Date: 2016-02-13 01:04:00+00:00\n"
+"PO-Revision-Date: 2016-02-13 01:05+0000\n"
+"Last-Translator: Meitar\n"
+"Language-Team: German (Germany) (http://www.transifex.com/cyberbusking/better-angels/language/de_DE/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"PO-Revision-Date: 2016-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: de_DE\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: buoy.php:163
 msgid "Buoy requires at least PHP version %1$s. You have PHP version %2$s."
@@ -33,11 +37,11 @@ msgstr ""
 
 #: class-buoy-alert.php:449
 msgid "Incidents"
-msgstr ""
+msgstr "Vorfälle"
 
 #: class-buoy-alert.php:450
 msgid "A call for help."
-msgstr ""
+msgstr "Ein Hilferuf."
 
 #: class-buoy-alert.php:538
 msgid "Alert"
@@ -45,35 +49,35 @@ msgstr ""
 
 #: class-buoy-alert.php:565
 msgid "Active alerts"
-msgstr ""
+msgstr "Aktive Alarme"
 
 #: class-buoy-alert.php:588
 msgid "My alert on %2$s"
-msgstr ""
+msgstr "Mein Alarm um %2$s"
 
 #: class-buoy-alert.php:603
 msgid "Alert issued by %1$s on %2$s"
-msgstr ""
+msgstr "Alarm erstellt von %1$s um %2$s"
 
 #: class-buoy-alert.php:617
 msgid "Cancel scheduled alert for %1$s"
-msgstr ""
+msgstr "Einen für %1$s eingerichteten Alarm abbrechen"
 
 #: class-buoy-alert.php:619
 msgid "Cancel this alert"
-msgstr ""
+msgstr "Diesen Alarm abbrechen."
 
 #: class-buoy-alert.php:642 class-buoy-alert.php:643
 msgid "Activate Alert"
-msgstr ""
+msgstr "Alarm aktivieren"
 
 #: class-buoy-alert.php:653 class-buoy-alert.php:654
 msgid "Respond to Alert"
-msgstr ""
+msgstr "Auf Alarm reagieren"
 
 #: class-buoy-alert.php:662 class-buoy-alert.php:663
 msgid "Incident Chat"
-msgstr ""
+msgstr "Vorfalls-Chat"
 
 #: class-buoy-alert.php:709 class-buoy-alert.php:732 class-buoy-alert.php:737
 #: class-buoy-settings.php:524 class-buoy-settings.php:536
@@ -97,55 +101,55 @@ msgstr ""
 
 #: class-buoy-alert.php:945
 msgid "Incident Map"
-msgstr ""
+msgstr "Vorfalls-Karte"
 
 #: class-buoy-alert.php:946
 msgid "Hide Map"
-msgstr ""
+msgstr "Karte verbergen"
 
 #: class-buoy-alert.php:947 pages/incident-chat.php:10
 msgid "Show Map"
-msgstr ""
+msgstr "Karte anzeigen"
 
 #: class-buoy-alert.php:948
 msgid "Location of emergency alert signal"
-msgstr ""
+msgstr "Standort des Notfall-Alarms"
 
 #: class-buoy-alert.php:949
 msgid "Emergency alert signal could not be pinpointed on a map."
-msgstr ""
+msgstr "Notfall-Alarm kann nicht auf einer Karte angezeigt werden."
 
 #: class-buoy-alert.php:950
 msgid "My location"
-msgstr ""
+msgstr "Mein Standort"
 
 #: class-buoy-alert.php:951
 msgid "Directions to here"
-msgstr ""
+msgstr "Wegbeschreibung"
 
 #: class-buoy-alert.php:952
 msgid "Call"
-msgstr ""
+msgstr "Anrufen"
 
 #: class-buoy-alert.php:953
 msgid "Responding to alert"
-msgstr ""
+msgstr "Auf Alarm reagieren"
 
 #: class-buoy-alert.php:954 pages/activate-alert.php:65
 msgid "Schedule alert"
-msgstr ""
+msgstr "Alarm einrichten"
 
 #: class-buoy-alert.php:955
 msgid "Scheduling alert"
-msgstr ""
+msgstr "Alarm anlegen"
 
 #: class-buoy-alert.php:1024
 msgid "Buoy could not understand the date and time you entered."
-msgstr ""
+msgstr "Buoy hat Deine Datums- und Zeiteingabe nicht verstanden."
 
 #: class-buoy-alert.php:1049
 msgid "Your timed alert has been scheduled. Schedule another?"
-msgstr ""
+msgstr "Dein geplanter Alarm wurde angelegt. Möchtest Du einen weiteren anlegen?"
 
 #: class-buoy-alert.php:1306
 msgctxt "Example: uploaded 5 mins ago"
@@ -167,25 +171,25 @@ msgstr ""
 
 #: class-buoy-notification.php:91 class-buoy-notification.php:121
 msgid "%1$s wants you to join %2$s crisis response team."
-msgstr ""
+msgstr "%1$s erbittet Deine Unterstützung des %2$s Krisenreaktions-Teams."
 
 #: class-buoy-notification.php:115
 msgid ""
 "%1$s invites you to join the Buoy emergency response alternative on %2$s!"
-msgstr ""
+msgstr "%1$s hat dich zur Buoy Notfall-Reaktions-Alternative am %2$s eingeladen!"
 
 #: class-buoy-notification.php:118
 msgid ""
 "Buoy is a community-based crisis response system. It is designed to connect "
-"people in need with trusted friends, family, and other nearby allies who can "
-"help. We believe that in situations where traditional emergency services are "
-"not available, reliable, trustworthy, or sufficient, communities can come "
-"together to aid each other in times of need."
+"people in need with trusted friends, family, and other nearby allies who can"
+" help. We believe that in situations where traditional emergency services "
+"are not available, reliable, trustworthy, or sufficient, communities can "
+"come together to aid each other in times of need."
 msgstr ""
 
 #: class-buoy-notification.php:125
 msgid "To join, sign up for an account here:"
-msgstr ""
+msgstr "Um teilzunehmen, richte hier ein Konto ein:"
 
 #: class-buoy-settings.php:244
 msgid "Failed to delete attachment post %1$s (child of %2$s) during %3$s"
@@ -197,24 +201,24 @@ msgstr ""
 
 #: class-buoy-settings.php:398
 msgid "Error installing system cronjob for timed alerts."
-msgstr ""
+msgstr "Fehler bei der Einrichtung der Cronjobs des Systems für geplante Alarme."
 
 #: class-buoy-settings.php:409
 msgid "Error removing system crontab jobs for timed alerts."
-msgstr ""
+msgstr "Fehler beim Entfernen der für geplante Alarme vorgesehenen Crontab-Einträge (cronjobs) dieses Systems."
 
 #: class-buoy-settings.php:470 pages/options.php:2
 msgid "Buoy Settings"
-msgstr ""
+msgstr "Buoy Einstellungen"
 
 #: class-buoy-settings.php:471 pages/manifest.json.php:27
 msgid "Buoy"
-msgstr ""
+msgstr "Buoy"
 
 #: class-buoy-settings.php:479 class-buoy-settings.php:480
 #: pages/incident-chat.php:108 pages/options.php:10
 msgid "Safety information"
-msgstr ""
+msgstr "Sicherheitsstatus"
 
 #: class-buoy-team-membership-list-table.php:92
 msgid "Team Name"
@@ -322,7 +326,7 @@ msgstr ""
 
 #: class-buoy-team.php:490 class-buoy-team.php:751 class-buoy-team.php:752
 msgid "Team membership"
-msgstr ""
+msgstr "Team-Mitgliedschaften"
 
 #: class-buoy-team.php:577
 msgid "Default team updated."
@@ -358,7 +362,7 @@ msgstr ""
 
 #: class-buoy-user.php:155
 msgid "Please help!"
-msgstr ""
+msgstr "Hilf bitte!"
 
 #: class-buoy-user.php:255
 msgid "You no longer have crisis responders."
@@ -460,7 +464,7 @@ msgstr ""
 
 #: pages/current-team-meta-box.php:32
 msgid "pending"
-msgstr ""
+msgstr "In Bearbeitung"
 
 #: pages/incident-chat.php:8
 msgid "Incident toolbar"
@@ -488,12 +492,14 @@ msgstr ""
 
 #: pages/incident-chat.php:44 pages/review-alert.php:20
 msgid ""
-"To view a map of the crisis area, JavaScript must be enabled in your browser."
+"To view a map of the crisis area, JavaScript must be enabled in your "
+"browser."
 msgstr ""
 
 #: pages/incident-chat.php:55
 msgid ""
-"To access the incident chat room, JavaScript must be enabled in your browser."
+"To access the incident chat room, JavaScript must be enabled in your "
+"browser."
 msgstr ""
 
 #: pages/incident-chat.php:69
@@ -527,8 +533,8 @@ msgstr ""
 
 #: pages/options.php:15
 msgid ""
-"Provide relevant safety information. This can include hotline phone numbers, "
-"links to nearby shelters or other support resources, and any other "
+"Provide relevant safety information. This can include hotline phone numbers,"
+" links to nearby shelters or other support resources, and any other "
 "information you believe would be useful. When finished, press %1$sSave "
 "Changes%2$s at the bottom of this page."
 msgstr ""
@@ -563,8 +569,8 @@ msgstr ""
 
 #: pages/options.php:63
 msgid ""
-"Choose how long alerts are kept active. Alerts that were created before this "
-"threshold will be automatically deleted."
+"Choose how long alerts are kept active. Alerts that were created before this"
+" threshold will be automatically deleted."
 msgstr ""
 
 #: pages/options.php:68
@@ -640,7 +646,7 @@ msgstr ""
 
 #: pages/profile.php:22
 msgid "Phone number"
-msgstr ""
+msgstr "Telefonnummer"
 
 #: pages/profile.php:32
 msgid "Optional, but will enable you to receive SMS/txt messages of alerts."
@@ -703,11 +709,12 @@ msgstr ""
 #. Description of the plugin/theme
 msgid ""
 "A community-based crisis response system. <strong>Like this plugin? Please "
-"<a href=\"https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;"
-"business=TJLPJYXHSRBEE&amp;lc=US&amp;item_name=Better%20Angels&amp;"
-"item_number=better-angels&amp;currency_code=USD&amp;bn=PP%2dDonationsBF"
-"%3abtn_donate_SM%2egif%3aNonHosted\" title=\"Send a donation to the "
-"developer of Better Angels Buoy\">donate</a>. &hearts; Thank you!</strong>"
+"<a href=\"https://www.paypal.com/cgi-"
+"bin/webscr?cmd=_donations&amp;business=TJLPJYXHSRBEE&amp;lc=US&amp;item_name=Better%20Angels&amp;item_number"
+"=better-"
+"angels&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted\""
+" title=\"Send a donation to the developer of Better Angels "
+"Buoy\">donate</a>. &hearts; Thank you!</strong>"
 msgstr ""
 
 #. Author of the plugin/theme
