@@ -114,3 +114,12 @@
 #comments-chat #respond {
     height: 34px;
 }
+
+/**
+ * Styles for the Tlk.io chat integration.
+ *
+ * @group tlkio_chat
+ */
+#tlkio {
+    height: 100%;
+}
