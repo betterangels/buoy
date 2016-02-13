@@ -1,0 +1,18 @@
+{
+  "name": "better-angels",
+  "homepage": "https://github.com/FeminismIsAwesome/better-angels",
+  "description": "",
+  "main": "",
+  "moduleType": [],
+  "license": "MIT",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "1.11.3"
+  }
+}

@@ -786,14 +786,24 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             false,
             $plugin_data['Version']
         );
+          
+        
         wp_register_script(
             self::$prefix . '-script',
             plugins_url(self::$prefix . '.js', __FILE__),
             array('jquery'),
             $plugin_data['Version']
         );
+        wp_register_script(
+            self::$prefix . '-setup',
+            plugins_url('includes/buoy-setup.js', __FILE__),
+            array('jquery'),
+            $plugin_data['Version']
+        );
         wp_localize_script(self::$prefix . '-script', self::$prefix . '_vars', self::localizeScript());
+        wp_localize_script(self::$prefix . '-setup', self::$prefix . '_vars', self::localizeScript());
         wp_enqueue_script(self::$prefix . '-script');
+        wp_enqueue_script(self::$prefix . '-setup');
     }
 
     /**

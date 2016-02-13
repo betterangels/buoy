@@ -241,8 +241,9 @@ var BUOY = (function () {
         });
     };
 
-    var init = function () {
-        incident_hash = jQuery('#map-container').data('incident-hash');
+    var init = function (body) {
+        body = body || document.body;
+        incident_hash = jQuery('#map-container', body).data('incident-hash');
         jQuery(document).ready(function () {
             // Panic buttons (activate alert).
             jQuery('#activate-alert-form').on('submit', function (e) {
@@ -479,14 +480,7 @@ var BUOY = (function () {
 
     return {
         'init': init,
-        'installWebApp': installWebApp
+        'installWebApp': installWebApp,
+        countIncidentMenuItems: countIncidentMenuItems
     };
 })();
-
-jQuery(document).ready(function () {
-    BUOY.init();
-});
-
-jQuery(document).on('install.ios', function () {
-    BUOY.installWebApp();
-});
