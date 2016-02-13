@@ -1,0 +1,28 @@
+{
+  "name": "better-angels",
+  "version": "1.0.0",
+  "description": "for running tests ",
+  "main": "buoy.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FeminismIsAwesome/better-angels.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FeminismIsAwesome/better-angels/issues"
+  },
+  "homepage": "https://github.com/FeminismIsAwesome/better-angels#readme",
+  "devDependencies": {
+    "jasmine-core": "^2.4.1",
+    "karma": "^0.13.19",
+    "karma-firefox-launcher": "^0.1.7",
+    "karma-jasmine": "^0.3.7"
+  }
+}
