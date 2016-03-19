@@ -8,20 +8,20 @@ front-page-weight: 10
 <div class="row">
 
     <div class="col-md-4">
-        <h4>Community-owned & operated</h4>
+        <h3>Community-owned & operated</h3>
 
         <p>Buoy can be entirely self-hosted. Run it on your own blog to create a community crisis response system in your neighborhood, with no involvement from corporate or government institutions of <em>any</em> kind.</p>
     </div>
 
     <div class="col-md-4">
-        <h4>Get the social support you need with none of the risk</h4>
+        <h3>Get the social support you need with none of the risk</h3>
 
         <p>Noise disturbance? Need parenting support? Use Buoy to call friends and neighbors to the scene, instead of relying on the cops. Read more about what <a href="http://talkpoverty.org/2016/03/10/when-low-income-mothers-call-the-police/">happens when low-income mothers call the cops</a>.</p>
     </div>
 
     <div class="col-md-4">
-        <h4>Decentralized</h4>
-        <p>Any WordPress-powered website can become a Buoy, and you can use more than one Buoy at once. This means no single entity can control or shut down the Buoy network.</p>
+        <h3>Group multi-media coordination</h3>
+        <p>Buoy combines a real-time map, group chat, and video or audio uploads to give responders the tools they need to coordinate an action even if the person who issued the alert is unresponsive.</p>
     </div>
 
 </div><!-- .row -->
@@ -31,20 +31,20 @@ front-page-weight: 10
 <div class="row">
 
     <div class="col-md-4">
-        <h4>Personalized teams</h4>
+        <h3>Personalized teams</h3>
 
         <p>Create custom teams for specific purposes. Make a "Family" team to notify your relatives of car trouble, or make a "Fire" team to create a volunteer fire brigade in your apartment complex.</p>
     </div>
 
     <div class="col-md-4">
-        <h4>By activists, for activists</h4>
+        <h3>By activists, for activists</h3>
 
         <p>Buoy is built by the Better Angels collective, a friendly group of anarchist techies comitted to feminist, anti-capitalist struggle. Learn more <a href="https://github.com/meitar/better-angels/wiki#who-are-the-better-angels">about the Better Angels</a>.</p>
     </div>
 
     <div class="col-md-4">
-        <h4>Group multi-media coordination</h4>
-        <p>Buoy combines a real-time map, group chat, and video or audio uploads to give responders the tools they need to coordinate an action even if the person who issued the alert is unresponsive.</p>
+        <h3>Decentralized</h3>
+        <p>Any WordPress-powered website can become a Buoy, and you can use more than one Buoy at once. This means no single entity can control or shut down the Buoy network.</p>
     </div>
 
 </div><!-- .row -->

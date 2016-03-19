@@ -47,6 +47,10 @@ a {
     max-width: 100%;
 }
 
+#features-container p {
+    text-align: justify;
+}
+
 @media screen and (min-width: 64em) {
   .btn {
     padding: 0.75rem 1rem; } }
