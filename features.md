@@ -16,7 +16,7 @@ front-page-weight: 10
     <div class="col-md-4">
         <h3>Get the social support you need with none of the risk</h3>
 
-        <p>Noise disturbance? Need parenting support? Use Buoy to call friends and neighbors to the scene, instead of relying on the cops. Read more about what <a href="http://talkpoverty.org/2016/03/10/when-low-income-mothers-call-the-police/">happens when low-income mothers call the cops</a>.</p>
+        <p>Noise disturbance? Need parenting support? Use Buoy to call friends and neighbors to the scene, instead of relying on the cops. Read more about <a href="http://talkpoverty.org/2016/03/10/when-low-income-mothers-call-the-police/">what happens when low-income mothers call the cops</a>.</p>
     </div>
 
     <div class="col-md-4">
