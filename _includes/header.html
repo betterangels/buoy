@@ -1,0 +1,15 @@
+<section class="page-header">
+    <h1 class="project-name"><a href="{{ "/" | prepend: site.github.url }}">{{ site.title }}</a></h1>
+    <h2 class="project-tagline">{{ site.tagline }}</h2>
+    <nav class="site-nav">
+        <ul>
+            <li><a href="https://github.com/meitar/better-angels/#readme" class="btn">View on GitHub</a></li>
+            <li><a href="https://github.com/meitar/better-angels/zipball/master" class="btn">Download .zip</a></li>
+            <li><a href="https://github.com/meitar/better-angels/tarball/master" class="btn">Download .tar.gz</a></li>
+            <li><a href="{{ "/docs/" | prepend: site.github.url }}" class="btn">API docs</a></li>
+            {% for page in site.pages %}{% if page.title %}
+            <li><a href="{{ page.url | prepend: site.baseurl }}" class="btn">{% if page.menu-title == blank %}{{ page.title }}{% else %}{{ page.menu-title }}{% endif %}</a></li>
+            {% endif %}{% endfor %}
+        </ul>
+    </nav>
+</section>

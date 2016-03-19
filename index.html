@@ -1,124 +1,38 @@
-<!DOCTYPE html>
-<html lang="en-us">
-  <head>
-    <meta charset="UTF-8">
-    <title>Better Angels&#39; Buoy by meitar</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="stylesheets/normalize.css" media="screen">
-    <link href='https://fonts.googleapis.com/css?family=Open+Sans:400,700' rel='stylesheet' type='text/css'>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen">
-    <link rel="stylesheet" type="text/css" href="stylesheets/github-light.css" media="screen">
-  </head>
-  <body>
-    <section class="page-header">
-      <h1 class="project-name">Better Angels&#39; Buoy</h1>
-      <h2 class="project-tagline">A community-based crisis response system. Because friends don&#39;t let friends call the cops.</h2>
-      <a href="https://github.com/meitar/better-angels" class="btn">View on GitHub</a>
-      <a href="https://github.com/meitar/better-angels/zipball/master" class="btn">Download .zip</a>
-      <a href="https://github.com/meitar/better-angels/tarball/master" class="btn">Download .tar.gz</a>
-    </section>
+---
+layout: page
+---
 
-    <section class="main-content">
-      <h1>
-<a id="better-angels-buoy-a-community-driven-emergency-dispatch-system-powered-by-friendship" class="anchor" href="#better-angels-buoy-a-community-driven-emergency-dispatch-system-powered-by-friendship" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Better Angels' Buoy: A community-driven emergency dispatch system powered by friendship.</h1>
+<div class="home">
 
-<table>
-<thead>
-<tr>
-<th align="left">Branch</th>
-<th align="center">Builds</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td align="left"><code>master</code></td>
-<td align="center"><a href="https://travis-ci.org/meitar/better-angels"><img src="https://travis-ci.org/meitar/better-angels.svg?branch=master" alt="Build Status for master branch"></a></td>
-</tr>
-<tr>
-<td align="left"><code>develop</code></td>
-<td align="center"><a href="https://travis-ci.org/meitar/better-angels"><img src="https://travis-ci.org/meitar/better-angels.svg?branch=develop" alt="Build Status for develop branch"></a></td>
-</tr>
-</tbody>
-</table>
+  {% assign pages = site.pages | where: "front-page", true | sort: "front-page-weight" %}
+  {% for page in pages %}
+  <article id="{{ page.name | split: ".md" | first }}">
+    {{ page.content | markdownify }}
+  </article>
+  {% endfor %}
 
-<p>Buoy is a private, enhanced <a href="https://en.wikipedia.org/wiki/9-1-1">9-1-1</a> for your website. It is free software created by the Better Angels collective as a <a href="https://wordpress.org/">WordPress</a> plugin and is designed to quickly connect people in need with trusted friends, family members, advocates, and other allies in times of crisis.</p>
+  {% capture postnum %}{{ site.posts | size | minus: 1}}{% endcapture %}
+  {% unless postnum contains '-' %}
+  <section id="recent-posts">
+      <h1 class="page-heading">Recent posts</h1>
 
-<blockquote>
-<p>One can imagine the Internet as a vast ocean, its many users as people sailing to the many ports on the high seas. Buoy is software that equips your website with tools that your users can use to help one another in the real world. The more buoys are deployed on the ocean, the safer traveling becomes for everyone.</p>
+      <ul class="post-list">
+        {% for post in site.posts %}
+          <li>
+            <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
 
-<p>—The Better Angels</p>
-</blockquote>
+            <h2>
+              <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
+            </h2>
+          </li>
+          {% if forloop.index == 3 %}
+            {% break %}
+          {% endif %}
+        {% endfor %}
+      </ul>
 
-<h2>
-<a id="for-service-providers" class="anchor" href="#for-service-providers" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>For service providers</h2>
+      <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
+  </section><!-- #recent-posts -->
+  {% endunless %}
 
-<p>Anyone with a WordPress-powered website or blog can add the Buoy software (a 1-click automatic install) to their website, instantly enabling the site's membership to provide peer-based mutual-aid to one another. Moreover, legal aid service providers, domestic, dating, and intimate partner violence prevention advocates, shelters, social groups, alternative medical and mental health collectives, and others can offer members of their community one-click emergency access to a network of trusted peers and/or on-call emergency responders.</p>
-
-<h2>
-<a id="for-victims-and-survivors" class="anchor" href="#for-victims-and-survivors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>For victims and survivors</h2>
-
-<p>Buoy makes it easy to tell your friends where you are and what you need, even in the most dangerous or frightening scenarios. Tapping a single button will immediately notify the people you trust most that you need their help, give them a map showing your exact location, and even helps them coordinate with one another to quickly figure out how to help you best. With Buoy and a smartphone, you are never more than one button press away from the people you trust most. (We are even working to support old-school flipfones!)</p>
-
-<p>You do not need to download or install special software to use Buoy. Simply bookmark a page with your smartphone's built-in Web browser to gain instant access to your personal emergency response team. Quickly send them your location with a pre-defined custom message, write a custom message, or schedule a timed alert (like a "safe call") for some time in the future.</p>
-
-<p>The people you select as your emergency contacts ("response team") will get a notification showing them your location in the real world as well as the locations of any other responders to your call for help. If it's safe for you to do so, you can now coordinate with all responders in a live chat room, or responders can coordinate amongst themselves about how best to help you if you are unresponsive.</p>
-
-<p><strong>See the <a href="https://wordpress.org/plugins/buoy/screenshots/">screenshots</a> for an example walkthrough of how Buoy works.</strong></p>
-
-<p><a href="https://github.com/meitar/better-angels/wiki/List-of-Buoy-enabled-websites">Find a Buoy-enabled web site.</a></p>
-
-<h1>
-<a id="installing-buoy-for-your-community" class="anchor" href="#installing-buoy-for-your-community" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Installing Buoy for your community</h1>
-
-<p>Installation is as simple as pressing "Install now" from your admin WordPress Dashboard. (<a href="http://www.wpbeginner.com/beginners-guide/step-by-step-guide-to-install-a-wordpress-plugin-for-beginners/">Learn more about installing WordPress plugins from WPBeginner.com</a>.) You can also find <a href="https://wordpress.org/plugins/buoy/">Buoy hosted on the WordPress plugin repository</a>.</p>
-
-<p>Read the <a href="https://github.com/meitar/better-angels/wiki/Buoy-Administration-Guide">Buoy Administration Guide</a> for more details.</p>
-
-<h1>
-<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Contributing</h1>
-
-<p>Buoy is <a href="https://www.gnu.org/philosophy/free-sw.en.html" title="What is free software?">free software</a>. It was developed and is maintained primarily by a nomadic hacker named <a href="https://maymay.net/">maymay</a> who has a lot of fucks to give about supporting survivors of any of capitalism's horrors, along with a growing group of volunteers who call themselves the Better Angels.</p>
-
-<p>Even if you don't code, there's a lot you can do to help make Buoy better. Here are a few.</p>
-
-<h2>
-<a id="donate" class="anchor" href="#donate" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Donate</h2>
-
-<p>You can support development and maintenance of Buoy by supporting its primary developer, maymay. Click <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=TJLPJYXHSRBEE&amp;lc=US&amp;item_name=Better%20Angels%20Buoy&amp;item_number=Better%20Angels%20Buoy&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted">here to donate via PayPal</a>, or visit <a href="http://Cyberbusking.org/">Cyberbusking.org</a> for maymay's personal donation portal.</p>
-
-<p>You can also support development of Buoy by supporting the following organizations who have helped make Buoy possible:</p>
-
-<ul>
-<li><a href="http://techforjustice.org/">Tech for Justice</a></li>
-</ul>
-
-<h2>
-<a id="translate" class="anchor" href="#translate" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Translate</h2>
-
-<p>If you speak multiple languages, you can help <a href="https://www.transifex.com/cyberbusking/better-angels/">translate Buoy into more human languages</a>. This helps make Buoy available to people all over the world in their native languages.</p>
-
-<h2>
-<a id="document" class="anchor" href="#document" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Document</h2>
-
-<p>If you use Buoy and are familiar with how it works, you can help others learn about the tool by writing about how you use it. We maintain <a href="https://github.com/meitar/better-angels/wiki">a wiki</a> that you can edit to add your own guides, walkthroughs, and suggestions.</p>
-
-<p>You can also write articles on your website or blog. If you do, please <a href="http://www.techforjustice.org/contact/">contact us</a> or <a href="mailto:bitetheappleback+buoy@gmail.com">email maymay directly</a> to let us know.</p>
-
-<h2>
-<a id="code" class="anchor" href="#code" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Code</h2>
-
-<p>The easiest way to get started contributing code is to use the <a href="https://github.com/Varying-Vagrant-Vagrants/VVV">Varying Vagrant Vagrants</a> ("VVV") project to make a local WordPress development environment. Then <a href="https://github.com/meitar/better-angels/fork">fork the Buoy project on GitHub</a> and <code>git clone</code> your fork into your VVV's <code>wordpress-default/wp-content/plugins/</code> directory. See our wiki for a step-by-step guide to <a href="http://github.com/meitar/better-angels/wiki/Setting-up-a-development-environment">setting up a development environment</a>.</p>
-
-<p>Patches and pull requests are very welcome!</p>
-
-      <footer class="site-footer">
-        <span class="site-footer-owner"><a href="https://github.com/meitar/better-angels">Better Angels&#39; Buoy</a> is maintained by <a href="https://github.com/meitar">meitar</a>.</span>
-
-        <span class="site-footer-credits">This page was generated by <a href="https://pages.github.com">GitHub Pages</a> using the <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a> by <a href="https://twitter.com/jasonlong">Jason Long</a>.</span>
-      </footer>
-
-    </section>
-
-  
-  </body>
-</html>
+</div>
