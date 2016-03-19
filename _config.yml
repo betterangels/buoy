@@ -8,6 +8,11 @@ url: "https://meitar.github.io" # the base hostname & protocol for your site
 github_username: meitar
 project_name: Better Angels&rsquo; Buoy
 
+# GitHub settings
+# See https://help.github.com/articles/configuring-jekyll/#defaults-you-can-change
+github:
+ - url: "https://meitar.github.io"
+
 # Build settings
 markdown: kramdown
 
