@@ -3,3 +3,20 @@
 
     <span class="site-footer-credits">Thanks to <a href="https://twitter.com/jasonlong">Jason Long</a> for his beautiful <a href="https://github.com/jasonlong/cayman-theme">Cayman theme</a>.</span>
 </footer>
+<script>
+// Smooth scroll.
+jQuery(function() {
+    jQuery('a[href*="#"]:not([href="#"])').click(function() {
+        if (location.pathname.replace(/^\//,'') == this.pathname.replace(/^\//,'') && location.hostname == this.hostname) {
+            var target = jQuery(this.hash);
+            target = target.length ? target : $('[name=' + this.hash.slice(1) +']');
+            if (target.length) {
+                jQuery('html, body').animate({
+                    scrollTop: target.offset().top
+                }, 1000);
+                return false;
+            }
+        }
+    });
+});
+</script>
