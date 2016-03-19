@@ -3,7 +3,7 @@ title: Better Angels&rsquo; Buoy
 tagline: A community-based crisis response system. Because friends don&rsquo;t let friends call the cops.
 description: > # this means to ignore newlines until "baseurl:"
   Better Angels&rsquo; Buoy is a community-based crisis response system.
-baseurl: ""
+baseurl: "better-angels"
 url: "https://meitar.github.io" # the base hostname & protocol for your site
 
 # Build settings
