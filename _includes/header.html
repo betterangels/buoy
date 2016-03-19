@@ -6,9 +6,9 @@
             <li><a href="https://github.com/meitar/better-angels/#readme" class="btn">View on GitHub</a></li>
             <li><a href="https://github.com/meitar/better-angels/zipball/master" class="btn">Download .zip</a></li>
             <li><a href="https://github.com/meitar/better-angels/tarball/master" class="btn">Download .tar.gz</a></li>
-            <li><a href="{{ "/docs/" | prepend: site.github.url }}" class="btn">API docs</a></li>
+            <li><a href="{{ site.github.url }}{{ "/docs/" | prepend: site.baseurl }}" class="btn">API docs</a></li>
             {% for page in site.pages %}{% if page.title %}
-            <li><a href="{{ page.url | prepend: site.baseurl }}" class="btn">{% if page.menu-title == blank %}{{ page.title }}{% else %}{{ page.menu-title }}{% endif %}</a></li>
+            <li><a href="{{ page.url | prepend: site.github.url }}" class="btn">{% if page.menu-title == blank %}{{ page.title }}{% else %}{{ page.menu-title }}{% endif %}</a></li>
             {% endif %}{% endfor %}
         </ul>
     </nav>

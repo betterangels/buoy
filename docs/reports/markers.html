@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"/>
+    <meta charset="utf-8"/>
+    <title>     &raquo; Markers
+</title>
+    <meta name="author" content=""/>
+    <meta name="description" content=""/>
+
+    <link href="../css/bootstrap-combined.no-icons.min.css" rel="stylesheet">
+    <link href="../css/font-awesome.min.css" rel="stylesheet">
+    <link href="../css/prism.css" rel="stylesheet" media="all"/>
+    <link href="../css/template.css" rel="stylesheet" media="all"/>
+    
+    <!--[if lt IE 9]>
+    <script src="../js/html5.js"></script>
+    <![endif]-->
+    <script src="../js/jquery-1.11.0.min.js"></script>
+    <script src="../js/ui/1.10.4/jquery-ui.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/jquery.smooth-scroll.js"></script>
+    <script src="../js/prism.min.js"></script>
+    <!-- TODO: Add http://jscrollpane.kelvinluck.com/ to style the scrollbars for browsers not using webkit-->
+    
+    <link rel="shortcut icon" href="../images/favicon.ico"/>
+    <link rel="apple-touch-icon" href="../images/apple-touch-icon.png"/>
+    <link rel="apple-touch-icon" sizes="72x72" href="../images/apple-touch-icon-72x72.png"/>
+    <link rel="apple-touch-icon" sizes="114x114" href="../images/apple-touch-icon-114x114.png"/>
+</head>
+<body>
+
+<div class="navbar navbar-fixed-top">
+    <div class="navbar-inner">
+        <div class="container">
+            <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                <i class="icon-ellipsis-vertical"></i>
+            </a>
+            <a class="brand" href="../index.html">Buoy (plugin for WordPress)</a>
+
+            <div class="nav-collapse">
+                <ul class="nav pull-right">
+                                        <li class="dropdown" id="charts-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Charts <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../graphs/class.html">
+                                    <i class="icon-list-alt"></i>&#160;Class hierarchy diagram
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                    <li class="dropdown" id="reports-menu">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            Reports <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a href="../reports/errors.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">56</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/markers.html">
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">30</span>
+                                </a>
+                            </li>
+                            <li>
+                                <a href="../reports/deprecated.html">
+                                                                                                            <i class="icon-list-alt"></i>&#160;Deprecated <span class="label label-info pull-right">0</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <!--<div class="go_to_top">-->
+    <!--<a href="#___" style="color: inherit">Back to top&#160;&#160;<i class="icon-upload icon-white"></i></a>-->
+    <!--</div>-->
+</div>
+
+<div id="___" class="container-fluid">
+        <section class="row-fluid">
+        <div class="span2 sidebar">
+            <ul class="side-nav nav nav-list">
+                <li class="nav-header">Navigation</li>
+                                                                        <li><a href="#buoy.php"><i class="icon-file"></i> buoy.php</a></li>
+                                                                                                <li><a href="#class-buoy-alert.php"><i class="icon-file"></i> class-buoy-alert.php</a></li>
+                                                                                                <li><a href="#class-buoy-chat-room.php"><i class="icon-file"></i> class-buoy-chat-room.php</a></li>
+                                                                                                <li><a href="#class-buoy-notification.php"><i class="icon-file"></i> class-buoy-notification.php</a></li>
+                                                                                                <li><a href="#class-buoy-settings.php"><i class="icon-file"></i> class-buoy-settings.php</a></li>
+                                                                                                                                                        <li><a href="#class-buoy-team.php"><i class="icon-file"></i> class-buoy-team.php</a></li>
+                                                                                                <li><a href="#class-buoy-user-settings.php"><i class="icon-file"></i> class-buoy-user-settings.php</a></li>
+                                                                                                <li><a href="#class-buoy-user.php"><i class="icon-file"></i> class-buoy-user.php</a></li>
+                                                                                                <li><a href="#includes/crontab-manager.php"><i class="icon-file"></i> includes/crontab-manager.php</a></li>
+                                                                                                                                                                                                                                                                                                                                <li><a href="#pages/incident-chat.php"><i class="icon-file"></i> pages/incident-chat.php</a></li>
+                                                                                                <li><a href="#pages/manifest.json.php"><i class="icon-file"></i> pages/manifest.json.php</a></li>
+                                                                                                                                                                                                                                                                                                                                                                                        <li><a href="#templates/comments-chat-room.php"><i class="icon-file"></i> templates/comments-chat-room.php</a></li>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                            </ul>
+        </div>
+
+        <div class="span10 offset2">
+
+            <ul class="breadcrumb">
+                <li><a href="../"><i class="icon-map-marker"></i></a><span class="divider">\</span></li>
+                <li>Markers</li>
+            </ul>
+
+            
+            <div id="marker-accordion">
+                                                            <div class="package-contents">
+                            <a name="buoy.php" id="buoy.php"></a>
+                            <h3>
+                            <i class="icon-file"></i>
+                                buoy.php
+                                <small style="float: right;padding-right: 10px;">1</small>
+                            </h3>
+                            <div>
+                                <table class="table markers table-bordered">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Description</th>
+                                    </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>294</td>
+                                            <td>This isn&#039;t showing up, figure out why.</td>
+                                        </tr>
+                                                                    </table>
+                            </div>
+                        </div>
+                                                                                <div class="package-contents">
+                            <a name="class-buoy-alert.php" id="class-buoy-alert.php"></a>
+                            <h3>
+                            <i class="icon-file"></i>
+                                class-buoy-alert.php
+                                <small style="float: right;padding-right: 10px;">10</small>
+                            </h3>
+                            <div>
+                                <table class="table markers table-bordered">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Description</th>
+                                    </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>569</td>
+                                            <td>Each of these nodes have similar HTML, reuse some code between these?</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>743</td>
+                                            <td>Clean this up a bit, maybe the JavaScript should send JSON data?</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>918</td>
+                                            <td>Figure out if the Google Maps API can also be SRI-enabled</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>989</td>
+                                            <td>array_map and sanitize this?</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>1017</td>
+                                            <td>Scheduled alerts should be their own function?</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>1028</td>
+                                            <td>This fails to offset the UTC time back to server-local time</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>246</td>
+                                            <td>Currently, an alert dynamically looks up who is on the
+teams associated with it. This should be changed so it
+keeps a snapshotted list of the confirmed team members
+at the time the alert was created. This will prevent a
+user from being added to a team (and thus granted access
+to an alert) *after* the alert has been sent out.</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>766</td>
+                                            <td>Move to the main plugin class?</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>843</td>
+                                            <td>Should this kind of utility loader be moved into its own class?</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>1159</td>
+                                            <td>Should the WP_Buoy_Alert object be responsible for handling
+      metadata associated with responder location updates? Right
+      now, this is all just manually updates of postmeta. Not the
+      best way to this in the long run, methinks.</td>
+                                        </tr>
+                                                                    </table>
+                            </div>
+                        </div>
+                                                                                <div class="package-contents">
+                            <a name="class-buoy-chat-room.php" id="class-buoy-chat-room.php"></a>
+                            <h3>
+                            <i class="icon-file"></i>
+                                class-buoy-chat-room.php
+                                <small style="float: right;padding-right: 10px;">3</small>
+                            </h3>
+                            <div>
+                                <table class="table markers table-bordered">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Description</th>
+                                    </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>278</td>
+                                            <td>This should become a &quot;real&quot; template, but for now, we just</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>180</td>
+                                            <td>The default refresh rate could (should?) become an admin
+      option configurable via the plugin&#039;s settings page.
+
+      Is there a way to go to the #page-footer upon reresh by setting the url here?
+      Placing it in the meta tag here doesn&#039;t seem to work (browser ignores it?)</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>275</td>
+                                            <td>Remove this global. Maybe template-ize this a bit better
+      with actual `load_template()` functions and similar to a
+      WordPress front-end? That would let theme developers use
+      their skills to customize the built-in chat room, too.</td>
+                                        </tr>
+                                                                    </table>
+                            </div>
+                        </div>
+                                                                                <div class="package-contents">
+                            <a name="class-buoy-notification.php" id="class-buoy-notification.php"></a>
+                            <h3>
+                            <i class="icon-file"></i>
+                                class-buoy-notification.php
+                                <small style="float: right;padding-right: 10px;">3</small>
+                            </h3>
+                            <div>
+                                <table class="table markers table-bordered">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Description</th>
+                                    </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>89</td>
+                                            <td>Write a better message.</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>162</td>
+                                            <td>Write a more descriptive message.</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>79</td>
+                                            <td>Support inviting via other means than email.</td>
+                                        </tr>
+                                                                    </table>
+                            </div>
+                        </div>
+                                                                                <div class="package-contents">
+                            <a name="class-buoy-settings.php" id="class-buoy-settings.php"></a>
+                            <h3>
+                            <i class="icon-file"></i>
+                                class-buoy-settings.php
+                                <small style="float: right;padding-right: 10px;">3</small>
+                            </h3>
+                            <div>
+                                <table class="table markers table-bordered">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Description</th>
+                                    </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>427</td>
+                                            <td>Refactor this, maybe can do better since the array</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>539</td>
+                                            <td>Can we harden this against XSS more?</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>216</td>
+                                            <td>Should this actually be part of the Alert class?</td>
+                                        </tr>
+                                                                    </table>
+                            </div>
+                        </div>
+                                                                                                                    <div class="package-contents">
+                            <a name="class-buoy-team.php" id="class-buoy-team.php"></a>
+                            <h3>
+                            <i class="icon-file"></i>
+                                class-buoy-team.php
+                                <small style="float: right;padding-right: 10px;">2</small>
+                            </h3>
+                            <div>
+                                <table class="table markers table-bordered">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Description</th>
+                                    </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>371</td>
+                                            <td>This should probably be moved so it loads only where needed.</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>853</td>
+                                            <td>Possibly the count should be its own meta field managed by us so this hook is more performant?</td>
+                                        </tr>
+                                                                    </table>
+                            </div>
+                        </div>
+                                                                                <div class="package-contents">
+                            <a name="class-buoy-user-settings.php" id="class-buoy-user-settings.php"></a>
+                            <h3>
+                            <i class="icon-file"></i>
+                                class-buoy-user-settings.php
+                                <small style="float: right;padding-right: 10px;">1</small>
+                            </h3>
+                            <div>
+                                <table class="table markers table-bordered">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Description</th>
+                                    </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>40</td>
+                                            <td>Possible values should not be part of default values.</td>
+                                        </tr>
+                                                                    </table>
+                            </div>
+                        </div>
+                                                                                <div class="package-contents">
+                            <a name="class-buoy-user.php" id="class-buoy-user.php"></a>
+                            <h3>
+                            <i class="icon-file"></i>
+                                class-buoy-user.php
+                                <small style="float: right;padding-right: 10px;">2</small>
+                            </h3>
+                            <div>
+                                <table class="table markers table-bordered">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Description</th>
+                                    </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>254</td>
+                                            <td>This should be a bit cleaner. Maybe part of the WP_Buoy_Notification class?</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>20</td>
+                                            <td>Make better use of WP_User&#039;s magic accessors, which can also
+      be used to automatically fetch usermeta settings.</td>
+                                        </tr>
+                                                                    </table>
+                            </div>
+                        </div>
+                                                                                <div class="package-contents">
+                            <a name="includes/crontab-manager.php" id="includes/crontab-manager.php"></a>
+                            <h3>
+                            <i class="icon-file"></i>
+                                includes/crontab-manager.php
+                                <small style="float: right;padding-right: 10px;">1</small>
+                            </h3>
+                            <div>
+                                <table class="table markers table-bordered">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Description</th>
+                                    </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>19</td>
+                                            <td>Test code coverage, pls kthxbai.</td>
+                                        </tr>
+                                                                    </table>
+                            </div>
+                        </div>
+                                                                                                                                                                                                                                <div class="package-contents">
+                            <a name="pages/incident-chat.php" id="pages/incident-chat.php"></a>
+                            <h3>
+                            <i class="icon-file"></i>
+                                pages/incident-chat.php
+                                <small style="float: right;padding-right: 10px;">1</small>
+                            </h3>
+                            <div>
+                                <table class="table markers table-bordered">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Description</th>
+                                    </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>111</td>
+                                            <td>Can we harden against XSS here? ?&gt;</td>
+                                        </tr>
+                                                                    </table>
+                            </div>
+                        </div>
+                                                                                <div class="package-contents">
+                            <a name="pages/manifest.json.php" id="pages/manifest.json.php"></a>
+                            <h3>
+                            <i class="icon-file"></i>
+                                pages/manifest.json.php
+                                <small style="float: right;padding-right: 10px;">2</small>
+                            </h3>
+                            <div>
+                                <table class="table markers table-bordered">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Description</th>
+                                    </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>31</td>
+                                            <td>Icons</td>
+                                        </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>39</td>
+                                            <td>Related applications, this is for opening a native app, when we have one.</td>
+                                        </tr>
+                                                                    </table>
+                            </div>
+                        </div>
+                                                                                                                                                                                                                                                                    <div class="package-contents">
+                            <a name="templates/comments-chat-room.php" id="templates/comments-chat-room.php"></a>
+                            <h3>
+                            <i class="icon-file"></i>
+                                templates/comments-chat-room.php
+                                <small style="float: right;padding-right: 10px;">1</small>
+                            </h3>
+                            <div>
+                                <table class="table markers table-bordered">
+                                    <tr>
+                                        <th>Type</th>
+                                        <th>Line</th>
+                                        <th>Description</th>
+                                    </tr>
+                                                                            <tr>
+                                            <td>TODO</td>
+                                            <td>19</td>
+                                            <td>Make the comments list a Microformats2 `h-feed` structure. ?&gt;&gt;</td>
+                                        </tr>
+                                                                    </table>
+                            </div>
+                        </div>
+                                                                                                                                                                                                                                                                                                            </div>
+        </div>
+    </section>
+
+    <footer class="row-fluid">
+        <section class="span10 offset2">
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <section class="row-fluid footer-sections">
+                        <section class="span4">
+                                                        <h1><i class="icon-code"></i></h1>
+                            <div>
+                                <ul>
+                                                                    </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-bar-chart"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../graphs/class.html">Class Hierarchy Diagram</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                        <section class="span4">
+                                                        <h1><i class="icon-pushpin"></i></h1>
+                            <div>
+                                <ul>
+                                    <li><a href="../reports/errors.html">Errors</a></li>
+                                    <li><a href="../reports/markers.html">Markers</a></li>
+                                </ul>
+                            </div>
+                        </section>
+                    </section>
+                </section>
+            </section>
+            <section class="row-fluid">
+                <section class="span10 offset1">
+                    <hr />
+                    Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
+                    on March 19th, 2016 at 02:20.
+                </section>
+            </section>
+        </section>
+    </footer>
+</div>
+
+</body>
+</html>
