@@ -48,3 +48,5 @@ front-page-weight: 10
     </div>
 
 </div><!-- .row -->
+
+<p>Read about <a href="https://github.com/meitar/better-angels/wiki/Buoy-Use-Cases">how others use Buoy</a> or tell the world how you use it by sharing your story on <a href="https://github.com/meitar/better-angels/wiki">our wiki</a>!</p>
