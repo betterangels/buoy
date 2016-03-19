@@ -6,7 +6,7 @@ layout: page
 
   {% assign pages = site.pages | where: "front-page", true | sort: "front-page-weight" %}
   {% for page in pages %}
-  <article id="{{ page.name | split: ".md" | first }}">
+  <article id="{{ page.name | split: ".md" | first }}-container">
     {{ page.content | markdownify }}
   </article>
   {% endfor %}
