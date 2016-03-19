@@ -1,4 +1,5 @@
 ---
+title: Buoy on FLOSS Weekly
 ---
 
 Every Angel is a strong advocate of free, libre, open source software, so we're thrilled to announce that two of our heavenly host will be interviewed on FLOSS Weekly, the TWiT.tv network's show dedicated to the free software movement. An upcoming show will be all about our [Buoy](https://meitar.github.io/better-angels/) project!
