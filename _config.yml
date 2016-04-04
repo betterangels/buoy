@@ -1,10 +1,10 @@
 # Site settings
-title: Better Angels&rsquo; Buoy
+title: Buoy
 tagline: A community-based crisis response system. Because friends don&rsquo;t let friends call the cops.
 description: > # this means to ignore newlines until "baseurl:"
-  Better Angels&rsquo; Buoy is a community-based crisis response system.
-baseurl: "/better-angels"
-url: "https://meitar.github.io" # the base hostname & protocol for your site
+  Buoy is a community-based crisis response system.
+baseurl: "/buoy"
+url: "https://betterangels.github.io" # the base hostname & protocol for your site
 
 # Build settings
 markdown: kramdown

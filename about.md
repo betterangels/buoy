@@ -7,8 +7,8 @@ menu-title: About
 
 | Branch   | Builds |
 | :------- |:------:|
-| `master` | [![Build Status for master branch](https://travis-ci.org/meitar/better-angels.svg?branch=master)](https://travis-ci.org/meitar/better-angels) |
-| `develop` | [![Build Status for develop branch](https://travis-ci.org/meitar/better-angels.svg?branch=develop)](https://travis-ci.org/meitar/better-angels) |
+| `master` | [![Build Status for master branch](https://travis-ci.org/betterangels/buoy.svg?branch=master)](https://travis-ci.org/betterangels/buoy) |
+| `develop` | [![Build Status for develop branch](https://travis-ci.org/betterangels/buoy.svg?branch=develop)](https://travis-ci.org/betterangels/buoy) |
 
 Buoy is a private, enhanced [9-1-1](https://en.wikipedia.org/wiki/9-1-1) for your website. It is free software created by the Better Angels collective as a [WordPress](https://wordpress.org/) plugin and is designed to quickly connect people in need with trusted friends, family members, advocates, and other allies in times of crisis.
 
@@ -30,13 +30,13 @@ The people you select as your emergency contacts ("response team") will get a no
 
 **See the [screenshots](https://wordpress.org/plugins/buoy/screenshots/) for an example walkthrough of how Buoy works.**
 
-[Find a Buoy-enabled web site.](https://github.com/meitar/better-angels/wiki/List-of-Buoy-enabled-websites)
+[Find a Buoy-enabled web site.](https://github.com/betterangels/better-angels/wiki/List-of-Buoy-enabled-websites)
 
 # Installing Buoy for your community
 
 Installation is as simple as pressing "Install now" from your admin WordPress Dashboard. ([Learn more about installing WordPress plugins from WPBeginner.com](http://www.wpbeginner.com/beginners-guide/step-by-step-guide-to-install-a-wordpress-plugin-for-beginners/).) You can also find [Buoy hosted on the WordPress plugin repository](https://wordpress.org/plugins/buoy/).
 
-Read the [Buoy Administration Guide](https://github.com/meitar/better-angels/wiki/Buoy-Administration-Guide) for more details.
+Read the [Buoy Administration Guide](https://github.com/betterangels/better-angels/wiki/Buoy-Administration-Guide) for more details.
 
 # Contributing
 
@@ -58,13 +58,13 @@ If you speak multiple languages, you can help [translate Buoy into more human la
 
 ## Document
 
-If you use Buoy and are familiar with how it works, you can help others learn about the tool by writing about how you use it. We maintain [a wiki](https://github.com/meitar/better-angels/wiki) that you can edit to add your own guides, walkthroughs, and suggestions.
+If you use Buoy and are familiar with how it works, you can help others learn about the tool by writing about how you use it. We maintain [a wiki](https://github.com/betterangels/better-angels/wiki) that you can edit to add your own guides, walkthroughs, and suggestions.
 
 You can also write articles on your website or blog. If you do, please [contact us](http://www.techforjustice.org/contact/) or [email maymay directly](mailto:bitetheappleback+buoy@gmail.com) to let us know.
 
 ## Code
 
-The easiest way to get started contributing code is to use the [Varying Vagrant Vagrants](https://github.com/Varying-Vagrant-Vagrants/VVV) ("VVV") project to make a local WordPress development environment. Then [fork the Buoy project on GitHub](https://github.com/meitar/better-angels/fork) and `git clone` your fork into your VVV's `wordpress-default/wp-content/plugins/` directory. See our wiki for a step-by-step guide to [setting up a development environment](http://github.com/meitar/better-angels/wiki/Setting-up-a-development-environment).
+The easiest way to get started contributing code is to use the [Varying Vagrant Vagrants](https://github.com/Varying-Vagrant-Vagrants/VVV) ("VVV") project to make a local WordPress development environment. Then [fork the Buoy project on GitHub](https://github.com/betterangels/buoy/fork) and `git clone` your fork into your VVV's `wordpress-default/wp-content/plugins/` directory. See our wiki for a step-by-step guide to [setting up a development environment](http://github.com/betterangels/better-angels/wiki/Setting-up-a-development-environment).
 
 Patches and pull requests are very welcome!
 

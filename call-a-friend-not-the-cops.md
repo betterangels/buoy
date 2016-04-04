@@ -10,4 +10,4 @@ Buoy is a decentralized 9-1-1 alternative built for people who are not well serv
 > If you feel protected by the police, then you are not the one being policed.  
 > <cite>&mdash;[maymay](https://maymay.net/), Buoy developer</cite>
 
-Read more about [Buoy as an alternative to police](https://github.com/meitar/better-angels/wiki/Buoy-as-an-alternative-to-police-and-EMS).
+Read more about [Buoy as an alternative to police](https://github.com/betterangels/better-angels/wiki/Buoy-as-an-alternative-to-police-and-EMS).

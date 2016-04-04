@@ -39,7 +39,7 @@ front-page-weight: 10
     <div class="col-md-4">
         <h3>By activists, for activists</h3>
 
-        <p>Buoy is built by the Better Angels collective, a friendly group of anarchist techies comitted to feminist, anti-capitalist struggle. Learn more <a href="https://github.com/meitar/better-angels/wiki#who-are-the-better-angels">about the Better Angels</a>.</p>
+        <p>Buoy is built by the Better Angels collective, a friendly group of anarchist techies comitted to feminist, anti-capitalist struggle. Learn more <a href="https://github.com/betterangels/better-angels/wiki#who-are-the-better-angels">about the Better Angels</a>.</p>
     </div>
 
     <div class="col-md-4">
@@ -49,4 +49,4 @@ front-page-weight: 10
 
 </div><!-- .row -->
 
-<p>Read about <a href="https://github.com/meitar/better-angels/wiki/Buoy-Use-Cases">how others use Buoy</a> or tell the world how you use it by sharing your story on <a href="https://github.com/meitar/better-angels/wiki">our wiki</a>!</p>
+<p>Read about <a href="https://github.com/betterangels/better-angels/wiki/Buoy-Use-Cases">how others use Buoy</a> or tell the world how you use it by sharing your story on <a href="https://github.com/betterangels/better-angels/wiki">our wiki</a>!</p>

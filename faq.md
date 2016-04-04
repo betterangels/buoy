@@ -7,7 +7,7 @@ menu-title: FAQ
 
 Some common questions people have asked us about Better Angels/Buoy and our answers to them.
 
-[Read the full FAQ](https://github.com/meitar/better-angels/wiki/Frequently-Asked-Questions) on the [Buoy project wiki](https://github.com/meitar/better-angels/wiki/Buoy).
+[Read the full FAQ](https://github.com/betterangels/better-angels/wiki/Frequently-Asked-Questions) on the [Buoy project wiki](https://github.com/betterangels/better-angels/wiki/Buoy).
 
 * [General questions](#general-questions)
 * [Implementation choices](#implementation-choices)
@@ -49,7 +49,7 @@ Because relatively non-technical people with extremely limited financial resourc
 Maybe, but remember:
 
 * Buoy is intended to be a *decentralized* and *community-run* system. We believe Buoy will be more effective for the people who need it if a single Buoy instance does not need to support millions of simultaneous users, but rather only several hundred or thousands. This is because, in a group of a million people, there are in fact many distinct "communities." Buoy's design philosophy is to more closely match real-world communities, which are understandably limited in size. We have no intention or desire to create a globalized (and globalizing) tool like Facebook, Twitter, or Google. Their architectures do not accurately reflect most people's social realities or needs.
-* The nature of decentralized systems is that they distribute their workload across multiple individual instances. The phrase "many hands make light work" applies here. A single Buoy instance need only handle traffic for its current active users; incoming alerts from other Buoys will bounce the user to that Buoy. (See [our issue tracker](https://github.com/meitar/better-angels/issues/162) for more information.)
+* The nature of decentralized systems is that they distribute their workload across multiple individual instances. The phrase "many hands make light work" applies here. A single Buoy instance need only handle traffic for its current active users; incoming alerts from other Buoys will bounce the user to that Buoy. (See [our issue tracker](https://github.com/betterangels/better-angels/issues/162) for more information.)
 * Also, remember that WordPress itself currently powers approximately 25% of all websites on the Internet, including some extremely large ones. Moreover, [WordPress is evolving in ways that embrace an API geared for performance](http://bethesignal.org/blog/2015/02/27/new-era-wordpress-hhvm-rest-react/).
 
 In short, we believe WordPress's strict dedication to free software matches our philosophy, and its forward-thinking development roadmap gives us the right tools we need to meet our own development goals. But even barring that, there's no reason you can't port the server-side components of Buoy to a platform you like more than WordPress if you want to. (Please do!)

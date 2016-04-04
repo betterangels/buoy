@@ -29,7 +29,7 @@ See Buoy in action helping to make your community more resilient in the face of 
             <img alt="Screenshot showing Buoy chat room" src="https://ps.w.org/buoy/assets/screenshot-9.png?rev=1328749" />
             <div class="carousel-caption">
                 <h2>Integrated chat</h2>
-                <p>Every time you send an alert, Buoy creates a secure, private chat room that all responders can use. This lets you communicate with anyone who answers your alert, but also lets responders coordinate with one another regarding how best to help you. Buoy comes with a built-in chat system (pictured), and can be configured to use other chat systems with the touch of a button. (We hope to add videoconferencing soon. If you can help, join <a href="https://github.com/meitar/better-angels/issues/165">the conversation on our issue tracker</a>!)</p>
+                <p>Every time you send an alert, Buoy creates a secure, private chat room that all responders can use. This lets you communicate with anyone who answers your alert, but also lets responders coordinate with one another regarding how best to help you. Buoy comes with a built-in chat system (pictured), and can be configured to use other chat systems with the touch of a button. (We hope to add videoconferencing soon. If you can help, join <a href="https://github.com/betterangels/better-angels/issues/165">the conversation on our issue tracker</a>!)</p>
             </div><!-- .carousel-caption -->
         </div><!-- .item -->
 
