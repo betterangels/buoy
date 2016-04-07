@@ -128,7 +128,7 @@ var BUOY_CHAT_ROOM = (function () {
      * Runs on "page load."
      */
     var init = function () {
-        window.location = window.location + '#page-footer';
+        jQuery('window').scrollTop(jQuery('#page-footer').offset().top);
         resetCommentForm();
         setInterval(pollForNewComments, 5000);
 
