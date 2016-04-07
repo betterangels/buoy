@@ -38,3 +38,13 @@
 #chat-room .media-object {
     border-radius: 50%;
 }
+
+#new-comments-notice {
+    display: none;
+    z-index: 1;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    width: 300px;
+    margin-left: -150px;
+}

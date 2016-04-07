@@ -2,9 +2,9 @@
 # This file is distributed under the same license as the Buoy (a Better Angels crisis response system) package.
 msgid ""
 msgstr ""
-"Project-Id-Version: Buoy (a Better Angels crisis response system) 0.1.1\n"
+"Project-Id-Version: Buoy (a Better Angels crisis response system) 0.1.2\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/buoy\n"
-"POT-Creation-Date: 2016-02-13 01:04:00+00:00\n"
+"POT-Creation-Date: 2016-02-20 10:39:15+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -39,129 +39,129 @@ msgstr ""
 msgid "A call for help."
 msgstr ""
 
-#: class-buoy-alert.php:538
+#: class-buoy-alert.php:540
 msgid "Alert"
 msgstr ""
 
-#: class-buoy-alert.php:565
+#: class-buoy-alert.php:567
 msgid "Active alerts"
 msgstr ""
 
-#: class-buoy-alert.php:588
+#: class-buoy-alert.php:590
 msgid "My alert on %2$s"
 msgstr ""
 
-#: class-buoy-alert.php:603
+#: class-buoy-alert.php:605
 msgid "Alert issued by %1$s on %2$s"
 msgstr ""
 
-#: class-buoy-alert.php:617
+#: class-buoy-alert.php:619
 msgid "Cancel scheduled alert for %1$s"
 msgstr ""
 
-#: class-buoy-alert.php:619
+#: class-buoy-alert.php:621
 msgid "Cancel this alert"
 msgstr ""
 
-#: class-buoy-alert.php:642 class-buoy-alert.php:643
+#: class-buoy-alert.php:644 class-buoy-alert.php:645
 msgid "Activate Alert"
 msgstr ""
 
-#: class-buoy-alert.php:653 class-buoy-alert.php:654
+#: class-buoy-alert.php:655 class-buoy-alert.php:656
 msgid "Respond to Alert"
 msgstr ""
 
-#: class-buoy-alert.php:662 class-buoy-alert.php:663
+#: class-buoy-alert.php:664 class-buoy-alert.php:665
 msgid "Incident Chat"
 msgstr ""
 
-#: class-buoy-alert.php:709 class-buoy-alert.php:732 class-buoy-alert.php:737
+#: class-buoy-alert.php:711 class-buoy-alert.php:734 class-buoy-alert.php:739
 #: class-buoy-settings.php:524 class-buoy-settings.php:536
-#: pages/post-comments-chat.php:27 pages/post-comments-chat.php:30
+#: pages/post-comments-chat.php:24 pages/post-comments-chat.php:27
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: class-buoy-alert.php:942
+#: class-buoy-alert.php:954
 msgid "Install Buoy"
 msgstr ""
 
-#: class-buoy-alert.php:943
+#: class-buoy-alert.php:955
 msgid ""
 "Install Buoy by tapping this button, then choosing \"Add to home screen\" "
 "from the menu."
 msgstr ""
 
-#: class-buoy-alert.php:944
+#: class-buoy-alert.php:956
 msgid "Dismiss"
 msgstr ""
 
-#: class-buoy-alert.php:945
+#: class-buoy-alert.php:957
 msgid "Incident Map"
 msgstr ""
 
-#: class-buoy-alert.php:946
+#: class-buoy-alert.php:958
 msgid "Hide Map"
 msgstr ""
 
-#: class-buoy-alert.php:947 pages/incident-chat.php:10
+#: class-buoy-alert.php:959 pages/incident-chat.php:10
 msgid "Show Map"
 msgstr ""
 
-#: class-buoy-alert.php:948
+#: class-buoy-alert.php:960
 msgid "Location of emergency alert signal"
 msgstr ""
 
-#: class-buoy-alert.php:949
+#: class-buoy-alert.php:961
 msgid "Emergency alert signal could not be pinpointed on a map."
 msgstr ""
 
-#: class-buoy-alert.php:950
+#: class-buoy-alert.php:962
 msgid "My location"
 msgstr ""
 
-#: class-buoy-alert.php:951
+#: class-buoy-alert.php:963
 msgid "Directions to here"
 msgstr ""
 
-#: class-buoy-alert.php:952
+#: class-buoy-alert.php:964
 msgid "Call"
 msgstr ""
 
-#: class-buoy-alert.php:953
+#: class-buoy-alert.php:965
 msgid "Responding to alert"
 msgstr ""
 
-#: class-buoy-alert.php:954 pages/activate-alert.php:65
+#: class-buoy-alert.php:966 pages/activate-alert.php:65
 msgid "Schedule alert"
 msgstr ""
 
-#: class-buoy-alert.php:955
+#: class-buoy-alert.php:967
 msgid "Scheduling alert"
 msgstr ""
 
-#: class-buoy-alert.php:1024
+#: class-buoy-alert.php:1036
 msgid "Buoy could not understand the date and time you entered."
 msgstr ""
 
-#: class-buoy-alert.php:1049
+#: class-buoy-alert.php:1061
 msgid "Your timed alert has been scheduled. Schedule another?"
 msgstr ""
 
-#: class-buoy-alert.php:1306
+#: class-buoy-alert.php:1318
 msgctxt "Example: uploaded 5 mins ago"
 msgid "uploaded %1$s ago"
 msgstr ""
 
-#: class-buoy-alert.php:1311
+#: class-buoy-alert.php:1323
 msgctxt "a byline, like \"written by Bob\""
 msgid "by %1$s"
 msgstr ""
 
-#: class-buoy-chat-room.php:158
+#: class-buoy-chat-room.php:164
 msgid "ago"
 msgstr ""
 
-#: class-buoy-chat-room.php:251
+#: class-buoy-chat-room.php:258
 msgid "%1$s image from %2$s"
 msgstr ""
 
@@ -690,6 +690,10 @@ msgstr ""
 
 #: templates/comments-chat-room.php:16
 msgid "Buoy chat: %s"
+msgstr ""
+
+#: templates/comments-chat-room.php:22
+msgid "View new messages."
 msgstr ""
 
 #. Plugin Name of the plugin/theme

@@ -217,6 +217,7 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
         if (isset($_GET['reset'])) {
             $classes[] = 'do_form_reset';
         }
+        $classes[] = 'wp-core-ui'; // for dismissible notices
         return $classes;
     }
 
@@ -286,13 +287,13 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
         wp_enqueue_style(
             self::$prefix.'-chat-room',
             plugins_url('/templates/comments-chat-room.css', __FILE__),
-            array(),
+            array('colors'),
             null
         );
         wp_enqueue_script(
             self::$prefix.'-chat-room',
             plugins_url('/templates/comments-chat-room.js', __FILE__),
-            array('jquery'),
+            array('common'),
             null
         );
 

@@ -46,8 +46,26 @@ var BUOY_CHAT_ROOM = (function () {
         jQuery.get(url, function (response) {
             if (response.length) {
                 appendComments(response);
+                showNewCommentsNotice();
             }
         });
+    };
+
+    /**
+     * Shows a notice that there are new comments.
+     */
+    var showNewCommentsNotice = function () {
+        jQuery('#new-comments-notice.notice').show();
+    };
+
+    /**
+     * Scrolls to bottom and hides the notice.
+     */
+    var handleNewCommentsNotice = function () {
+        jQuery(this).hide();
+        jQuery('html, body').animate({
+            'scrollTop': jQuery('#page-footer').offset().top
+        }, 500);
     };
 
     /**
@@ -113,6 +131,9 @@ var BUOY_CHAT_ROOM = (function () {
         window.location = window.location + '#page-footer';
         resetCommentForm();
         setInterval(pollForNewComments, 5000);
+
+        // Attach handlers.
+        jQuery('#new-comments-notice.notice').on('click', handleNewCommentsNotice);
     };
 
     /**

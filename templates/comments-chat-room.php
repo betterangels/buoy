@@ -18,6 +18,9 @@
 </head>
 <body <?php body_class(); // TODO: Make the comments list a Microformats2 `h-feed` structure. ?>>
     <div id="page">
+        <div id="new-comments-notice" class="updated notice is-dismissible">
+            <p><a href="#page-footer"><strong><?php esc_html_e('View new messages.', 'buoy');?></strong></a></p>
+        </div>
         <header id="masthead" class="site-header" role="banner">
             <h1 class="site-title"><?php print esc_html($this->get_title());?></h1>
         </header>
