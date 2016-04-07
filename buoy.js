@@ -1,11 +1,46 @@
 var BUOY = (function () {
     this.incident_hash;
     this.emergency_location;
-    this.map;           //< Google Map object itself
-    this.marker_bounds; //< Google Map marker bounding box
+    this.map;           //< Leaflet Map object itself
+    this.marker_bounds; //< Leaflet Map marker bounding box
     this.map_markers = {};
     this.map_touched = false; //< Whether the user has manually interacted with the map.
     this.geowatcher_id; //< ID of Geolocation.watchPosition() timer
+
+    /**
+     * Custom Leaflet map icon.
+     *
+     * @see {@link http://leafletjs.com/examples/custom-icons.html}
+     */
+    this.GravatarIcon = L.Icon.extend({
+        'options': {
+            'iconSize': [32, 32]
+        }
+    });
+
+    /**
+     * Get a Buoy "gravatar map icon."
+     *
+     * @param {object} options A {@link http://leafletjs.com/reference.html#icon-options Leaflet icon options object}
+     *
+     * @return {Leaflet.Icon}
+     */
+    this.gravatarIcon = function (options) {
+        return new this.GravatarIcon(options);
+    };
+
+    /**
+     * Makes a URL for linking to directions.
+     *
+     * @todo Currently uses Google Maps, worth changing?
+     *
+     * @param {Array} latlng
+     *
+     * @return {string}
+     */
+    var getDirectionsUrl = function (latlng) {
+        return 'https://maps.google.com/?saddr=Current+Location&daddr=' + encodeURIComponent(latlng.join(','));
+    }
 
     var getMyPosition = function (success) {
         if (!navigator.geolocation){
@@ -37,31 +72,27 @@ var BUOY = (function () {
         for (var i = 0; i < marker_info.length; i++) {
             var responder = marker_info[i];
             if (!responder.geo) { continue; } // no geo for this responder
-            var new_pos = new google.maps.LatLng(
+            var new_pos = [
                 parseFloat(responder.geo.latitude),
                 parseFloat(responder.geo.longitude)
-            );
+            ];
             if (map_markers[responder.id]) {
-                map_markers[responder.id].setPosition(new_pos);
+                map_markers[responder.id].setLatLng(new_pos);
             } else {
-                var marker = new google.maps.Marker({
-                    'position': new_pos,
-                    'map': map,
+                var marker = L.marker(new_pos, {
                     'title': responder.display_name,
                     'icon': responder.avatar_url
-                });
+                }).addTo(map);
                 map_markers[responder.id] = marker;
                 var iw_data = {
-                    'directions': 'https://maps.google.com/?saddr=Current+Location&daddr=' + encodeURIComponent(responder.geo.latitude) + ',' + encodeURIComponent(responder.geo.longitude)
+                    'directions': getDirectionsUrl([responder.geo.latitude, rseponder.geo.longitude])
                 };
                 if (responder.call) { iw_data.call = 'tel:' + responder.call; }
-                var infowindow = new google.maps.InfoWindow({
-                    'content': '<p>' + responder.display_name + '</p>'
-                               + infoWindowContent(iw_data)
-                });
-                marker.addListener('click', function () {
-                    infowindow.open(map, marker);
-                });
+                var infowindow = L.popup().setContent(
+                    '<p>' + responder.display_name + '</p>'
+                    + infoWindowContent(iw_data)
+                );
+                marker.bindPopup(infowindow);
             }
             marker_bounds.extend(new_pos);
             if (!map_touched) {
@@ -144,81 +175,90 @@ var BUOY = (function () {
         );
     }
 
+    /**
+     * Gets the HTML for an info window pop up on the map.
+     *
+     * @param data
+     *
+     * @return {string}
+     */
     var infoWindowContent = function (data) {
         var html = '<ul>';
         for (key in data) {
-            html += '<li>' + jQuery('<span>').append(
-                        jQuery('<a>')
-                        .attr('href', data[key])
-                        .attr('target', '_blank')
-                        .html(buoy_vars['i18n_' + key])
-                    ).html() + '</li>';
+            if (data[key]) {
+                html += '<li>' + jQuery('<span>').append(
+                            jQuery('<a>')
+                            .attr('href', data[key])
+                            .attr('target', '_blank')
+                            .html(buoy_vars['i18n_' + key])
+                        ).html() + '</li>';
+            }
         }
         html += '</ul>';
         return html;
     };
 
     /**
-     * Creates a google map centered on the given coordinates.
+     * Creates a Leaflet Map centered on the given coordinates.
      *
      * @param object coords An object of geolocated data with properties named "lat" and "lng".
      * @param bool mark_coords Whether or not to create a marker and infowindow for the coords location.
      */
     var initMap = function (coords, mark_coords) {
-        if ('undefined' === typeof google) { return; }
+        if ('undefined' === typeof L) { return; }
 
-        this.map = new google.maps.Map(document.getElementById('map'));
-        this.marker_bounds = new google.maps.LatLngBounds();
+        this.map = new L.Map(document.getElementById('map'))
+            .setView(coords, 10);
+        this.map.attributionControl.setPrefix('');
+        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            'maxZoom': 19
+        }).addTo(this.map);
+        this.marker_bounds = L.latLngBounds([0,0]);
 
         if (mark_coords) {
-            var infowindow = new google.maps.InfoWindow({
-                'content': '<p>' + buoy_vars.i18n_crisis_location + '</p>'
-                           + infoWindowContent({
-                               'directions': 'https://maps.google.com/?saddr=Current+Location&daddr=' + encodeURIComponent(coords.lat) + ',' + encodeURIComponent(coords.lng)
-                           })
-            });
-            var marker = new google.maps.Marker({
-                'position': new google.maps.LatLng(coords.lat, coords.lng),
-                'map': map,
-                'title': buoy_vars.i18n_crisis_location
-            });
+            var infowindow = L.popup().setContent(
+                '<p>' + buoy_vars.i18n_crisis_location + '</p>'
+                + infoWindowContent({
+                    'directions': getDirectionsUrl([coords.lat, coords.lng])
+                })
+            );
+            var marker = L.marker([coords.lat, coords.lng], {
+                    'title': buoy_vars.i18n_crisis_location
+                }).addTo(map).bindPopup(infowindow);
+            marker_bounds.extend([coords.lat, coords.lng]);
             this.map_markers.incident = marker;
-            marker_bounds.extend(new google.maps.LatLng(coords.lat, coords.lng));
-            marker.addListener('click', function () {
-                infowindow.open(map, marker);
-            });
         }
 
         if (jQuery('#map-container').data('responder-info')) {
             jQuery.each(jQuery('#map-container').data('responder-info'), function (i, v) {
-                var responder_geo = new google.maps.LatLng(
-                    parseFloat(v.geo.latitude), parseFloat(v.geo.longitude)
-                );
-                var infowindow = new google.maps.InfoWindow({
-                    'content': '<p>' + v.display_name + '</p>'
-                               + infoWindowContent({
-                                   'directions': 'https://maps.google.com/?saddr=Current+Location&daddr=' + encodeURIComponent(v.geo.latitude) + ',' + encodeURIComponent(v.geo.longitude),
-                                   'call': 'tel:' + v.call
-                               })
-                });
-                var marker = new google.maps.Marker({
-                    'position': responder_geo,
-                    'map': map,
-                    'title': v.display_name,
-                    'icon': v.avatar_url
-                });
-                map_markers[v.id] = marker;
-                marker_bounds.extend(responder_geo);
-                marker.addListener('click', function () {
-                    infowindow.open(map, marker);
-                });
+                if (v.geo) {
+                    var responder_geo = [
+                        parseFloat(v.geo.latitude),
+                        parseFloat(v.geo.longitude)
+                    ];
+                    var infowindow = L.popup().setContent(
+                        '<p>' + v.display_name + '</p>'
+                        + infoWindowContent({
+                            'directions': 'https://maps.google.com/?saddr=Current+Location&daddr=' + encodeURIComponent(v.geo.latitude) + ',' + encodeURIComponent(v.geo.longitude),
+                            'call': (v.call) ? 'tel:' + v.call : ''
+                        })
+                    );
+                    var marker = L.marker(responder_geo, {
+                        'title': v.display_name,
+                        'icon': gravatarIcon({
+                            'iconUrl': v.avatar_url
+                        })
+                    }).addTo(map).bindPopup(infowindow);
+                    map_markers[v.id] = marker;
+                    marker_bounds.extend(responder_geo);
+                }
             });
         }
 
         map.fitBounds(marker_bounds);
 
-        map.addListener('click', touchMap);
-        map.addListener('drag', touchMap);
+        map.on('click', touchMap);
+        map.on('drag', touchMap);
     };
 
     var touchMap = function () {
@@ -227,15 +267,13 @@ var BUOY = (function () {
 
     var addMarkerForCurrentLocation = function () {
         getMyPosition(function (position) {
-            var my_geo = new google.maps.LatLng(
-                position.coords.latitude, position.coords.longitude
-            );
-            var my_marker = new google.maps.Marker({
-                'position': my_geo,
-                'map': map,
+            var my_geo = [position.coords.latitude, position.coords.longitude];
+            var my_marker = L.marker(my_geo, {
                 'title': buoy_vars.i18n_my_location,
-                'icon': jQuery('#map-container').data('my-avatar-url')
-            });
+                'icon': gravatarIcon({
+                    'iconUrl': jQuery('#map-container').data('my-avatar-url')
+                })
+            }).addTo(map);
             marker_bounds.extend(my_geo);
             map.fitBounds(marker_bounds);
         });
@@ -308,7 +346,7 @@ var BUOY = (function () {
                 } else {
                     map_container.slideDown({
                         'complete': function () {
-                            google.maps.event.trigger(map, 'resize');
+                            map.invalidateSize(true);
                             map.fitBounds(marker_bounds);
                         }
                     });
@@ -328,7 +366,12 @@ var BUOY = (function () {
                 if (jQuery('#map-container').is(':hidden')) {
                     jQuery('#toggle-incident-map-btn').click();
                 }
-                map.panTo(map_markers[jQuery(this).data('user-id')].getPosition());
+                // Pan map view.
+                map.setView(
+                    map_markers[jQuery(this).data('user-id')].getLatLng(),
+                    map.getZoom(),
+                    {animation: true}
+                );
                 touchMap();
             });
 

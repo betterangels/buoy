@@ -941,7 +941,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         wp_register_script(
             self::$prefix.'-script',
             plugins_url('../'.self::$prefix.'.js', __FILE__),
-            array('jquery', 'google-maps-api'),
+            array('jquery', 'leaflet'),
             $plugin_data['Version']
         );
         wp_localize_script(self::$prefix.'-script', self::$prefix.'_vars', self::localizeScript());
@@ -983,7 +983,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
 
     /**
      * Enqueues the Bootstrap CSS and JavaScript framework resources,
-     * along with jQuery and Google library plugins used for Alert UI.
+     * along with jQuery and Leaflet library plugins used for Alert UI.
      *
      * @todo Should this kind of utility loader be moved into its own class?
      *
@@ -1005,9 +1005,13 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
 
         self::enqueueBootstrapFramework();
 
+        wp_enqueue_style(
+            'leaflet',
+            plugins_url('vendor/leaflet/dist/leaflet.css', dirname(__FILE__))
+        );
         wp_enqueue_script(
-            'google-maps-api',
-            'https://maps.googleapis.com/maps/api/js?language='.get_locale(),
+            'leaflet',
+            plugins_url('vendor/leaflet/dist/leaflet.js', dirname(__FILE__)),
             array(),
             null,
             true
@@ -1064,7 +1068,6 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             // sha*-$hash => handle
             'sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7' => 'bootstrap-css',
             'sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS' => 'bootstrap-js'
-            // TODO: Figure out if the Google Maps API can also be SRI-enabled
         );
         if ($integrity = array_search($handle, $integrities)) {
             $sri_att = ' crossorigin="anonymous" integrity="'.$integrity.'"';

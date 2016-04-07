@@ -1,18 +1,23 @@
 {
   "name": "better-angels",
-  "homepage": "https://github.com/FeminismIsAwesome/better-angels",
-  "description": "",
-  "main": "",
+  "description": "A private, community-based crisis response system. Because friends don't let friends call the cops.",
+  "main": "buoy.js",
+  "authors": [
+    "The Better Angels"
+  ],
+  "license": "GPL-3.0",
+  "homepage": "https://meitar.github.io/better-angels/",
   "moduleType": [],
-  "license": "MIT",
+  "private": true,
   "ignore": [
     "**/.*",
     "node_modules",
     "bower_components",
+    "vendor",
     "test",
     "tests"
   ],
   "dependencies": {
-    "jquery": "1.11.3"
+    "leaflet": "^0.7.7"
   }
 }

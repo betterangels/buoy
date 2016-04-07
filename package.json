@@ -1,24 +1,28 @@
 {
   "name": "better-angels",
-  "version": "1.0.0",
-  "description": "for running tests ",
+  "version": "0.1.0",
+  "description": "A private, community-based crisis response system. Because friends don't let friends call the cops.",
   "main": "buoy.js",
   "directories": {
     "test": "tests"
   },
+  "config": {
+    "bower_directory": "vendor"
+  },
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "postinstall": "bower install"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/FeminismIsAwesome/better-angels.git"
+    "url": "git+https://github.com/meitar/better-angels.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "The Better Angels",
+  "license": "GPL-3.0",
   "bugs": {
-    "url": "https://github.com/FeminismIsAwesome/better-angels/issues"
+    "url": "https://github.com/meitar/better-angels/issues"
   },
-  "homepage": "https://github.com/FeminismIsAwesome/better-angels#readme",
+  "homepage": "https://meitar.github.io/better-angels/",
   "devDependencies": {
     "jasmine-core": "^2.4.1",
     "karma": "^0.13.19",
