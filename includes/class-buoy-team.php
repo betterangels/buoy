@@ -409,6 +409,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         add_action("manage_{$post_type}_posts_custom_column", array(__CLASS__, 'renderTeamPostsColumn'), 10, 2);
 
         add_action('user_register', array(__CLASS__, 'checkInvitations'));
+        add_action('user_register', array(__CLASS__, 'createTeamTemplates'));
     }
 
     /**
@@ -1027,6 +1028,37 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
                 $team->remove_member($user->user_email); // removes the invitation
                 $team->add_member($user_id, false);      // then adds the user
             }
+        }
+    }
+
+    /**
+     * Creates teams for newly-registered users.
+     *
+     * @link https://developer.wordpress.org/reference/hooks/user_register/
+     *
+     * @param int $user_id
+     *
+     * @return void
+     */
+    public static function createTeamTemplates ($user_id) {
+        // Create three new "teams" for the new user so that they can
+        // begin editing the members lists and can invite folks ASAP.
+        $new_teams = array(
+            array(
+                'post_title' => __('Friends', 'buoy')
+            ),
+            array(
+                'post_title' => __('Family', 'buoy')
+            ),
+            array(
+                'post_title' => __('Neighbours', 'buoy')
+            )
+        );
+        foreach ($new_teams as $new_team) {
+            $new_team['post_author'] = $user_id;
+            $new_team['post_type'] = self::$prefix.'_team';
+            $new_team['post_status'] = 'private';
+            wp_insert_post($new_team);
         }
     }
 
