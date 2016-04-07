@@ -210,7 +210,7 @@ var BUOY = (function () {
         this.map = new L.Map(document.getElementById('map'))
             .setView(coords, 10);
         this.map.attributionControl.setPrefix('');
-        L.tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             'maxZoom': 19
         }).addTo(this.map);
         this.marker_bounds = L.latLngBounds([0,0]);
