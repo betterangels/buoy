@@ -34,14 +34,14 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      *
      * @var WP_User
      */
-    private $_user;
+    private $user;
 
     /**
      * The teams to which this alert was sent.
      *
      * @var int[]
      */
-    private $_teams;
+    private $teams;
 
     /**
      * The alert's WP_Post data.
@@ -53,12 +53,12 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      *
      * @var array
      */
-    private $_postarr;
+    private $postarr;
 
     /**
      * The alert's public identifier.
      *
-     * The `$_hash` is a randomly generated lookup value that is used
+     * The `$hash` is a randomly generated lookup value that is used
      * instead of a WordPress post ID. This is because a post ID is a
      * sequential number, and would expose the Buoy to attack if a bad
      * (malicious) actor. Using a hash value instead of an integer in
@@ -69,14 +69,14 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      *
      * @var string
      */
-    private $_hash;
+    private $hash;
 
     /**
      * The chat room associated with this alert.
      *
      * @var string
      */
-    private $_chat_room_name;
+    private $chat_room_name;
 
     /**
      * Constructor.
@@ -130,8 +130,8 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         if ($this->wp_post && self::$prefix.'_alert' === $this->wp_post->post_type) {
             $this->set_hash();
             $this->set_chat_room_name();
-            $this->_user = get_userdata($this->wp_post->post_author);
-            $this->_teams = array_map(
+            $this->user = get_userdata($this->wp_post->post_author);
+            $this->teams = array_map(
                 'absint', get_post_meta($this->wp_post->ID, self::$prefix.'_teams', true)
             );
         } else {
@@ -152,7 +152,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return int|WP_Error Result of `wp_insert_post()`.
      */
     public function save () {
-        $result = wp_insert_post($this->_postarr, true);
+        $result = wp_insert_post($this->postarr, true);
         if (is_int($result)) {
             $this->wp_post = get_post($result);
             $this->set_hash();
@@ -199,7 +199,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         }
         $postarr['meta_input'] = wp_parse_args($postarr['meta_input'], $default_meta);
 
-        $this->_postarr = $postarr;
+        $this->postarr = $postarr;
 
         return $this;
     }
@@ -210,7 +210,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return string
      */
     public function get_hash () {
-        return $this->_hash;
+        return $this->hash;
     }
 
     /**
@@ -219,7 +219,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return int[]
      */
     public function get_teams () {
-        return $this->_teams;
+        return $this->teams;
     }
 
     /**
@@ -261,7 +261,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
     private function set_hash () {
         $prev_hash = sanitize_text_field(get_post_meta($this->wp_post->ID, self::$prefix.'_hash', true));
         if ($prev_hash) {
-            $this->_hash = $prev_hash;
+            $this->hash = $prev_hash;
         }
     }
 
@@ -271,7 +271,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     private function set_chat_room_name () {
-        $this->_chat_room_name = sanitize_text_field(get_post_meta($this->wp_post->ID, self::$prefix.'_chat_room_name', true));
+        $this->chat_room_name = sanitize_text_field(get_post_meta($this->wp_post->ID, self::$prefix.'_chat_room_name', true));
     }
 
     /**
@@ -280,7 +280,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return string
      */
     public function get_chat_room_name () {
-        return $this->_chat_room_name;
+        return $this->chat_room_name;
     }
 
     /**
