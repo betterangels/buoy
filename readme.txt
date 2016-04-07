@@ -118,6 +118,8 @@ In this release:
 * [Security](https://github.com/meitar/better-angels/issues/157): Built-in chat system no longer exposes chat messages to unauthenticated users.
 * Privacy: Replace Google Maps with OpenStreetMaps. With this change, Buoy no longer relies on any non-free (proprietary) code.
 * Usability: New users automatically have three (empty) teams created for them when they sign up.
+* Feature: New chat room option "Jitsi Meet" offers full-featured video conferencing for incident chat rooms via [Jitsi Meet web service](https://meet.jit.si/).
+    * Site admins who want Buoy incident chat rooms to support video conferencing need to change the [Buoy chat system setting](https://github.com/meitar/better-angels/wiki/Buoy-Administration-Guide#chat-system-options) in their Buoy's admin settings screen.
 * [Feature](https://github.com/meitar/better-angels/issues/115): Multiple default teams are now supported.
     * You can now set more than one team as your "default." These are teams whose members will be sent notifications when you press the big red Alert button. Setting a list of teams as your default instead of just one gives you more flexibility in what the Immediate Alert button does.
 * [Bugfix](https://github.com/meitar/better-angels/issues/126): Fixed screen flickering when using built-in chat system.
