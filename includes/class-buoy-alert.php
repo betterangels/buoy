@@ -466,6 +466,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         add_action('wp_ajax_'.self::$prefix.'_unschedule_alert', array(__CLASS__, 'handleUnscheduleAlert'));
         add_action('wp_ajax_'.self::$prefix.'_update_location', array(__CLASS__, 'handleLocationUpdate'));
         add_action('wp_ajax_'.self::$prefix.'_dismiss_installer', array(__CLASS__, 'handleDismissInstaller'));
+        add_action('wp_ajax_'.self::$prefix.'_chat_event_stream', array(__CLASS__, 'chatEventStream'));
         add_action('wp_ajax_'.self::$prefix.'_post_comments_chat', array(__CLASS__, 'renderPostCommentsChatRoom'));
 
         add_action('publish_'.self::$prefix.'_alert', array('WP_Buoy_Notification', 'publishAlert'), 10, 2);
@@ -836,6 +837,65 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
     public static function renderPostCommentsChatRoom () {
         require_once plugin_dir_path(dirname(__FILE__)).'pages/post-comments-chat.php';
         exit();
+    }
+
+    /**
+     * A super-simple HTML5 Server-Side Events streaming server.
+     *
+     * @link https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Sending_events_from_the_server
+     */
+    public static function chatEventStream () {
+        $post_id = absint($_GET['post_id']);
+        $offset  = absint($_GET['offset']);
+        // How many comments to return in a single batch.
+        $limit   = 5; // arbitrary
+
+        header('Content-Type: text/event-stream');
+        header('Cache-Control: no-cache, must-revalidate, max-age=0');
+        // Tell nginx not to buffer us!
+        // See http://nginx.org/en/docs/http/ngx_http_fastcgi_module.html#fastcgi_buffering
+        header('X-Accel-Buffering: no');
+
+        while (true) {
+            $comments = get_comments(array(
+                'post_id' => $post_id,
+                'number'  => $limit,
+                'offset'  => $offset,
+                'order'   => 'ASC'
+            ));
+            wp_cache_flush();
+
+            if ($comments) {
+                $offset += count($comments);
+                // Translate a WP_Comment into a WP REST API version of the same.
+                // TODO: This should be a helper function. :P
+                foreach ($comments as $comment) {
+                    $comment->id = $comment->comment_ID;
+                    $comment->author_name = $comment->comment_author;
+                    $comment->date = $comment->comment_date;
+                    $comment->author_avatar_urls = array(
+                        '48' => get_avatar_url($comment->comment_author_email, '48')
+                    );
+                    $comment->content = new stdClass();
+                    $comment->content->rendered = $comment->comment_content;
+                }
+                $json = json_encode($comments);
+                echo "event: updated\n";
+                echo "data: $json\n";
+                echo "\n";
+            } else {
+                // Heartbeat.
+                echo ':';
+                echo "\n\n";
+            }
+
+            ob_end_flush();
+            flush();
+
+            sleep(1);
+        }
+
+        exit(0);
     }
 
     /**

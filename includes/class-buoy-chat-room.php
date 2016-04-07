@@ -299,6 +299,10 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
             array('common', 'wp-api'),
             null
         );
+        wp_localize_script(self::$prefix.'-chat-room', self::$prefix.'_chat_room_vars', array(
+            'ajaxurl' => admin_url('admin-ajax.php'),
+            'api_base' => site_url('/?rest_route=/wp/v2')
+        ));
 
         add_filter('body_class', array(__CLASS__, 'filterBodyClass'));
         add_filter('comment_text', array(__CLASS__, 'filterCommentText'), 5); // early priority

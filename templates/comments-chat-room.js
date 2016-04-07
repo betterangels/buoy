@@ -18,9 +18,24 @@ var BUOY_CHAT_ROOM = (function () {
     /**
      * Base request URI for WP-API.
      *
+     * Used for traditional polling when `EventSource` is not available.
+     * If we can use HTML5 Server-Sent Events, we just make a single
+     * request to WordPress's `admin-ajax.php` endpoint.
+     *
      * @type {string}
      */
-    var api_base = '/?rest_route=/wp/v2';
+    var api_base = buoy_chat_room_vars.api_base;
+
+    /**
+     * WordPress's admin-ajax.php endpoint.
+     *
+     * WordPress does not offer the global `ajaxurl` to JavaScript if
+     * the current page is rendered on the "front-end," which this JS
+     * still qualifies as. So we make our own `ajaxurl`.
+     *
+     * @type {string}
+     */
+    var ajaxurl = buoy_chat_room_vars.ajaxurl;
 
     /**
      * Gets the post ID of the current chat room.
@@ -43,7 +58,7 @@ var BUOY_CHAT_ROOM = (function () {
     };
 
     /**
-     * Checks for any new comments.
+     * Asks the Buoy server for new comments using the WP REST API.
      */
     var pollForNewComments = function () {
         var url = api_base + '/comments&post=' + getPostId() + '&offset=' + getCommentCount()
@@ -53,6 +68,27 @@ var BUOY_CHAT_ROOM = (function () {
                 appendComments(response);
                 showNewCommentsNotice();
             }
+        });
+    };
+
+    /**
+     * Sets up a new HTML5 SSE listener.
+     *
+     * If the browser supports it, we minimize load on the WordPress
+     * backend by using the HTML5 specification's `EventSource` API.
+     * Only Microsoft's browsers don't yet support this part of the
+     * spec, but we fallback to Ajax polling in those cases already.
+     *
+     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events}
+     *
+     * @param {string} url
+     */
+    var connectSource = function (url) {
+        url += '?action=buoy_chat_event_stream&post_id=' + getPostId() + '&offset=' + getCommentCount();
+        var es = new EventSource(url);
+        es.addEventListener('updated', function (e) {
+            appendComments(JSON.parse(e.data));
+            showNewCommentsNotice();
         });
     };
 
@@ -112,6 +148,7 @@ var BUOY_CHAT_ROOM = (function () {
      * @return {string}
      */
     var commentHtml = function (comment) {
+        console.log(comment);
         // TODO: Is there some way to define a template that both the PHP
         //       and this JS can use?
         var html = '<li id="comment-' + comment.id + '" class="media media-on-left buoy-chat-message">';
@@ -135,7 +172,12 @@ var BUOY_CHAT_ROOM = (function () {
     var init = function () {
         jQuery('window').scrollTop(jQuery('#page-footer').offset().top);
         resetCommentForm();
-        setInterval(pollForNewComments, 5000);
+
+        if (window.EventSource) {
+            connectSource(ajaxurl);
+        } else {
+            setInterval(pollForNewComments, 5000);
+        }
 
         // Attach handlers.
         jQuery('#new-comments-notice.notice').on('click', handleNewCommentsNotice);
