@@ -135,6 +135,11 @@ class WP_Buoy_Plugin {
 
         require_once 'class-buoy-settings.php';
         WP_Buoy_Settings::get_instance()->activate();
+
+        // TODO: Remove this after enough migrations.
+        require_once 'class-buoy-user-settings.php';
+        require_once 'class-buoy-team.php';
+        self::migrateDefaultTeamSettings();
     }
 
     /**
@@ -170,6 +175,30 @@ class WP_Buoy_Plugin {
                 __('Buoy requires at least WordPress version %1$s. You have WordPress version %2$s.', 'buoy'),
                 $min_wp_version, $wp_version
             ));
+        }
+    }
+
+    /**
+     * Updates old "default team" settings.
+     *
+     * This automatically moves the new "default team" internal data
+     * to the right places. Should be safe to remove after a few updates.
+     *
+     * @since 0.1.3
+     *
+     * @ignore This is purely a migration function, do not include in API docs.
+     */
+    public static function migrateDefaultTeamSettings () {
+        foreach (get_users() as $usr) {
+            $usropt = new WP_Buoy_User_Settings($usr);
+            $old_default = $usropt->get('default_team');
+            if ($old_default) {
+                $team = new WP_Buoy_Team($old_default);
+                $team->set_default();
+                $usropt
+                    ->delete('default_team')
+                    ->save();
+            }
         }
     }
 

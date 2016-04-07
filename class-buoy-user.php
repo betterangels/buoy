@@ -31,14 +31,14 @@ class WP_Buoy_User extends WP_Buoy_Plugin {
      *
      * @var WP_Buoy_User_Settings
      */
-    private $_options;
+    private $options;
 
     /**
      * The user's teams.
      *
      * @var int[]
      */
-    private $_teams;
+    private $teams;
 
     /**
      * Constructor.
@@ -60,7 +60,7 @@ class WP_Buoy_User extends WP_Buoy_Plugin {
                 $user_id
             ));
         }
-        $this->_options = new WP_Buoy_User_Settings($this->wp_user);
+        $this->options = new WP_Buoy_User_Settings($this->wp_user);
     }
 
     /**
@@ -69,22 +69,31 @@ class WP_Buoy_User extends WP_Buoy_Plugin {
      * @return int[]
      */
     public function get_teams () {
-        $this->_teams = get_posts(array(
+        $this->teams = get_posts(array(
             'post_type' => self::$prefix . '_team',
             'author' => $this->wp_user->ID,
             'posts_per_page' => -1,
             'fields' => 'ids'
         ));
-        return $this->_teams;
+        return $this->teams;
     }
 
     /**
-     * Gets the user's default team.
+     * Gets the user's default teams.
      *
-     * @return int
+     * @uses get_posts()
+     *
+     * @return int[]
      */
-    public function get_default_team () {
-        return $this->get_option('default_team');
+    public function get_default_teams () {
+        return get_posts(array(
+            'author'      => $this->wp_user->ID,
+            'fields'      => 'ids',
+            'meta_key'    => self::$prefix.'_default_team',
+            'meta_value'  => true,
+            'numberposts' => -1,
+            'post_type'   => self::$prefix.'_team',
+        ));
     }
 
     /**
@@ -101,7 +110,7 @@ class WP_Buoy_User extends WP_Buoy_Plugin {
      * @return bool
      */
     public function has_responder () {
-        if (null === $this->_teams) {
+        if (null === $this->teams) {
             $this->get_teams();
         }
         // We need a loop here because, unless we use straight SQL,
@@ -110,7 +119,7 @@ class WP_Buoy_User extends WP_Buoy_Plugin {
         // over on Stack Exchange but this is more standard for now.
         //
         // See https://wordpress.stackexchange.com/a/193841/66139
-        foreach ($this->_teams as $team_id) {
+        foreach ($this->teams as $team_id) {
             $team = new WP_Buoy_Team($team_id);
             if ($team->has_responder()) {
                 return true;
@@ -221,7 +230,7 @@ class WP_Buoy_User extends WP_Buoy_Plugin {
      * @access private
      */
     private function get_option ($name, $default = null) {
-        return $this->_options->get($name, $default);
+        return $this->options->get($name, $default);
     }
 
     /**

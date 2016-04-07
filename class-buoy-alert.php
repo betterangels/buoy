@@ -190,7 +190,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         $default_meta = array(
             self::$prefix.'_hash' => $this->make_hash(),
             self::$prefix.'_chat_room_name' => $this->make_chat_room_name(),
-            self::$prefix.'_teams' => array($alerter->get_default_team()),
+            self::$prefix.'_teams' => $alerter->get_default_teams(),
             self::$prefix.'_chat_system' => WP_Buoy_Settings::get_instance()->get('chat_system', 'post_comments')
         );
 

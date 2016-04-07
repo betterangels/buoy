@@ -98,28 +98,38 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
     }
 
     /**
-     * Checks whether or not this team is the user's default team.
-     *
-     * @uses WP_Buoy_User_Settings::get()
+     * Checks whether or not this team is one of user's default teams.
      *
      * @return bool
      */
     public function is_default () {
-        $usropt = new WP_Buoy_User_Settings($this->author->ID);
-        return $this->wp_post->ID == $usropt->get('default_team');
+        return (bool) get_post_meta($this->wp_post->ID, self::$prefix.'_default_team', true);
     }
 
     /**
-     * Makes this team the default team of the author.
-     *
-     * @uses WP_Buoy_User_Settings::set()
-     * @uses WP_Buoy_User_Settings::save()
+     * Makes this team part a default team of the author.
      *
      * @return WP_Buoy_Team
      */
-    public function make_default () {
-        $usropt = new WP_Buoy_User_Settings($this->author->ID);
-        $usropt->set('default_team', $this->wp_post->ID)->save();
+    public function set_default () {
+        update_post_meta($this->wp_post->ID, self::$prefix.'_default_team', true);
+        return $this;
+    }
+
+    /**
+     * Removes this team from the list of default teams.
+     *
+     * Refuses to remove the team from the list of default teams if
+     * the team's author does not have any other default teams. This
+     * ensures that a user always has at least one default team.
+     *
+     * @return WP_Buoy_Team
+     */
+    public function unset_default () {
+        $user = new WP_Buoy_User($this->author->ID);
+        if (1 < count($user->get_default_teams())) {
+            delete_post_meta($this->wp_post->ID, self::$prefix.'_default_team');
+        }
         return $this;
     }
 
@@ -431,7 +441,10 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
 
         add_meta_box(
             'default-team',
-            esc_html__('Default Team?', 'buoy'),
+            sprintf(
+                esc_html__('Default Team? (%s)', 'buoy'),
+                ($team->is_default()) ? esc_html__('Yes', 'buoy') : esc_html__('No', 'buoy')
+            ),
             array(__CLASS__, 'renderDefaultTeamMetaBox'),
             null,
             'side',
@@ -460,20 +473,33 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
     }
 
     /**
+     * Displays the "default team" meta box.
+     *
      * @param WP_Post $post
      *
      * @return void
      */
     public static function renderDefaultTeamMetaBox ($post) {
         $team = new WP_Buoy_Team($post->ID);
+        $html = '<input type="checkbox"';
+        $html .= ' id="'.self::$prefix.'_default_team"';
+        $html .= ' name="'.self::$prefix.'_default_team"';
+        $html .= ' value="1"';
+        $html .= ' '.checked($team->is_default(), true, false);
+        $html .= ' />';
+        $html .= esc_html__('Include as default team?', 'buoy');
+        $html .= '<p class="description">';
         if ($team->is_default()) {
-            esc_html_e('This team is your default team.', 'buoy');
+            $html .= esc_html__('This team is one of your default teams.', 'buoy')
+                .' '
+                .esc_html__('Uncheck the box to remove this team from your list of default teams.', 'buoy');
         } else {
-            print sprintf(
-                esc_html__('No. You can make this team your default team from your %1$sTeams%2$s page.', 'buoy'),
-                '<a href="' . admin_url('edit.php?post_type=' . $post->post_type) . '">', '</a>'
-            );
+            $html .= esc_html__('This team is not one of your default teams.', 'buoy')
+                .' '
+                .esc_html__('Check the box to add this team to your list of default teams.', 'buoy');
         }
+        $html .= '</p>';
+        print "<label>$html</label>";
     }
 
     /**
@@ -523,9 +549,10 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         if ('post' === $current_screen->base) {
             // The "My Teams" page.
             $table = new WP_Posts_List_Table();
-            if ('make_default' === $table->current_action()) {
+            $action = $table->current_action();
+            if ('set_default' === $action || 'unset_default' === $action) {
                 $team = new WP_Buoy_Team(absint($_GET['post']));
-                $team->make_default();
+                $team->$action();
                 $msg = self::$prefix . '-default-team-updated';
                 wp_safe_redirect(admin_url(
                     "edit.php?post_type={$current_screen->post_type}&msg=$msg"
@@ -599,7 +626,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
      *
      * @uses WP_Buoy_User::has_responder()
      * @uses WP_Buoy_Team::is_default()
-     * @uses WP_Buoy_Team::make_default()
+     * @uses WP_Buoy_Team::set_default()
      *
      * @param int $post_id
      * @param WP_Post $post_after
@@ -629,7 +656,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         if ('trash' === $post_after->post_status && $team->is_default()) {
             $teams = $buoy_user->get_teams();
             $next_team = new WP_Buoy_Team(array_pop($teams));
-            $next_team->make_default();
+            $next_team->set_default();
         }
     }
 
@@ -646,6 +673,8 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
      * @uses WP_Buoy_Team::remove_member()
      * @uses WP_Buoy_Team::get_member_ids()
      * @uses WP_Buoy_Team::add_member()
+     * @uses WP_Buoy_Team::set_default()
+     * @uses WP_Buoy_Team::unset_default()
      *
      * @param int $post_id
      * @param WP_Post $post
@@ -684,6 +713,13 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
             }
         }
 
+        // Set default status
+        if (!empty($_POST[self::$prefix.'_default_team'])) {
+            $team->set_default();
+        } else {
+            $team->unset_default();
+        }
+
         // If this is the user's only team, make this the default one.
         $cnt = count(get_posts(array(
             'post_type' => $post->post_type,
@@ -691,7 +727,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
             'fields' => 'ids'
         )));
         if (0 === $cnt) {
-            $team->make_default();
+            $team->set_default();
         }
     }
 
@@ -963,8 +999,11 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
     public static function postRowActions ($items, $post) {
         $team = new WP_Buoy_Team($post->ID);
         if (!$team->is_default() && $team->has_responder() && 'publish' === $post->post_status) {
-            $url = admin_url('post.php?post=' . $post->ID . '&action=make_default');
-            $items['default'] = '<a href="' . esc_attr($url) . '">' . __('Make default', 'buoy') . '</a>';
+            $url = admin_url('post.php?post=' . $post->ID . '&action=set_default');
+            $items['default'] = '<a href="' . esc_attr($url) . '">' . __('Add to defaults', 'buoy') . '</a>';
+        } else if ($team->is_default() && $team->has_responder() && 'publish' === $post->post_status) {
+            $url = admin_url('post.php?post=' . $post->ID . '&action=unset_default');
+            $items['default'] = '<a href="' . esc_attr($url) . '">' . __('Remove from defaults', 'buoy') . '</a>';
         }
 
         unset($items['inline hide-if-no-js']); // the "Quick Edit" link
