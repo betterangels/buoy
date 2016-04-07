@@ -9,8 +9,8 @@
 if (!defined('WP_UNINSTALL_PLUGIN')) { exit(); }
 
 require_once plugin_dir_path(__FILE__) . 'buoy.php';
-require_once plugin_dir_path(__FILE__) . 'class-buoy-settings.php';
-require_once plugin_dir_path(__FILE__) . 'class-buoy-user-settings.php';
+require_once plugin_dir_path(__FILE__) . 'includes/class-buoy-settings.php';
+require_once plugin_dir_path(__FILE__) . 'includes/class-buoy-user-settings.php';
 
 $my_prefix = WP_Buoy_Plugin::$prefix;
 $post_types = array(

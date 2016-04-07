@@ -370,7 +370,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
             'has_archive' => false,
             'rewrite' => false,
             'can_export' => false,
-            'menu_icon' => plugins_url('img/icon-bw-life-preserver.svg', __FILE__)
+            'menu_icon' => plugins_url('../img/icon-bw-life-preserver.svg', __FILE__)
         ));
         add_action('load-post.php', array('WP_Buoy_Plugin', 'addHelpTab'));
         add_action('load-post-new.php', array('WP_Buoy_Plugin', 'addHelpTab'));
@@ -382,7 +382,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         if (is_admin()) {
             wp_enqueue_style(
                 __CLASS__ . '-style',
-                plugins_url('css/admin-teams.css', __FILE__)
+                plugins_url('../css/admin-teams.css', __FILE__)
             );
         }
 
@@ -459,7 +459,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
      */
     public static function renderAddTeamMemberMetaBox ($post) {
         wp_nonce_field(self::$prefix . '_add_team_member', self::$prefix . '_add_team_member_nonce');
-        require 'pages/add-team-member-meta-box.php';
+        require plugin_dir_path(dirname(__FILE__)).'pages/add-team-member-meta-box.php';
     }
 
     /**
@@ -469,7 +469,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
      */
     public static function renderCurrentTeamMetaBox ($post) {
         wp_nonce_field(self::$prefix . '_choose_team', self::$prefix . '_choose_team_nonce');
-        require 'pages/current-team-meta-box.php';
+        require plugin_dir_path(dirname(__FILE__)).'pages/current-team-meta-box.php';
     }
 
     /**

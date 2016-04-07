@@ -260,7 +260,7 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
 
         // Finally, parse the result as markdown for more formatting
         if (!class_exists('Parsedown')) {
-            require_once dirname(__FILE__).'/includes/vendor/wp-screen-help-loader/vendor/parsedown/Parsedown.php';
+            require_once dirname(__FILE__).'/vendor/wp-screen-help-loader/vendor/parsedown/Parsedown.php';
         }
         $comment_text = Parsedown::instance()->text($comment_text);
 
@@ -289,13 +289,13 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
         WP_Buoy_Alert::enqueueBootstrapFramework();
         wp_enqueue_style(
             self::$prefix.'-chat-room',
-            plugins_url('/templates/comments-chat-room.css', __FILE__),
+            plugins_url('../templates/comments-chat-room.css', __FILE__),
             array('colors'),
             null
         );
         wp_enqueue_script(
             self::$prefix.'-chat-room',
-            plugins_url('/templates/comments-chat-room.js', __FILE__),
+            plugins_url('../templates/comments-chat-room.js', __FILE__),
             array('common', 'wp-api'),
             null
         );
@@ -303,7 +303,7 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
         add_filter('body_class', array(__CLASS__, 'filterBodyClass'));
         add_filter('comment_text', array(__CLASS__, 'filterCommentText'), 5); // early priority
 
-        require_once dirname(__FILE__).'/templates/comments-chat-room.php';
+        require_once dirname(__FILE__).'/../templates/comments-chat-room.php';
 
         do_action('shutdown');
         exit();

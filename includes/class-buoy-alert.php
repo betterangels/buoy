@@ -757,9 +757,9 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
     public static function renderActivateAlertPage () {
         $buoy_user = new WP_Buoy_User(get_current_user_id());
         if (!$buoy_user->has_responder()) {
-            require_once 'pages/no-responders-available.php';
+            require_once plugin_dir_path(dirname(__FILE__)).'pages/no-responders-available.php';
         } else {
-            require_once 'pages/activate-alert.php';
+            require_once plugin_dir_path(dirname(__FILE__)).'pages/activate-alert.php';
         }
     }
 
@@ -783,7 +783,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             esc_html_e('You do not have sufficient permissions to access this page.', 'buoy');
             return;
         }
-        require_once 'pages/review-alert.php';
+        require_once plugin_dir_path(dirname(__FILE__)).'pages/review-alert.php';
     }
 
     /**
@@ -825,7 +825,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             }
         }
 
-        require_once 'pages/incident-chat.php';
+        require_once plugin_dir_path(dirname(__FILE__)).'pages/incident-chat.php';
     }
 
     /**
@@ -834,7 +834,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function renderPostCommentsChatRoom () {
-        require_once plugin_dir_path(__FILE__).'pages/post-comments-chat.php';
+        require_once plugin_dir_path(dirname(__FILE__)).'pages/post-comments-chat.php';
         exit();
     }
 
@@ -863,10 +863,10 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function enqueueFrontEndScripts () {
-        $plugin_data = get_plugin_data(plugin_dir_path(__FILE__).self::$prefix.'.php');
+        $plugin_data = get_plugin_data(plugin_dir_path(dirname(__FILE__)).self::$prefix.'.php');
         wp_enqueue_style(
             self::$prefix.'-alert-style',
-            plugins_url('css/alerts.css', __FILE__),
+            plugins_url('../css/alerts.css', __FILE__),
             false,
             $plugin_data['Version']
         );
@@ -874,20 +874,19 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         
         wp_register_script(
             self::$prefix.'-script',
-            plugins_url(self::$prefix.'.js', __FILE__),
-            array('jquery'),
-            $plugin_data['Version']
-        );
-        wp_register_script(
-            self::$prefix.'-setup',
-            plugins_url('includes/buoy-setup.js', __FILE__),
-            array('jquery'),
+            plugins_url('../'.self::$prefix.'.js', __FILE__),
+            array('jquery', 'google-maps-api'),
             $plugin_data['Version']
         );
         wp_localize_script(self::$prefix.'-script', self::$prefix.'_vars', self::localizeScript());
-        wp_localize_script(self::$prefix.'-setup', self::$prefix.'_vars', self::localizeScript());
         wp_enqueue_script(self::$prefix.'-script');
-        wp_enqueue_script(self::$prefix.'-setup');
+
+        wp_enqueue_script(
+            self::$prefix.'-setup',
+            plugins_url('buoy-setup.js', __FILE__),
+            array(self::$prefix.'-script'),
+            $plugin_data['Version']
+        );
     }
 
     /**
@@ -906,12 +905,12 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         if (!$usropt->get('installer_dismissed')) {
             wp_enqueue_script(
                 self::$prefix.'-install-webapp',
-                plugins_url('includes/install-webapp.js', __FILE__),
+                plugins_url('install-webapp.js', __FILE__),
                 array('jquery')
             );
             wp_enqueue_style(
                 self::$prefix.'-install-webapp',
-                plugins_url('includes/install-webapp.css', __FILE__)
+                plugins_url('install-webapp.css', __FILE__)
             );
         }
     }
@@ -928,11 +927,11 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         // Enqueue jQuery plugins.
         wp_enqueue_style(
             'jquery-datetime-picker',
-            plugins_url('includes/jquery.datetimepicker.css', __FILE__)
+            plugins_url('jquery.datetimepicker.css', __FILE__)
         );
         wp_enqueue_script(
             'jquery-datetime-picker',
-            plugins_url('includes/jquery.datetimepicker.full.min.js', __FILE__),
+            plugins_url('jquery.datetimepicker.full.min.js', __FILE__),
             array('jquery'),
             null,
             true
@@ -951,7 +950,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         // Enqueue a custom pulse loader CSS animation.
         wp_enqueue_style(
             self::$prefix.'-pulse-loader',
-            plugins_url('includes/pulse-loader.css', __FILE__)
+            plugins_url('pulse-loader.css', __FILE__)
         );
     }
 

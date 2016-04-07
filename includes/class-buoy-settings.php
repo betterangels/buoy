@@ -60,7 +60,7 @@ class WP_Buoy_Settings {
         $this->defaults  = array(
             'alert_ttl_num' => 2,
             'alert_ttl_multiplier' => DAY_IN_SECONDS,
-            'safety_info' => file_get_contents(plugin_dir_path(__FILE__) . 'includes/default-safety-information.html'),
+            'safety_info' => file_get_contents(plugin_dir_path(__FILE__) . 'default-safety-information.html'),
             'chat_system' => 'post_comments',
             'future_alerts' => false,
             'delete_old_incident_media' => false,
@@ -407,7 +407,7 @@ class WP_Buoy_Settings {
      * @return void
      */
     public static function configureCron () {
-        require_once plugin_dir_path(__FILE__) . 'includes/crontab-manager.php';
+        require_once plugin_dir_path(__FILE__) . 'crontab-manager.php';
 
         $C = new Buoy_Crontab_Manager();
         $path_to_wp_cron = ABSPATH . 'wp-cron.php';

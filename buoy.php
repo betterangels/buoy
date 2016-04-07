@@ -69,9 +69,13 @@ class WP_Buoy_Plugin {
     public static function register () {
         add_action('plugins_loaded', array(__CLASS__, 'registerL10n'));
         add_action('init', array(__CLASS__, 'initialize'));
-        add_action('admin_enqueue_scripts', array(__CLASS__, 'enqueueFrontEndScripts'));
-        add_action('admin_head', array(__CLASS__, 'addHelpSidebar'));
-        add_action('admin_head-dashboard_page_' . self::$prefix . '_activate_alert', array(__CLASS__, 'renderWebAppHTML'));
+
+        if (is_admin()) {
+            add_action('admin_enqueue_scripts', array(__CLASS__, 'enqueueFrontEndScripts'));
+            add_action('admin_head', array(__CLASS__, 'addHelpSidebar'));
+            add_action('admin_head-dashboard_page_' . self::$prefix . '_activate_alert', array(__CLASS__, 'renderWebAppHTML'));
+            add_action('wp_dashboard_setup', array(__CLASS__, 'registerDashboardWidget'));
+        }
 
         add_action('wp_ajax_nopriv_' . self::$prefix . '_webapp_manifest', array(__CLASS__, 'renderWebAppManifest'));
 
@@ -103,12 +107,13 @@ class WP_Buoy_Plugin {
      * @return void
      */
     public static function initialize () {
-        require_once 'class-buoy-settings.php';
-        require_once 'class-buoy-user-settings.php';
-        require_once 'class-buoy-team.php';
-        require_once 'class-buoy-notification.php';
-        require_once 'class-buoy-user.php';
-        require_once 'class-buoy-alert.php';
+        require_once 'includes/class-buoy-helper.php';
+        require_once 'includes/class-buoy-settings.php';
+        require_once 'includes/class-buoy-user-settings.php';
+        require_once 'includes/class-buoy-team.php';
+        require_once 'includes/class-buoy-notification.php';
+        require_once 'includes/class-buoy-user.php';
+        require_once 'includes/class-buoy-alert.php';
 
         if (!class_exists('WP_Screen_Help_Loader')) {
             require_once 'includes/vendor/wp-screen-help-loader/class-wp-screen-help-loader.php';
@@ -137,12 +142,12 @@ class WP_Buoy_Plugin {
     public static function activate ($network_wide) {
         self::checkPrereqs();
 
-        require_once 'class-buoy-settings.php';
+        require_once 'includes/class-buoy-settings.php';
         WP_Buoy_Settings::get_instance()->activate($network_wide);
 
         // TODO: Remove this after enough migrations.
-        require_once 'class-buoy-user-settings.php';
-        require_once 'class-buoy-team.php';
+        require_once 'includes/class-buoy-user-settings.php';
+        require_once 'includes/class-buoy-team.php';
         self::migrateDefaultTeamSettings();
     }
 
@@ -328,6 +333,30 @@ class WP_Buoy_Plugin {
         //print '<link rel="apple-touch-startup-image" href="' . plugins_url('img/apple-touch-startup.png', __FILE__) . '">';
     }
 
+    /**
+     * Register the Dashboard widget.
+     *
+     * @uses wp_add_dashboard_widget()
+     *
+     * @return void
+     */
+    public static function registerDashboardWidget () {
+        wp_add_dashboard_widget(
+            self::$prefix.'_dashboard',
+            __('Buoy Dashboard', 'buoy'),
+            array(__CLASS__, 'renderDashboardWidget')
+        );
+    }
+
+    /**
+     * Renders the Buoy Dashboard widget.
+     *
+     * @return void
+     */
+    public static function renderDashboardWidget () {
+        include_once 'pages/dashboard-widget-check-responders.php';
+        include_once 'pages/dashboard-widget-check-plugins.php';
+    }
 
     /**
      * Prepares an error message for logging.
