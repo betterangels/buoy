@@ -148,7 +148,6 @@ var BUOY_CHAT_ROOM = (function () {
      * @return {string}
      */
     var commentHtml = function (comment) {
-        console.log(comment);
         // TODO: Is there some way to define a template that both the PHP
         //       and this JS can use?
         var html = '<li id="comment-' + comment.id + '" class="media media-on-left buoy-chat-message">';

@@ -524,8 +524,14 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             // user has permission to view the given comments. That
             // will be the case if the given user is a "responder" of
             // the Buoy Alert to which the comments are attached.
-            $post_ids = $wp_comment_query->query_vars['post__in'];
-            if (!empty($post_ids)) {
+            $post_ids = array();
+            if ($wp_comment_query->query_vars['post_id']) {
+                $post_ids[] = $wp_comment_query->query_vars['post_id'];
+            }
+            if ($wp_comment_query->query_vars['post__in']) {
+                $post_ids = array_merge($post_ids, $wp_comment_query->query_vars['post__in']);
+            }
+            if ($post_ids) {
                 foreach ($post_ids as $id) {
                     $post = get_post($id);
                     if (self::$prefix . '_alert' === $post->post_type) {
