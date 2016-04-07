@@ -278,7 +278,7 @@ class WP_Buoy_User extends WP_Buoy_Plugin {
      */
     public static function renderProfile ($profileuser) {
         $usropt = new WP_Buoy_User_Settings($profileuser);
-        require_once 'pages/profile.php';
+        require_once dirname(dirname(__FILE__)).'/pages/profile.php';
     }
 
     /**
