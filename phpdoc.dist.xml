@@ -11,5 +11,7 @@
     <files>
         <directory>.</directory>
         <ignore>includes/vendor/*</ignore>
+        <ignore>vendor/*</ignore>
+        <ignore>_site/*</ignore>
     </files>
 </phpdoc>
