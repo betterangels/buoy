@@ -448,7 +448,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         register_post_type(self::$prefix.'_alert', array(
             'label' => __('Incidents', 'buoy'),
             'description' => __('A call for help.', 'buoy'),
-            'supports' => array('title', 'comments'),
+            'supports' => array('title'),
             'has_archive' => false,
             'rewrite' => false,
             'can_export' => false,
@@ -470,7 +470,43 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
 
         add_action('publish_'.self::$prefix.'_alert', array('WP_Buoy_Notification', 'publishAlert'), 10, 2);
 
-        add_filter('comments_open', array(__CLASS__, 'handleNewPostCommentChat'), 1, 2); // high priority
+        add_filter('comments_open', array(__CLASS__, 'handleNewPostCommentChat'), 1, 2);    // run early
+        add_filter('comments_clauses', array(__CLASS__, 'filterChatRoomComments'), 900, 2); // run late
+    }
+
+    /**
+     * Omit comments used in Buoy Alert chats from comment queries.
+     *
+     * Comments on Buoy Alerts (posts with the type `buoy_alert`) are
+     * actually "chat room" messages. These should not show elsewhere
+     * in the WordPress blog, such as in the "Recent comments" widget
+     * or other areas where a "show all comments" kind of request is
+     * asked for.
+     *
+     * See also {@link https://github.com/meitar/better-angels/issues/157 issue #157}.
+     *
+     * @global wpdb $wpdb
+     *
+     * @param string[] $clauses
+     * @param WP_Comment_Query $wp_comment_query
+     *
+     * @link https://developer.wordpress.org/reference/hooks/comments_clauses/
+     *
+     * @return string[]
+     */
+    public static function filterChatRoomComments ($clauses, $wp_comment_query) {
+        global $wpdb;
+        // When querying for "comments on posts" there will be a JOIN clause,
+        // but when querying for comments only, there won't be. We only want
+        // to modify the WHERE clause when asking for comments associated with
+        // some post or another, to remove the Buoy Alert post type from that
+        // query. In cases where the comments are queried directly, we don't
+        // need to make any change because such cases are, for instance, the
+        // comments admin screen or the Buoy Alert chat room itself.
+        if ($clauses['join']) {
+            $clauses['where'] .= $wpdb->prepare(" AND {$wpdb->posts}.post_type != %s", self::$prefix.'_alert');
+        }
+        return $clauses;
     }
 
     /**
