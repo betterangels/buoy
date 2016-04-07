@@ -131,6 +131,8 @@ class WP_Buoy_Notification extends WP_Buoy_Plugin {
      * Runs whenever an alert is published. Sends notifications to an
      * alerter's response team informing them of the alert.
      *
+     * @global array $wp_filter
+     *
      * @param int $post_id
      * @param WP_Post $post
      *
@@ -180,7 +182,24 @@ class WP_Buoy_Notification extends WP_Buoy_Plugin {
                         // truncate the $subject since the link must be fully included
                         $subject = substr($subject, 0, $sms_max_length - $url_length - $extra_length);
                     }
+                    // SMS emails must be extremely short and thus do
+                    // not support the addition of a PGP signature so
+                    // we must remove it. :(
+                    // The signature would be added by another plugin
+                    // so we check for its existence, and disable its
+                    // filter temporarily if it exists.
+                    $filter_callback = array('WP_PGP_Encrypted_Emails', 'wp_mail');
+                    $filter_function = implode('::', $filter_callback);
+                    $filter_priority = has_filter('wp_mail', $filter_callback);
+                    if ($filter_priority) {
+                        $filter_num_args = $GLOBALS['wp_filter']['wp_mail'][$filter_priority][$filter_function]['accepted_args'];
+                        remove_filter('wp_mail', $filter_callback);
+                    }
                     wp_mail($smsemail, $subject, $responder_short_link, $headers);
+                    if ($filter_priority) {
+                        // Re-add filter with same arguments.
+                        add_filter('wp_mail', $filter_callback, $filter_priority, $filter_num_args);
+                    }
                 }
             }
         }
