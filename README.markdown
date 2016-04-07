@@ -2,8 +2,8 @@
 
 | Branch   | Builds |
 | :------- |:------:|
-| `master` | [![Build Status for master branch](https://travis-ci.org/meitar/better-angels.svg?branch=master)](https://travis-ci.org/meitar/better-angels) |
-| `develop` | [![Build Status for develop branch](https://travis-ci.org/meitar/better-angels.svg?branch=develop)](https://travis-ci.org/meitar/better-angels) |
+| `master` | [![Build Status for master branch](https://travis-ci.org/betterangels/buoy.svg?branch=master)](https://travis-ci.org/meitar/better-angels) |
+| `develop` | [![Build Status for develop branch](https://travis-ci.org/betterangels/buoy.svg?branch=develop)](https://travis-ci.org/meitar/better-angels) |
 
 Buoy is a private, enhanced [9-1-1](https://en.wikipedia.org/wiki/9-1-1) for your website. It is free software created by the Better Angels collective as a [WordPress](https://wordpress.org/) plugin and is designed to quickly connect people in need with trusted friends, family members, advocates, and other allies in times of crisis.
 
