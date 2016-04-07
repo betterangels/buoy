@@ -125,16 +125,20 @@ class WP_Buoy_Plugin {
      * Method to run when the plugin is activated by a user in the
      * WordPress Dashboard admin screen.
      *
+     * @link https://developer.wordpress.org/reference/hooks/activate_plugin/
+     *
      * @uses WP_Buoy_Plugin::checkPrereqs()
      * @uses WP_Buoy_Settings::activate()
      *
+     * @param bool $network_wide
+     *
      * @return void
      */
-    public static function activate () {
+    public static function activate ($network_wide) {
         self::checkPrereqs();
 
         require_once 'class-buoy-settings.php';
-        WP_Buoy_Settings::get_instance()->activate();
+        WP_Buoy_Settings::get_instance()->activate($network_wide);
 
         // TODO: Remove this after enough migrations.
         require_once 'class-buoy-user-settings.php';

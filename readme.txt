@@ -120,6 +120,7 @@ In this release:
 * [Bugfix](https://github.com/meitar/better-angels/issues/126): Fixed screen flickering when using built-in chat system.
 * Bugfix: Sending a new message now correctly scrolls to the newest message in built-in chat system.
 * Bugfix: SMS notifications are no longer broken for security-enhanced Buoys running [WP PGP Encrypted Emails](https://wordpress.org/plugins/wp-pgp-encrypted-emails/).
+* [Bugfix](https://github.com/meitar/better-angels/issues/163): Default settings are correctly set when network-activated on a Multisite install.
 
 = Version 0.1.2 =
 

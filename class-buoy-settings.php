@@ -47,7 +47,7 @@ class WP_Buoy_Settings {
      *
      * @var array
      */
-    private $_defaults;
+    private $defaults;
 
     /**
      * Constructor.
@@ -57,7 +57,7 @@ class WP_Buoy_Settings {
     private function __construct () {
         $this->meta_key = WP_Buoy_Plugin::$prefix . '_settings';
         $this->options  = $this->get_options();
-        $this->_defaults  = array(
+        $this->defaults  = array(
             'alert_ttl_num' => 2,
             'alert_ttl_multiplier' => DAY_IN_SECONDS,
             'safety_info' => file_get_contents(plugin_dir_path(__FILE__) . 'includes/default-safety-information.html'),
@@ -87,7 +87,7 @@ class WP_Buoy_Settings {
      * @return mixed
      */
     public function get_defaults ($key = null) {
-        return (null === $key) ? $this->_defaults : $this->_defaults[$key];
+        return (null === $key) ? $this->defaults : $this->defaults[$key];
     }
 
     /**
@@ -103,13 +103,39 @@ class WP_Buoy_Settings {
      * Saves default plugin options to the database when the plugin
      * is activated by a user without overwriting existing values.
      * 
-     * @uses WP_Buoy_Settings::save()
-     * @uses WP_Buoy_Settings::updateSchedules()
+     * @uses is_multisite()
+     * @uses wp_get_site()
+     * @uses get_current_blog_id()
+     * @uses switch_to_blog()
+     * @uses WP_Buoy_Settings::activateSite()
+     * @uses restore_current_blog()
+     *
+     * @param bool $network_wide
      *
      * @return void
      */
-    public function activate () {
-        foreach ($this->_defaults as $k => $v) {
+    public function activate ($network_wide) {
+        $sites = (is_multisite() && $network_wide) ? wp_get_sites() : array(array('blog_id' => get_current_blog_id()));
+        foreach ($sites as $site) {
+            $restore = false;
+            if (get_current_blog_id() != $site['blog_id']) {
+                $restore = true;
+                switch_to_blog($site['blog_id']);
+            }
+            $this->activateSite();
+            if ($restore) {
+                restore_current_blog();
+            }
+        }
+    }
+
+    /**
+     * Sets up Buoy settings for a site.
+     *
+     * @return void
+     */
+    private function activateSite () {
+        foreach ($this->defaults as $k => $v) {
             if (!$this->has($k)) {
                 $this->set($k, $v);
             }
