@@ -72,7 +72,9 @@ class BuoyAlertsTest extends Buoy_UnitTestCase {
      * @ticket 21
      */
     public function test_schedule_and_unschedule_delete_old_alerts_hook_on_activation_and_deactivation () {
-        WP_Buoy_Plugin::activate();
+        $network_wide = is_multisite();
+
+        WP_Buoy_Plugin::activate($network_wide);
         $this->assertEquals('hourly', wp_get_schedule('buoy_delete_old_alerts', array('-2 days')));
 
         WP_Buoy_Plugin::deactivate();
