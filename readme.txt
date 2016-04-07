@@ -2,8 +2,8 @@
 Contributors: meitar
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TJLPJYXHSRBEE&lc=US&item_name=Better%20Angels%20Buoy&item_number=Better%20Angels%20Buoy&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted
 Tags: community, emergency response
-Requires at least: 4.4
-Tested up to: 4.4.2
+Requires at least: 4.5
+Tested up to: 4.5
 Stable tag: 0.2.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
@@ -116,10 +116,13 @@ This is a feature, bugfix, and security release. Please update your Buoy as soon
 In this release:
 
 * [Security](https://github.com/meitar/better-angels/issues/157): Built-in chat system no longer exposes chat messages to unauthenticated users.
-* [Feature](https://github.com/meitar/better-angels/issues/115): You can now designate more than one "default" team. These are teams whose members will be sent notifications when you press the big red Alert button. Multiple teams gives you more flexibility in organizing who is on which of your crisis responseteams.
+* Privacy: Replace Google Maps with OpenStreetMaps. With this change, Buoy no longer relies on any non-free (proprietary) code.
+* Usability: New users automatically have three (empty) teams created for them when they sign up.
+* [Feature](https://github.com/meitar/better-angels/issues/115): Multiple default teams are now supported.
+    * You can now set more than one team as your "default." These are teams whose members will be sent notifications when you press the big red Alert button. Setting a list of teams as your default instead of just one gives you more flexibility in what the Immediate Alert button does.
 * [Bugfix](https://github.com/meitar/better-angels/issues/126): Fixed screen flickering when using built-in chat system.
 * Bugfix: Sending a new message now correctly scrolls to the newest message in built-in chat system.
-* Bugfix: SMS notifications are no longer broken for security-enhanced Buoys running [WP PGP Encrypted Emails](https://wordpress.org/plugins/wp-pgp-encrypted-emails/).
+* Bugfix: SMS notifications are no longer broken for security-enhanced Buoys running [WP PGP Encrypted Emails](https://wordpress.org/plugins/wp-pgp-encrypted-emails/). Learn more about [securing your Buoy](https://github.com/meitar/better-angels/wiki/Security-advice).
 * [Bugfix](https://github.com/meitar/better-angels/issues/163): Default settings are correctly set when network-activated on a Multisite install.
 
 = Version 0.1.2 =
