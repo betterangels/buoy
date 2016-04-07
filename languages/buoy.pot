@@ -4,7 +4,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Buoy (a Better Angels crisis response system) 0.1.2\n"
 "Report-Msgid-Bugs-To: http://wordpress.org/tag/buoy\n"
-"POT-Creation-Date: 2016-02-20 10:39:15+00:00\n"
+"POT-Creation-Date: 2016-04-02 07:42:54+00:00\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
@@ -12,169 +12,175 @@ msgstr ""
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 
-#: buoy.php:163
+#: buoy.php:177
 msgid "Buoy requires at least PHP version %1$s. You have PHP version %2$s."
 msgstr ""
 
-#: buoy.php:170
+#: buoy.php:184
 msgid ""
 "Buoy requires at least WordPress version %1$s. You have WordPress version "
 "%2$s."
 msgstr ""
 
-#: class-buoy-alert.php:138
+#: buoy.php:346
+msgid "Buoy Dashboard"
+msgstr ""
+
+#: includes/class-buoy-alert.php:138
 msgid "No alert with lookup \"%s\" found."
 msgstr ""
 
-#: class-buoy-alert.php:434
+#: includes/class-buoy-alert.php:434
 msgid ""
 "WARNING! Your system does not have %s available to generate alert hashes."
 msgstr ""
 
-#: class-buoy-alert.php:449
+#: includes/class-buoy-alert.php:449
 msgid "Incidents"
 msgstr ""
 
-#: class-buoy-alert.php:450
+#: includes/class-buoy-alert.php:450
 msgid "A call for help."
 msgstr ""
 
-#: class-buoy-alert.php:540
+#: includes/class-buoy-alert.php:630
 msgid "Alert"
 msgstr ""
 
-#: class-buoy-alert.php:567
+#: includes/class-buoy-alert.php:657
 msgid "Active alerts"
 msgstr ""
 
-#: class-buoy-alert.php:590
+#: includes/class-buoy-alert.php:680
 msgid "My alert on %2$s"
 msgstr ""
 
-#: class-buoy-alert.php:605
+#: includes/class-buoy-alert.php:695
 msgid "Alert issued by %1$s on %2$s"
 msgstr ""
 
-#: class-buoy-alert.php:619
+#: includes/class-buoy-alert.php:709
 msgid "Cancel scheduled alert for %1$s"
 msgstr ""
 
-#: class-buoy-alert.php:621
+#: includes/class-buoy-alert.php:711
 msgid "Cancel this alert"
 msgstr ""
 
-#: class-buoy-alert.php:644 class-buoy-alert.php:645
+#: includes/class-buoy-alert.php:734 includes/class-buoy-alert.php:735
 msgid "Activate Alert"
 msgstr ""
 
-#: class-buoy-alert.php:655 class-buoy-alert.php:656
+#: includes/class-buoy-alert.php:745 includes/class-buoy-alert.php:746
 msgid "Respond to Alert"
 msgstr ""
 
-#: class-buoy-alert.php:664 class-buoy-alert.php:665
+#: includes/class-buoy-alert.php:754 includes/class-buoy-alert.php:755
 msgid "Incident Chat"
 msgstr ""
 
-#: class-buoy-alert.php:711 class-buoy-alert.php:734 class-buoy-alert.php:739
-#: class-buoy-settings.php:524 class-buoy-settings.php:536
-#: pages/post-comments-chat.php:24 pages/post-comments-chat.php:27
+#: includes/class-buoy-alert.php:801 includes/class-buoy-alert.php:824
+#: includes/class-buoy-alert.php:829 includes/class-buoy-settings.php:550
+#: includes/class-buoy-settings.php:562 pages/post-comments-chat.php:24
+#: pages/post-comments-chat.php:27
 msgid "You do not have sufficient permissions to access this page."
 msgstr ""
 
-#: class-buoy-alert.php:954
+#: includes/class-buoy-alert.php:1130
 msgid "Install Buoy"
 msgstr ""
 
-#: class-buoy-alert.php:955
+#: includes/class-buoy-alert.php:1131
 msgid ""
 "Install Buoy by tapping this button, then choosing \"Add to home screen\" "
 "from the menu."
 msgstr ""
 
-#: class-buoy-alert.php:956
+#: includes/class-buoy-alert.php:1132
 msgid "Dismiss"
 msgstr ""
 
-#: class-buoy-alert.php:957
+#: includes/class-buoy-alert.php:1133
 msgid "Incident Map"
 msgstr ""
 
-#: class-buoy-alert.php:958
+#: includes/class-buoy-alert.php:1134
 msgid "Hide Map"
 msgstr ""
 
-#: class-buoy-alert.php:959 pages/incident-chat.php:10
+#: includes/class-buoy-alert.php:1135 pages/incident-chat.php:10
 msgid "Show Map"
 msgstr ""
 
-#: class-buoy-alert.php:960
+#: includes/class-buoy-alert.php:1136
 msgid "Location of emergency alert signal"
 msgstr ""
 
-#: class-buoy-alert.php:961
+#: includes/class-buoy-alert.php:1137
 msgid "Emergency alert signal could not be pinpointed on a map."
 msgstr ""
 
-#: class-buoy-alert.php:962
+#: includes/class-buoy-alert.php:1138
 msgid "My location"
 msgstr ""
 
-#: class-buoy-alert.php:963
+#: includes/class-buoy-alert.php:1139
 msgid "Directions to here"
 msgstr ""
 
-#: class-buoy-alert.php:964
+#: includes/class-buoy-alert.php:1140
 msgid "Call"
 msgstr ""
 
-#: class-buoy-alert.php:965
+#: includes/class-buoy-alert.php:1141
 msgid "Responding to alert"
 msgstr ""
 
-#: class-buoy-alert.php:966 pages/activate-alert.php:65
+#: includes/class-buoy-alert.php:1142 pages/activate-alert.php:65
 msgid "Schedule alert"
 msgstr ""
 
-#: class-buoy-alert.php:967
+#: includes/class-buoy-alert.php:1143
 msgid "Scheduling alert"
 msgstr ""
 
-#: class-buoy-alert.php:1036
+#: includes/class-buoy-alert.php:1212
 msgid "Buoy could not understand the date and time you entered."
 msgstr ""
 
-#: class-buoy-alert.php:1061
+#: includes/class-buoy-alert.php:1237
 msgid "Your timed alert has been scheduled. Schedule another?"
 msgstr ""
 
-#: class-buoy-alert.php:1318
+#: includes/class-buoy-alert.php:1494
 msgctxt "Example: uploaded 5 mins ago"
 msgid "uploaded %1$s ago"
 msgstr ""
 
-#: class-buoy-alert.php:1323
+#: includes/class-buoy-alert.php:1499
 msgctxt "a byline, like \"written by Bob\""
 msgid "by %1$s"
 msgstr ""
 
-#: class-buoy-chat-room.php:164
+#: includes/class-buoy-chat-room.php:164
 msgid "ago"
 msgstr ""
 
-#: class-buoy-chat-room.php:258
+#: includes/class-buoy-chat-room.php:258
 msgid "%1$s image from %2$s"
 msgstr ""
 
-#: class-buoy-notification.php:91 class-buoy-notification.php:121
+#: includes/class-buoy-notification.php:92
+#: includes/class-buoy-notification.php:122
 msgid "%1$s wants you to join %2$s crisis response team."
 msgstr ""
 
-#: class-buoy-notification.php:115
+#: includes/class-buoy-notification.php:116
 msgid ""
 "%1$s invites you to join the Buoy emergency response alternative on %2$s!"
 msgstr ""
 
-#: class-buoy-notification.php:118
+#: includes/class-buoy-notification.php:119
 msgid ""
 "Buoy is a community-based crisis response system. It is designed to connect "
 "people in need with trusted friends, family, and other nearby allies who can "
@@ -183,207 +189,248 @@ msgid ""
 "together to aid each other in times of need."
 msgstr ""
 
-#: class-buoy-notification.php:125
+#: includes/class-buoy-notification.php:126
 msgid "To join, sign up for an account here:"
 msgstr ""
 
-#: class-buoy-settings.php:244
+#: includes/class-buoy-settings.php:270
 msgid "Failed to delete attachment post %1$s (child of %2$s) during %3$s"
 msgstr ""
 
-#: class-buoy-settings.php:255
+#: includes/class-buoy-settings.php:281
 msgid "Failed to delete post with ID %1$s during %2$s"
 msgstr ""
 
-#: class-buoy-settings.php:398
+#: includes/class-buoy-settings.php:424
 msgid "Error installing system cronjob for timed alerts."
 msgstr ""
 
-#: class-buoy-settings.php:409
+#: includes/class-buoy-settings.php:435
 msgid "Error removing system crontab jobs for timed alerts."
 msgstr ""
 
-#: class-buoy-settings.php:470 pages/options.php:2
+#: includes/class-buoy-settings.php:496 pages/options.php:2
 msgid "Buoy Settings"
 msgstr ""
 
-#: class-buoy-settings.php:471 pages/manifest.json.php:27
+#: includes/class-buoy-settings.php:497 pages/manifest.json.php:27
 msgid "Buoy"
 msgstr ""
 
-#: class-buoy-settings.php:479 class-buoy-settings.php:480
-#: pages/incident-chat.php:108 pages/options.php:10
+#: includes/class-buoy-settings.php:505 includes/class-buoy-settings.php:506
+#: pages/incident-chat.php:59 pages/options.php:10
 msgid "Safety information"
 msgstr ""
 
-#: class-buoy-team-membership-list-table.php:92
+#: includes/class-buoy-team-membership-list-table.php:93
 msgid "Team Name"
 msgstr ""
 
-#: class-buoy-team-membership-list-table.php:93
+#: includes/class-buoy-team-membership-list-table.php:94
 msgid "Alerter"
 msgstr ""
 
-#: class-buoy-team-membership-list-table.php:94
-#: class-buoy-team-membership-list-table.php:107
+#: includes/class-buoy-team-membership-list-table.php:95
+#: includes/class-buoy-team-membership-list-table.php:108
 msgid "Confirmed"
 msgstr ""
 
-#: class-buoy-team-membership-list-table.php:107
+#: includes/class-buoy-team-membership-list-table.php:108
 msgid "Pending"
 msgstr ""
 
-#: class-buoy-team-membership-list-table.php:124
-#: class-buoy-team-membership-list-table.php:139
+#: includes/class-buoy-team-membership-list-table.php:125
+#: includes/class-buoy-team-membership-list-table.php:141
 msgid "Leave Team"
 msgstr ""
 
-#: class-buoy-team-membership-list-table.php:124
-#: class-buoy-team-membership-list-table.php:138
+#: includes/class-buoy-team-membership-list-table.php:125
+#: includes/class-buoy-team-membership-list-table.php:140
 msgid "Join Team"
 msgstr ""
 
-#: class-buoy-team-membership-list-table.php:133
+#: includes/class-buoy-team-membership-list-table.php:130
+#: includes/class-buoy-user.php:345
+msgid "Private"
+msgstr ""
+
+#: includes/class-buoy-team-membership-list-table.php:135
 msgid "You are not on any teams."
 msgstr ""
 
-#: class-buoy-team.php:91
+#: includes/class-buoy-team.php:91
 msgid "Invalid state for membership."
 msgstr ""
 
-#: class-buoy-team.php:337
+#: includes/class-buoy-team.php:347
 msgid "Crisis Response Teams"
 msgstr ""
 
-#: class-buoy-team.php:338
+#: includes/class-buoy-team.php:348
 msgid "Crisis Response Team"
 msgstr ""
 
-#: class-buoy-team.php:339
+#: includes/class-buoy-team.php:349
 msgid "Add New Team"
 msgstr ""
 
-#: class-buoy-team.php:340
+#: includes/class-buoy-team.php:350
 msgid "Edit Team"
 msgstr ""
 
-#: class-buoy-team.php:341
+#: includes/class-buoy-team.php:351
 msgid "New Team"
 msgstr ""
 
-#: class-buoy-team.php:342
+#: includes/class-buoy-team.php:352
 msgid "View Team"
 msgstr ""
 
-#: class-buoy-team.php:343
+#: includes/class-buoy-team.php:353
 msgid "Search Teams"
 msgstr ""
 
-#: class-buoy-team.php:344
+#: includes/class-buoy-team.php:354
 msgid "No teams found"
 msgstr ""
 
-#: class-buoy-team.php:345
+#: includes/class-buoy-team.php:355
 msgid "No teams found in Trash"
 msgstr ""
 
-#: class-buoy-team.php:346
+#: includes/class-buoy-team.php:356
 msgid "All Teams"
 msgstr ""
 
-#: class-buoy-team.php:347
+#: includes/class-buoy-team.php:357
 msgid "My Teams"
 msgstr ""
 
-#: class-buoy-team.php:349
+#: includes/class-buoy-team.php:359
 msgid "Groups of crisis responders"
 msgstr ""
 
-#: class-buoy-team.php:413 pages/add-team-member-meta-box.php:5
+#: includes/class-buoy-team.php:424 pages/add-team-member-meta-box.php:5
 msgid "Add a team member"
 msgstr ""
 
-#: class-buoy-team.php:423
+#: includes/class-buoy-team.php:434
 msgid "Current team members %s"
 msgstr ""
 
-#: class-buoy-team.php:434 class-buoy-team.php:818
-msgid "Default Team?"
+#: includes/class-buoy-team.php:446
+msgid "Default Team? (%s)"
 msgstr ""
 
-#: class-buoy-team.php:470
-msgid "This team is your default team."
-msgstr ""
-
-#: class-buoy-team.php:473
-msgid ""
-"No. You can make this team your default team from your %1$sTeams%2$s page."
-msgstr ""
-
-#: class-buoy-team.php:490 class-buoy-team.php:751 class-buoy-team.php:752
-msgid "Team membership"
-msgstr ""
-
-#: class-buoy-team.php:577
-msgid "Default team updated."
-msgstr ""
-
-#: class-buoy-team.php:800
-msgid "Enter team name here"
-msgstr ""
-
-#: class-buoy-team.php:816
-msgid "Members"
-msgstr ""
-
-#: class-buoy-team.php:817
-msgid "Confirmed Members"
-msgstr ""
-
-#: class-buoy-team.php:909
+#: includes/class-buoy-team.php:447 includes/class-buoy-team.php:946
 msgid "Yes"
 msgstr ""
 
-#: class-buoy-team.php:967
-msgid "Make default"
+#: includes/class-buoy-team.php:447
+msgid "No"
 msgstr ""
 
-#: class-buoy-user.php:59
+#: includes/class-buoy-team.php:491
+msgid "Include as default team?"
+msgstr ""
+
+#: includes/class-buoy-team.php:494
+msgid "This team is one of your default teams."
+msgstr ""
+
+#: includes/class-buoy-team.php:496
+msgid "Uncheck the box to remove this team from your list of default teams."
+msgstr ""
+
+#: includes/class-buoy-team.php:498
+msgid "This team is not one of your default teams."
+msgstr ""
+
+#: includes/class-buoy-team.php:500
+msgid "Check the box to add this team to your list of default teams."
+msgstr ""
+
+#: includes/class-buoy-team.php:517 includes/class-buoy-team.php:788
+#: includes/class-buoy-team.php:789
+msgid "Team membership"
+msgstr ""
+
+#: includes/class-buoy-team.php:605
+msgid "Default team updated."
+msgstr ""
+
+#: includes/class-buoy-team.php:837
+msgid "Enter team name here"
+msgstr ""
+
+#: includes/class-buoy-team.php:853
+msgid "Members"
+msgstr ""
+
+#: includes/class-buoy-team.php:854
+msgid "Confirmed Members"
+msgstr ""
+
+#: includes/class-buoy-team.php:855
+msgid "Default Team?"
+msgstr ""
+
+#: includes/class-buoy-team.php:1004
+msgid "Add to defaults"
+msgstr ""
+
+#: includes/class-buoy-team.php:1007
+msgid "Remove from defaults"
+msgstr ""
+
+#: includes/class-buoy-team.php:1048
+msgid "Friends"
+msgstr ""
+
+#: includes/class-buoy-team.php:1051
+msgid "Family"
+msgstr ""
+
+#: includes/class-buoy-team.php:1054
+msgid "Neighbours"
+msgstr ""
+
+#: includes/class-buoy-user.php:59
 msgid "Invalid user ID: %s"
 msgstr ""
 
-#: class-buoy-user.php:142
+#: includes/class-buoy-user.php:151
 msgid "their"
 msgstr ""
 
-#: class-buoy-user.php:155
+#: includes/class-buoy-user.php:164
 msgid "Please help!"
 msgstr ""
 
-#: class-buoy-user.php:255
+#: includes/class-buoy-user.php:264
 msgid "You no longer have crisis responders."
 msgstr ""
 
-#: class-buoy-user.php:256
+#: includes/class-buoy-user.php:265
 msgid ""
 "Either you have removed the last of your Buoy crisis response team members, "
 "or they have all left your teams. You will not be able to send a Buoy alert "
 "to anyone until you add more people to your team(s)."
 msgstr ""
 
-#: class-buoy-user.php:309
+#: includes/class-buoy-user.php:318
 msgid "Choose teams"
 msgstr ""
 
-#: class-buoy-user.php:313
+#: includes/class-buoy-user.php:322
 msgid "Your teams with responders"
 msgstr ""
 
-#: class-buoy-user.php:317
+#: includes/class-buoy-user.php:326
 msgid "Team name"
 msgstr ""
 
-#: class-buoy-user.php:318
+#: includes/class-buoy-user.php:327
 msgid "Responders"
 msgstr ""
 
@@ -400,7 +447,7 @@ msgid "Activate alert"
 msgstr ""
 
 #: pages/activate-alert.php:31 pages/activate-alert.php:47
-#: pages/incident-chat.php:107 pages/incident-chat.php:114
+#: pages/incident-chat.php:58 pages/incident-chat.php:65
 msgid "Close"
 msgstr ""
 
@@ -408,7 +455,7 @@ msgstr ""
 msgid "Message to my team"
 msgstr ""
 
-#: pages/activate-alert.php:38 pages/incident-chat.php:83
+#: pages/activate-alert.php:38 pages/chat-room-wordpress-comments.php:23
 msgid "Send"
 msgstr ""
 
@@ -450,6 +497,17 @@ msgstr ""
 msgid "Michelle"
 msgstr ""
 
+#: pages/chat-room-jit-si.php:3 pages/chat-room-tlk.io.php:4
+msgid ""
+"To access the incident chat room, JavaScript must be enabled in your browser."
+msgstr ""
+
+#: pages/chat-room-wordpress-comments.php:9
+msgid ""
+"To access the incident chat room, inline frames must be supported by your "
+"browser."
+msgstr ""
+
 #: pages/current-team-meta-box.php:5
 msgid "Remove team members"
 msgstr ""
@@ -460,6 +518,46 @@ msgstr ""
 
 #: pages/current-team-meta-box.php:32
 msgid "pending"
+msgstr ""
+
+#: pages/dashboard-widget-check-plugins.php:26
+msgid "Missing supplemental plugins:"
+msgstr ""
+
+#: pages/dashboard-widget-check-plugins.php:37
+msgid "These recommended plugins were not found. Consider installing them."
+msgstr ""
+
+#: pages/dashboard-widget-check-plugins.php:41
+msgid "Disabled supplemental plugins:"
+msgstr ""
+
+#: pages/dashboard-widget-check-plugins.php:49
+msgid ""
+"These recommended plugins are installed but disabled. Consider activating "
+"them."
+msgstr ""
+
+#: pages/dashboard-widget-check-plugins.php:53
+msgid "Active supplemental plugins:"
+msgstr ""
+
+#: pages/dashboard-widget-check-plugins.php:65
+msgid ""
+"Supplemental plugins are recommended components that enhance the usability "
+"and functionality of your Buoy."
+msgstr ""
+
+#: pages/dashboard-widget-check-responders.php:25
+msgid "You have no crisis responders."
+msgstr ""
+
+#: pages/dashboard-widget-check-responders.php:27
+msgid "Add people you trust to %1$syour crisis response teams%2$s."
+msgstr ""
+
+#: pages/dashboard-widget-check-responders.php:35
+msgid "You have responders on this Buoy."
 msgstr ""
 
 #: pages/incident-chat.php:8
@@ -489,17 +587,6 @@ msgstr ""
 #: pages/incident-chat.php:44 pages/review-alert.php:20
 msgid ""
 "To view a map of the crisis area, JavaScript must be enabled in your browser."
-msgstr ""
-
-#: pages/incident-chat.php:55
-msgid ""
-"To access the incident chat room, JavaScript must be enabled in your browser."
-msgstr ""
-
-#: pages/incident-chat.php:69
-msgid ""
-"To access the incident chat room, inline frames must be supported by your "
-"browser."
 msgstr ""
 
 #: pages/manifest.json.php:26
@@ -590,28 +677,34 @@ msgid "Built-in (WordPress commenting system)"
 msgstr ""
 
 #: pages/options.php:98
+msgid "Jitsi Meet"
+msgstr ""
+
+#: pages/options.php:99
 msgid "Tlk.io"
 msgstr ""
 
-#: pages/options.php:101
+#: pages/options.php:102
 msgid ""
-"Choose a default chat system. You can use the built-in WordPress commenting "
-"system, or the free %1$sTlk.io%2$s chat service as a chat room for alerts."
-msgstr ""
-
-#: pages/options.php:109
-msgid "Plugin extras"
+"Choose a default chat system. The built-in WordPress commenting system "
+"ensures chat room data never leaves your Buoy. The other options embed "
+"external services into your alert. Only use an external service if you trust "
+"its operators. Learn more about %1$sBuoy chat system options%2$s."
 msgstr ""
 
 #: pages/options.php:110
+msgid "Plugin extras"
+msgstr ""
+
+#: pages/options.php:111
 msgid "Additional options to customize plugin behavior."
 msgstr ""
 
-#: pages/options.php:115
+#: pages/options.php:116
 msgid "Enable detailed debugging information?"
 msgstr ""
 
-#: pages/options.php:127
+#: pages/options.php:128
 msgid ""
 "Turn this on only if you are experiencing problems using this plugin, or if "
 "you were told to do so by someone helping you fix a problem (or if you "
