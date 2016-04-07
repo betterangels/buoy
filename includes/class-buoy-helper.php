@@ -76,7 +76,7 @@ class WP_Buoy_Helper {
     public static function getPluginInstallUrlBySlug ($slug) {
         $parts = explode('/', $slug);
         $slug = array_shift($parts);
-        return admin_url("plugin-install.php?tab=plugin-information&plugin=$slug");
+        return self::maybe_network_admin_url("plugin-install.php?tab=plugin-information&plugin=$slug");
     }
 
     /**
@@ -85,7 +85,37 @@ class WP_Buoy_Helper {
      * @param string $search
      */
     public static function getPluginSearchUrl ($search) {
-        return admin_url('plugins.php?s='.urlencode($search));
+        return self::maybe_network_admin_url('plugins.php?s='.urlencode($search));
+    }
+
+    /**
+     * Returns the appropriate admin URL based on user privilege.
+     *
+     * @return string
+     */
+    public static function maybe_network_admin_url ($url) {
+        $func = '';
+        if (is_multisite() && self::hasMenuItem('plugins') && !is_super_admin(get_current_user_id())) {
+            $func = 'admin_url';
+        } else {
+            $func = 'network_admin_url';
+        }
+        return $func($url);
+    }
+
+    /**
+     * Whether or not a given menu item is available to site admins.
+     *
+     * This is only useful for checking whether the `plugins` menu item
+     * exists at the moment because that's the only one that can be
+     * toggled on a multisite network.
+     *
+     * @param string $item
+     *
+     * @return bool
+     */
+    private static function hasMenuItem ($item) {
+        return array_key_exists($item, get_site_option('menu_items'));
     }
 
 }
