@@ -471,6 +471,17 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
 
         add_action('publish_'.self::$prefix.'_alert', array('WP_Buoy_Notification', 'publishAlert'), 10, 2);
 
+        /**
+         * Fired when the Buoy chat room is printed.
+         *
+         * Remove the default function and hook your own callback to
+         * this hook create custom chat room output.
+         *
+         * @param WP_Buoy_Alert $alert
+         * @param WP_User $curr_user
+         */
+        add_action(self::$prefix.'_chat_room', array(__CLASS__, 'renderChatRoom'), 10, 2);
+
         add_filter('comments_open', array(__CLASS__, 'handleNewPostCommentChat'), 1, 2);    // run early
         add_filter('comments_clauses', array(__CLASS__, 'filterCommentsClauses'), 900, 2); // run late
     }
@@ -833,6 +844,31 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         }
 
         require_once plugin_dir_path(dirname(__FILE__)).'pages/incident-chat.php';
+    }
+
+    /**
+     * Hookable action to print out the HTML for the given chat room system.
+     *
+     * This function is called by the custom `buoy_chat_room` action hook.
+     * Plugin developers can replace the Buoy chat room by hooking their
+     * own code to the action after removing the default action. This allows
+     * plugin developers to develop their own plugins that use custom chat
+     * room code for their own Buoys.
+     *
+     * @param WP_Buoy_Alert $alert
+     */
+    public static function renderChatRoom ($alert, $curr_user) {
+        switch ($alert->get_chat_system()) {
+            case 'tlk.io':
+                include plugin_dir_path(dirname(__FILE__)).'/pages/chat-room-tlk-io.php';
+                break;
+            case 'meet.jit.si':
+                include plugin_dir_path(dirname(__FILE__)).'/pages/chat-room-jit-si.php';
+                break;
+            default:
+                include plugin_dir_path(dirname(__FILE__)).'/pages/chat-room-wordpress-comments.php';
+                break;
+        }
     }
 
     /**

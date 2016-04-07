@@ -48,77 +48,7 @@ $auto_show_modal = ($curr_user->ID === $alerter->wp_user->ID) ? 'auto-show-modal
 </div>
 
 <div id="alert-chat-room-container" style="height: 100%;">
-<?php if ('tlk.io' === $alert->get_chat_system()) { ?>
-    <div id="tlkio" data-channel="<?php print esc_attr($alert->get_chat_room_name());?>" data-nickname="<?php print esc_attr($curr_user->display_name);?>">
-        <noscript>
-            <div class="notice error">
-                <p><?php esc_html_e('To access the incident chat room, JavaScript must be enabled in your browser.', 'buoy');?></p>
-            </div>
-        </noscript>
-    </div>
-    <script async src="https://tlk.io/embed.js" type="text/javascript"></script>
-<?php } else if ('meet.jit.si' === $alert->get_chat_system()) { ?>
-    <noscript>
-        <div class="notice error">
-            <p><?php esc_html_e('To access the incident chat room, JavaScript must be enabled in your browser.', 'buoy');?></p>
-        </div>
-    </noscript>
-    <script src="https://meet.jit.si/external_api.js"></script>
-    <style scoped="scoped">
-        #jitsiConference0 { height: 100%; }
-    </style>
-    <script>
-        var JitsiMeetAPI = new JitsiMeetExternalAPI(
-            'meet.jit.si',
-            '<?php print str_replace('_', '', esc_js($alert->get_chat_room_name()));?>',
-            '100%',
-            '100%'
-        );
-        // Not sure why this isn't working.
-        // See the API docs: https://github.com/jitsi/jitsi-meet/blob/master/doc/api.md
-        JitsiMeetApi.executeCommand('displayName', ['<?php print esc_js($curr_user->display_name);?>']);
-    </script>
-<?php } else { ?>
-    <div id="comments-chat">
-        <iframe
-            src="<?php print admin_url('admin-ajax.php');?>?action=<?php print esc_attr(self::$prefix.'_post_comments_chat');?>&amp;hash=<?php print esc_attr($alert->get_hash());?>#page-footer"
-            name="<?php print esc_attr(self::$prefix);?>_post_comments_chat"
-            width="100%"
-            allowfullscreen="allowfullscreen"
-            seamless="seamless"
-        >
-            <?php esc_html_e('To access the incident chat room, inline frames must be supported by your browser.', 'buoy');?>
-        </iframe>
-<?php
-add_filter('comments_open', '__return_true');
-$submit_field  = '<div class="input-group">';
-$submit_field .= '<input type="text" id="comment" name="comment"';
-$submit_field .= ' class="form-control" aria-requred="true" required="required"';
-$submit_field .= ' placeholder="'.$curr_user->display_name.'&hellip;" />';
-$submit_field .= '<span class="input-group-btn">%1$s</span> %2$s';
-$submit_field .= wp_nonce_field(self::$prefix.'_chat_comment', self::$prefix.'_chat_comment_nonce', true, false);
-$submit_field .= '</div><!-- .input-group -->';
-ob_start();
-comment_form(array(
-    'comment_field' => '', // use the submit_field instead,
-    'label_submit' => esc_attr__('Send', 'buoy'),
-    'class_submit' => 'btn btn-success',
-    'id_submit' => 'submit-btn',
-    'name_submit' => 'submit-btn',
-    'submit_button' => '<button type="submit" class="%3$s" id="%2$s" name="%1$s">%4$s</button>',
-    'submit_field' => $submit_field,
-    'logged_in_as' => '',
-    'title_reply' => '',
-    'title_reply_before' => '',
-    'cancel_reply_before' => '',
-    'cancel_reply_link' => ' ',
-), $alert->wp_post->ID);
-$comment_form = ob_get_contents();
-ob_end_clean();
-print links_add_target($comment_form, self::$prefix.'_post_comments_chat', array('form'));
-?>
-    </div>
-<?php } ?>
+    <?php do_action(self::$prefix.'_chat_room', $alert, $curr_user);?>
 </div>
 
 <div id="safety-information-modal" class="modal fade <?php esc_attr_e($auto_show_modal);?>" role="dialog" aria-labelledby="safety-information-modal-label">
