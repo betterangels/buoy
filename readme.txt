@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TJLPJ
 Tags: community, emergency response
 Requires at least: 4.4
 Tested up to: 4.4.2
-Stable tag: 0.1.2
+Stable tag: 0.2.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -106,6 +106,20 @@ For instance:
 13. The alerter and all current responders become aware of new responders as they are added to the chat room and the map. As people involved in the incident move in the physical world, the map shown to each of the other people also updates in near real time. Clicking on any of the user icons on the map reveals one-click access to both turn-by-turn directions to their location and one-click access to call them from your phone, Facetime, Skype, or other default calling app.
 
 == Change log ==
+
+= Version 0.2.0 =
+
+This is a feature, bugfix, and security release. Please update your Buoy as soon as you can.
+
+**Important update notice for WordPress version 4.4 admins:** If you are still using WordPress version 4.4 you must first activate the [REST API plugin](https://wordpress.org/plugins/rest-api/) *before* updating Buoy. If you have updated to WordPress 4.5 already you do not need the additional plugin, and if you update later you can delete the REST API plugin after updating to WordPress 4.5.
+
+In this release:
+
+* [Security](https://github.com/meitar/better-angels/issues/157): Built-in chat system no longer exposes chat messages to unauthenticated users.
+* [Feature](https://github.com/meitar/better-angels/issues/115): You can now designate more than one "default" team. These are teams whose members will be sent notifications when you press the big red Alert button. Multiple teams gives you more flexibility in organizing who is on which of your crisis responseteams.
+* [Bugfix](https://github.com/meitar/better-angels/issues/126): Fixed screen flickering when using built-in chat system.
+* Bugfix: Sending a new message now correctly scrolls to the newest message in built-in chat system.
+* Bugfix: SMS notifications are no longer broken for security-enhanced Buoys running [WP PGP Encrypted Emails](https://wordpress.org/plugins/wp-pgp-encrypted-emails/).
 
 = Version 0.1.2 =
 
