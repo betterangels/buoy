@@ -4,7 +4,7 @@
     </div>
 </noscript>
 <script src="https://meet.jit.si/external_api.js"></script>
-<style scoped="scoped">
+<style scoped="scoped"><?php // Note scoping only actually scopes styles in Firefox; they're global on every other browser. ?>
     #jitsiConference0 { height: 100%; }
 </style>
 <script>
@@ -16,5 +16,7 @@
     );
     // Not sure why this isn't working.
     // See the API docs: https://github.com/jitsi/jitsi-meet/blob/master/doc/api.md
+    // Error is likely a bug in Jitsi Meet API:
+    //     https://github.com/jitsi/jitsi-meet/issues/415
     JitsiMeetApi.executeCommand('displayName', ['<?php print esc_js($curr_user->display_name);?>']);
 </script>

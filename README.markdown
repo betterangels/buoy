@@ -1,9 +1,6 @@
-# Better Angels' Buoy: A community-driven emergency dispatch system powered by friendship.
+# Buoy: A community-driven emergency dispatch system powered by friendship.
 
-| Branch   | Builds |
-| :------- |:------:|
-| `master` | [![Build Status for master branch](https://travis-ci.org/betterangels/buoy.svg?branch=master)](https://travis-ci.org/meitar/better-angels) |
-| `develop` | [![Build Status for develop branch](https://travis-ci.org/betterangels/buoy.svg?branch=develop)](https://travis-ci.org/meitar/better-angels) |
+[![Join the project chat room](https://badges.gitter.im/betterangels/buoy.svg)](https://gitter.im/betterangels/buoy) [![Build Status for develop branch](https://travis-ci.org/betterangels/buoy.svg?branch=develop)](https://travis-ci.org/meitar/better-angels) [![Download Buoy from WordPress.org](https://img.shields.io/wordpress/plugin/dt/buoy.svg)](https://wordpress.org/plugins/buoy/) [![Current release at WordPress.org](https://img.shields.io/wordpress/plugin/v/buoy.svg)](https://wordpress.org/plugins/buoy/) [![Required WordPress version](https://img.shields.io/wordpress/v/buoy.svg)](https://wordpress.org/plugins/buoy/developers/) [![Buoy is licensed GPL-3.0](https://img.shields.io/github/license/betterangels/buoy.svg)](https://www.gnu.org/licenses/quick-guide-gplv3.en.html)
 
 Buoy is a private, enhanced [9-1-1](https://en.wikipedia.org/wiki/9-1-1) for your website. It is free software created by the Better Angels collective as a [WordPress](https://wordpress.org/) plugin and is designed to quickly connect people in need with trusted friends, family members, advocates, and other allies in times of crisis.
 
@@ -35,17 +32,13 @@ Read the [Buoy Administration Guide](https://github.com/meitar/better-angels/wik
 
 # Contributing
 
-Buoy is [free software](https://www.gnu.org/philosophy/free-sw.en.html "What is free software?"). It was developed and is maintained primarily by a nomadic hacker named [maymay](https://maymay.net/) who has a lot of fucks to give about supporting survivors of any of capitalism's horrors, along with a growing group of volunteers who call themselves the Better Angels.
+Buoy is [free software](https://www.gnu.org/philosophy/free-sw.en.html "What is free software?"). It was developed and is maintained primarily by a nomadic hacker named [maymay](https://maymay.net/) who has a lot of fucks to give about supporting survivors of any of capitalism's horrors, along with a growing group of volunteers who call themselves the [Better Angels](https://betterangels.github.io/).
 
 Even if you don't code, there's a lot you can do to help make Buoy better. Here are a few.
 
 ## Donate
 
-You can support development and maintenance of Buoy by supporting its primary developer, maymay. Click [here to donate via PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TJLPJYXHSRBEE&lc=US&item_name=Better%20Angels%20Buoy&item_number=Better%20Angels%20Buoy&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted), or visit [Cyberbusking.org](http://Cyberbusking.org/) for maymay's personal donation portal.
-
-You can also support development of Buoy by supporting the following organizations who have helped make Buoy possible:
-
-* [Tech for Justice](http://techforjustice.org/)
+You can support development and maintenance of Buoy by [donating to our crowdfunding campaign](https://www.generosity.com/community-fundraising/buoy-empowering-community-based-crisis-response), or by directly supporting its primary developer, [maymay](https://maymay.net/). Click [here to donate via PayPal](https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TJLPJYXHSRBEE&lc=US&item_name=Better%20Angels%20Buoy&item_number=Better%20Angels%20Buoy&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted), or visit [Cyberbusking.org](http://Cyberbusking.org/) for maymay's personal donation portal.
 
 ## Translate
 
@@ -55,7 +48,7 @@ If you speak multiple languages, you can help [translate Buoy into more human la
 
 If you use Buoy and are familiar with how it works, you can help others learn about the tool by writing about how you use it. We maintain [a wiki](https://github.com/meitar/better-angels/wiki) that you can edit to add your own guides, walkthroughs, and suggestions.
 
-You can also write articles on your website or blog. If you do, please [contact us](http://www.techforjustice.org/contact/) or [email maymay directly](mailto:bitetheappleback+buoy@gmail.com) to let us know.
+You can also write articles on your website or blog. If you do, please [connect with us](https://github.com/betterangels/buoy/wiki/Connect-with-Us) over social media or [email the Better Angels collective](mailto:BetterAngels@RiseUp.net) to let us know.
 
 ## Code
 
