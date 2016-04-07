@@ -21,14 +21,14 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
      *
      * @var WP_Comment[]
      */
-    private $_comments;
+    private $comments;
 
     /**
      * The alert associatd with this chat room.
      *
      * @var WP_Buoy_Alert
      */
-    private $_alert;
+    private $alert;
 
     /**
      * Constructor.
@@ -36,9 +36,9 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
      * @param int|string $lookup
      */
     public function __construct ($lookup) {
-        $this->_alert = new WP_Buoy_Alert($lookup);
-        $this->_comments = get_comments(array(
-            'post_id' => $this->_alert->wp_post->ID
+        $this->alert = new WP_Buoy_Alert($lookup);
+        $this->comments = get_comments(array(
+            'post_id' => $this->alert->wp_post->ID
         ));
     }
 
@@ -50,7 +50,7 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
      * @return bool
      */
     public function is_responder ($user_id) {
-        return $this->_alert->is_responder($user_id);
+        return $this->alert->is_responder($user_id);
     }
 
     /**
@@ -61,7 +61,7 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
      * @return bool
      */
     public function is_alerter ($user_id) {
-        return $user_id == $this->_alert->wp_post->post_author;
+        return $user_id == $this->alert->wp_post->post_author;
     }
 
     /**
@@ -70,7 +70,7 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
      * @return string
      */
     public function get_title () {
-        return $this->_alert->wp_post->post_title;
+        return $this->alert->wp_post->post_title;
     }
 
     /**
@@ -90,7 +90,7 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
             'callback' => array(__CLASS__, 'renderComment')
         );
         $args = wp_parse_args($args, $defaults);
-        wp_list_comments($args, $this->_comments);
+        wp_list_comments($args, $this->comments);
     }
 
     /**
@@ -155,7 +155,7 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
      * @return void
      */
     protected static function renderCommentBody ($comment, $args, $depth) {
-        $time_ago = human_time_diff(get_comment_time('U'), current_time('timestamp')) . ' ' . __('ago');
+        $time_ago = human_time_diff(get_comment_time('U'), current_time('timestamp')).' '.__('ago');
 ?>
     <div class="media-body">
         <?php comment_text($comment, $args);?>
@@ -181,12 +181,12 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
         /**
          * Filters the chat room refresh rate.
          */
-        $refresh = apply_filters(self::$prefix . '_chat_room_meta_refresh_rate', 5);
+        $refresh = apply_filters(self::$prefix.'_chat_room_meta_refresh_rate', 5);
 
         /**
          * Filters the URL to which the chat room reloads to.
          */
-        $url     = apply_filters(self::$prefix . '_chat_room_meta_refresh_url', $_SERVER['REQUEST_URI']);
+        $url     = esc_attr(apply_filters(self::$prefix.'_chat_room_meta_refresh_url', $_SERVER['REQUEST_URI']));
 
         $html = '<meta http-equiv="refresh" content="%1$s;url=%2$s" />';
         $options = WP_Buoy_Settings::get_instance();
@@ -224,7 +224,7 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
      * @return string[]
      */
     public static function filterCommentClass ($classes) {
-        $classes[] = self::$prefix . '-chat-message';
+        $classes[] = self::$prefix.'-chat-message';
         return $classes;
     }
 
@@ -248,12 +248,12 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
     public static function filterCommentText ($comment_text) {
         // Detect any URLs that point to recognized images, and embed them.
         $pat = '!(?:([^:/?#\s]+):)?(?://([^/?#]*))?([^?#\s]*\.(jpe?g|JPE?G|gif|GIF|png|PNG))(?:\?([^#]*))?(?:#(.*))?!';
-        $rep = '<a href="$0"><img src="$0" alt="[' . sprintf(esc_attr__('%1$s image from %2$s', 'buoy'), '.$4 ', '$2') . ']" style="max-width:100%;" /></a>';
+        $rep = '<a href="$0"><img src="$0" alt="['.sprintf(esc_attr__('%1$s image from %2$s', 'buoy'), '.$4 ', '$2').']" style="max-width:100%;" /></a>';
         $comment_text = preg_replace($pat, $rep, $comment_text);
 
         // Finally, parse the result as markdown for more formatting
         if (!class_exists('Parsedown')) {
-            require_once dirname(__FILE__) . '/includes/vendor/wp-screen-help-loader/vendor/parsedown/Parsedown.php';
+            require_once dirname(__FILE__).'/includes/vendor/wp-screen-help-loader/vendor/parsedown/Parsedown.php';
         }
         $comment_text = Parsedown::instance()->text($comment_text);
 
@@ -263,18 +263,9 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
     /**
      * Renders a chat room.
      *
-     * @global $buoy_chat_room
-     *
-     * @todo Remove this global. Maybe template-ize this a bit better
-     *       with actual `load_template()` functions and similar to a
-     *       WordPress front-end? That would let theme developers use
-     *       their skills to customize the built-in chat room, too.
-     *
      * @return void
      */
     public function render () {
-        global $buoy_chat_room;
-
         // TODO: This should become a "real" template, but for now, we just
         //       empty the major front-end template hooks so we have a clean
         //       slate from which to define a simple HTML "template."
@@ -287,13 +278,13 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
 
         WP_Buoy_Alert::enqueueBootstrapFramework();
         wp_enqueue_style(
-            self::$prefix . '-chat-room',
+            self::$prefix.'-chat-room',
             plugins_url('/templates/comments-chat-room.css', __FILE__),
             array(),
             null
         );
         wp_enqueue_script(
-            self::$prefix . '-chat-room',
+            self::$prefix.'-chat-room',
             plugins_url('/templates/comments-chat-room.js', __FILE__),
             array(),
             null
@@ -302,7 +293,7 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
         add_filter('body_class', array(__CLASS__, 'filterBodyClass'));
         add_filter('comment_text', array(__CLASS__, 'filterCommentText'), 5); // early priority
 
-        require_once dirname(__FILE__) . '/templates/comments-chat-room.php';
+        require_once dirname(__FILE__).'/templates/comments-chat-room.php';
 
         do_action('shutdown');
         exit();

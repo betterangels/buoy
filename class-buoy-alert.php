@@ -109,11 +109,11 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
     public function load ($lookup) {
         if (strlen($lookup) > 7) {
             $posts = get_posts(array(
-                'post_type' => self::$prefix . '_alert',
+                'post_type' => self::$prefix.'_alert',
                 'post_status' => array('publish', 'future'),
                 'meta_query' => array(
                     array(
-                        'key' => self::$prefix . '_hash',
+                        'key' => self::$prefix.'_hash',
                         'value' => "^$lookup",
                         'compare' => 'REGEXP'
                     )
@@ -127,12 +127,12 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             $this->wp_post = get_post($lookup);
         }
 
-        if ($this->wp_post && self::$prefix . '_alert' === $this->wp_post->post_type) {
+        if ($this->wp_post && self::$prefix.'_alert' === $this->wp_post->post_type) {
             $this->set_hash();
             $this->set_chat_room_name();
             $this->_user = get_userdata($this->wp_post->post_author);
             $this->_teams = array_map(
-                'absint', get_post_meta($this->wp_post->ID, self::$prefix . '_teams', true)
+                'absint', get_post_meta($this->wp_post->ID, self::$prefix.'_teams', true)
             );
         } else {
             throw new Exception(sprintf(__('No alert with lookup "%s" found.', 'buoy'), $lookup));
@@ -174,7 +174,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      */
     public function set ($postarr = array()) {
         // These args are always hardcoded.
-        $postarr['post_type']      = self::$prefix . '_alert';
+        $postarr['post_type']      = self::$prefix.'_alert';
         $postarr['post_content']   = ''; // empty content
         $postarr['ping_status']    = 'closed';
         $postarr['comment_status'] = 'closed'; // always closed, but dynamically opened by filter
@@ -188,10 +188,10 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
 
         $alerter = new WP_Buoy_User($postarr['post_author']);
         $default_meta = array(
-            self::$prefix . '_hash' => $this->make_hash(),
-            self::$prefix . '_chat_room_name' => $this->make_chat_room_name(),
-            self::$prefix . '_teams' => array($alerter->get_default_team()),
-            self::$prefix . '_chat_system' => WP_Buoy_Settings::get_instance()->get('chat_system', 'post_comments')
+            self::$prefix.'_hash' => $this->make_hash(),
+            self::$prefix.'_chat_room_name' => $this->make_chat_room_name(),
+            self::$prefix.'_teams' => array($alerter->get_default_team()),
+            self::$prefix.'_chat_system' => WP_Buoy_Settings::get_instance()->get('chat_system', 'post_comments')
         );
 
         if (!isset($postarr['meta_input'])) {
@@ -259,7 +259,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     private function set_hash () {
-        $prev_hash = sanitize_text_field(get_post_meta($this->wp_post->ID, self::$prefix . '_hash', true));
+        $prev_hash = sanitize_text_field(get_post_meta($this->wp_post->ID, self::$prefix.'_hash', true));
         if ($prev_hash) {
             $this->_hash = $prev_hash;
         }
@@ -271,7 +271,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     private function set_chat_room_name () {
-        $this->_chat_room_name = sanitize_text_field(get_post_meta($this->wp_post->ID, self::$prefix . '_chat_room_name', true));
+        $this->_chat_room_name = sanitize_text_field(get_post_meta($this->wp_post->ID, self::$prefix.'_chat_room_name', true));
     }
 
     /**
@@ -289,7 +289,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return string
      */
     public function get_chat_system () {
-        $meta_key = self::$prefix . '_chat_system';
+        $meta_key = self::$prefix.'_chat_system';
         return $this->wp_post->$meta_key;
     }
 
@@ -299,7 +299,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return int[]
      */
     public function get_responders () {
-        return get_post_meta($this->wp_post->ID, self::$prefix . '_responders');
+        return get_post_meta($this->wp_post->ID, self::$prefix.'_responders');
     }
 
     /**
@@ -325,7 +325,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      */
     public function add_responder ($user_id) {
         if (!$this->is_responder($user_id)) {
-            add_post_meta($this->wp_post->ID, self::$prefix . '_responders', $user_id, false);
+            add_post_meta($this->wp_post->ID, self::$prefix.'_responders', $user_id, false);
         }
         return $this;
     }
@@ -341,7 +341,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return WP_Buoy_Alert
      */
     public function set_responder_geo ($user_id, $geo) {
-        update_post_meta($this->wp_post->ID, self::$prefix . "_responder_{$user_id}_location", $geo);
+        update_post_meta($this->wp_post->ID, self::$prefix."_responder_{$user_id}_location", $geo);
         return $this;
     }
 
@@ -355,7 +355,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return float[]
      */
     public function get_responder_geo ($user_id) {
-        return get_post_meta($this->wp_post->ID, self::$prefix . "_responder_{$user_id}_location", true);
+        return get_post_meta($this->wp_post->ID, self::$prefix."_responder_{$user_id}_location", true);
     }
 
     /**
@@ -403,7 +403,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      */
     private function make_chat_room_name () {
         // need to limit the length of this string due to Tlk.io integration for now
-        return self::$prefix . '_' . substr(hash('sha1', $this->get_random_seed()), 0, 20);
+        return self::$prefix.'_'.substr(hash('sha1', $this->get_random_seed()), 0, 20);
     }
 
     /**
@@ -432,11 +432,11 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             } else {
                 static::debug_log(sprintf(
                     __('WARNING! Your system does not have %s available to generate alert hashes.', 'buoy'),
-                    $func . '()'
+                    $func.'()'
                 ));
             }
         }
-        return (isset($seed)) ? $seed : mt_rand() . microtime() . getmypid() . uniqid('', true);
+        return (isset($seed)) ? $seed : mt_rand().microtime().getmypid().uniqid('', true);
     }
 
     /**
@@ -445,7 +445,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function register () {
-        register_post_type(self::$prefix . '_alert', array(
+        register_post_type(self::$prefix.'_alert', array(
             'label' => __('Incidents', 'buoy'),
             'description' => __('A call for help.', 'buoy'),
             'supports' => array('title', 'comments'),
@@ -460,13 +460,14 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         add_action('wp_before_admin_bar_render', array(__CLASS__, 'addAlertsMenu'));
         add_action('admin_menu', array(__CLASS__, 'registerAdminMenu'));
 
-        add_action('wp_ajax_' . self::$prefix . '_new_alert', array(__CLASS__, 'handleNewAlert'));
-        add_action('wp_ajax_' . self::$prefix . '_upload_media', array(__CLASS__, 'handleMediaUpload'));
-        add_action('wp_ajax_' . self::$prefix . '_unschedule_alert', array(__CLASS__, 'handleUnscheduleAlert'));
-        add_action('wp_ajax_' . self::$prefix . '_update_location', array(__CLASS__, 'handleLocationUpdate'));
-        add_action('wp_ajax_' . self::$prefix . '_dismiss_installer', array(__CLASS__, 'handleDismissInstaller'));
+        add_action('wp_ajax_'.self::$prefix.'_new_alert', array(__CLASS__, 'handleNewAlert'));
+        add_action('wp_ajax_'.self::$prefix.'_upload_media', array(__CLASS__, 'handleMediaUpload'));
+        add_action('wp_ajax_'.self::$prefix.'_unschedule_alert', array(__CLASS__, 'handleUnscheduleAlert'));
+        add_action('wp_ajax_'.self::$prefix.'_update_location', array(__CLASS__, 'handleLocationUpdate'));
+        add_action('wp_ajax_'.self::$prefix.'_dismiss_installer', array(__CLASS__, 'handleDismissInstaller'));
+        add_action('wp_ajax_'.self::$prefix.'_post_comments_chat', array(__CLASS__, 'renderPostCommentsChatRoom'));
 
-        add_action('publish_' . self::$prefix . '_alert', array('WP_Buoy_Notification', 'publishAlert'), 10, 2);
+        add_action('publish_'.self::$prefix.'_alert', array('WP_Buoy_Notification', 'publishAlert'), 10, 2);
 
         add_filter('comments_open', array(__CLASS__, 'handleNewPostCommentChat'), 1, 2); // high priority
     }
@@ -492,13 +493,13 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function redirectShortUrl ($wp) {
-        $get_param = self::$prefix . '_alert';
+        $get_param = self::$prefix.'_alert';
         if (isset($_GET[$get_param]) && 8 === strlen($_GET[$get_param])) {
             $alert = new self(sanitize_text_field(urldecode($_GET[$get_param])));
             if ($alert->get_hash()) {
                 wp_safe_redirect(admin_url(
-                    '?page=' . self::$prefix . '_review_alert'
-                    . '&' . self::$prefix . '_hash=' . urlencode($alert->get_hash())
+                    '?page='.self::$prefix.'_review_alert'
+                   .'&'.self::$prefix.'_hash='.urlencode($alert->get_hash())
                 ));
                 exit();
             }
@@ -516,7 +517,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
     public static function redirectChatComment ($location, $comment) {
         $fragment = parse_url($location, PHP_URL_FRAGMENT);
         $alert = new WP_Buoy_Alert($comment->comment_post_ID);
-        $new_location = plugins_url('pages/post-comments-chat.php', __FILE__) . '?hash=' . $alert->get_hash() . '&reset';
+        $new_location = admin_url('admin-ajax.php').'?action='.self::$prefix.'_post_comments_chat&hash='.$alert->get_hash().'&reset';
         if ($fragment) {
             $new_location .= "#$fragment";
         }
@@ -534,10 +535,10 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         global $wp_admin_bar;
 
         $wp_admin_bar->add_node(array(
-            'id' => 'new-' . self::$prefix . '-alert',
+            'id' => 'new-'.self::$prefix.'-alert',
             'title' => __('Alert', 'buoy'),
             'parent' => 'new-content',
-            'href' => admin_url('index.php?page=' . self::$prefix . '_activate_alert')
+            'href' => admin_url('index.php?page='.self::$prefix.'_activate_alert')
         ));
 
         $alerts = array(
@@ -561,7 +562,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
 
         if (!empty($alerts['my_alerts']) || !empty($alerts['my_responses']) || !empty($alerts['my_scheduled_alerts'])) {
             $wp_admin_bar->add_menu(array(
-                'id' => self::$prefix . '-alerts-menu',
+                'id' => self::$prefix.'-alerts-menu',
                 'title' => __('Active alerts', 'buoy')
             ));
         }
@@ -570,23 +571,23 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         // Add group nodes to WP Toolbar
         foreach ($alerts as $group_name => $posts) {
             $wp_admin_bar->add_group(array(
-                'id' => self::$prefix . '_' . $group_name,
-                'parent' => self::$prefix . '-alerts-menu'
+                'id' => self::$prefix.'_'.$group_name,
+                'parent' => self::$prefix.'-alerts-menu'
             ));
         }
 
-        $dtfmt = get_option('date_format') . ' ' . get_option('time_format');
+        $dtfmt = get_option('date_format').' '.get_option('time_format');
         foreach ($alerts['my_alerts'] as $post) {
             $alert = new WP_Buoy_Alert($post->ID);
             $author = get_userdata($post->post_author);
             $url = wp_nonce_url(
-                admin_url('?page=' . self::$prefix . '_chat&' . self::$prefix . '_hash=' . $alert->get_hash()),
-                self::$prefix . '_chat', self::$prefix . '_nonce'
+                admin_url('?page='.self::$prefix.'_chat&'.self::$prefix.'_hash='.$alert->get_hash()),
+                self::$prefix.'_chat', self::$prefix.'_nonce'
             );
             $wp_admin_bar->add_node(array(
-                'id' => self::$prefix . '-alert-' . $alert->get_hash(),
+                'id' => self::$prefix.'-alert-'.$alert->get_hash(),
                 'title' => sprintf(__('My alert on %2$s', 'buoy'), $author->display_name, date($dtfmt, strtotime($post->post_date))),
-                'parent' => self::$prefix . '_my_alerts',
+                'parent' => self::$prefix.'_my_alerts',
                 'href' => $url
             ));
         }
@@ -595,13 +596,13 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             $alert = new WP_Buoy_Alert($post->ID);
             $author = get_userdata($post->post_author);
             $url = wp_nonce_url(
-                admin_url('?page=' . self::$prefix . '_chat&' . self::$prefix . '_hash=' . $alert->get_hash()),
-                self::$prefix . '_chat', self::$prefix . '_nonce'
+                admin_url('?page='.self::$prefix.'_chat&'.self::$prefix.'_hash='.$alert->get_hash()),
+                self::$prefix.'_chat', self::$prefix.'_nonce'
             );
             $wp_admin_bar->add_node(array(
-                'id' => self::$prefix . '-alert-' . $alert->get_hash(),
+                'id' => self::$prefix.'-alert-'.$alert->get_hash(),
                 'title' => sprintf(__('Alert issued by %1$s on %2$s', 'buoy'), $author->display_name, date($dtfmt, strtotime($post->post_date))),
-                'parent' => self::$prefix . '_my_responses',
+                'parent' => self::$prefix.'_my_responses',
                 'href' => $url
             ));
         }
@@ -609,16 +610,16 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         foreach ($alerts['my_scheduled_alerts'] as $post) {
             $alert = new WP_Buoy_Alert($post->ID);
             $url = wp_nonce_url(
-                admin_url('admin-ajax.php?action=' . self::$prefix . '_unschedule_alert&' . self::$prefix .'_hash=' . $alert->get_hash() . '&r=' . esc_url($_SERVER['REQUEST_URI'])),
-                self::$prefix . '_unschedule_alert', self::$prefix . '_nonce'
+                admin_url('admin-ajax.php?action='.self::$prefix.'_unschedule_alert&'.self::$prefix .'_hash='.$alert->get_hash().'&r='.esc_url($_SERVER['REQUEST_URI'])),
+                self::$prefix.'_unschedule_alert', self::$prefix.'_nonce'
             );
             $wp_admin_bar->add_node(array(
-                'id' => self::$prefix . '-alert-' . $alert->get_hash(),
+                'id' => self::$prefix.'-alert-'.$alert->get_hash(),
                 'title' => sprintf(__('Cancel scheduled alert for %1$s','buoy'), date($dtfmt, strtotime($post->post_date))),
                 'meta' => array(
                     'title' => __('Cancel this alert', 'buoy')
                 ),
-                'parent' => self::$prefix . '_my_scheduled_alerts',
+                'parent' => self::$prefix.'_my_scheduled_alerts',
                 'href' => $url
             ));
         }
@@ -642,18 +643,18 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             __('Activate Alert', 'buoy'),
             __('Activate Alert', 'buoy'),
             'read', // give access to all users including Subscribers role
-            self::$prefix . '_activate_alert',
+            self::$prefix.'_activate_alert',
             array(__CLASS__, 'renderActivateAlertPage')
         );
-        add_action('load-' . $hook, array(__CLASS__, 'removeScreenOptions'));
-        add_action('load-' . $hook, array(__CLASS__, 'addInstallerScripts'));
+        add_action('load-'.$hook, array(__CLASS__, 'removeScreenOptions'));
+        add_action('load-'.$hook, array(__CLASS__, 'addInstallerScripts'));
 
         $hooks[] = add_submenu_page(
             null,
             __('Respond to Alert', 'buoy'),
             __('Respond to Alert', 'buoy'),
             'read',
-            self::$prefix . '_review_alert',
+            self::$prefix.'_review_alert',
             array(__CLASS__, 'renderReviewAlertPage')
         );
 
@@ -662,13 +663,13 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             __('Incident Chat', 'buoy'),
             __('Incident Chat', 'buoy'),
             'read',
-            self::$prefix . '_chat',
+            self::$prefix.'_chat',
             array(__CLASS__, 'renderIncidentChatPage')
         );
 
         foreach ($hooks as $hook) {
-            add_action('load-' . $hook, array(__CLASS__, 'enqueueFrontEndScripts'));
-            add_action('load-' . $hook, array(__CLASS__, 'enqueueFrameworkScripts'));
+            add_action('load-'.$hook, array(__CLASS__, 'enqueueFrontEndScripts'));
+            add_action('load-'.$hook, array(__CLASS__, 'enqueueFrameworkScripts'));
         }
     }
 
@@ -701,10 +702,10 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function renderReviewAlertPage () {
-        if (empty($_GET[self::$prefix . '_hash'])) {
+        if (empty($_GET[self::$prefix.'_hash'])) {
             return;
         }
-        $alert = new WP_Buoy_Alert($_GET[self::$prefix . '_hash']);
+        $alert = new WP_Buoy_Alert($_GET[self::$prefix.'_hash']);
         if (!current_user_can('read') || !$alert->can_respond(get_current_user_id())) {
             esc_html_e('You do not have sufficient permissions to access this page.', 'buoy');
             return;
@@ -727,13 +728,13 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      */
     public static function renderIncidentChatPage () {
         try {
-            $alert = new WP_Buoy_Alert(urldecode($_GET[self::$prefix . '_hash']));
+            $alert = new WP_Buoy_Alert(urldecode($_GET[self::$prefix.'_hash']));
         } catch (Exception $e) {
             esc_html_e('You do not have sufficient permissions to access this page.', 'buoy');
             return;
         }
 
-        if (!$alert->wp_post || !current_user_can('read') || !isset($_GET[self::$prefix . '_nonce']) || !wp_verify_nonce($_GET[self::$prefix . '_nonce'], self::$prefix . '_chat')) {
+        if (!$alert->wp_post || !current_user_can('read') || !isset($_GET[self::$prefix.'_nonce']) || !wp_verify_nonce($_GET[self::$prefix.'_nonce'], self::$prefix.'_chat')) {
             esc_html_e('You do not have sufficient permissions to access this page.', 'buoy');
             return;
         }
@@ -741,8 +742,8 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         if (get_current_user_id() != $alert->wp_post->post_author) {
             $alert->add_responder(get_current_user_id());
             // TODO: Clean this up a bit, maybe the JavaScript should send JSON data?
-            if (!empty($_POST[self::$prefix . '_location'])) {
-                $p = explode(',', $_POST[self::$prefix . '_location']);
+            if (!empty($_POST[self::$prefix.'_location'])) {
+                $p = explode(',', $_POST[self::$prefix.'_location']);
                 $geo = array(
                     'latitude' => $p[0],
                     'longitude' => $p[1]
@@ -752,6 +753,16 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         }
 
         require_once 'pages/incident-chat.php';
+    }
+
+    /**
+     * Shows the built-in post comments chat room.
+     *
+     * @return void
+     */
+    public static function renderPostCommentsChatRoom () {
+        require_once plugin_dir_path(__FILE__).'pages/post-comments-chat.php';
+        exit();
     }
 
     /**
@@ -779,9 +790,9 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function enqueueFrontEndScripts () {
-        $plugin_data = get_plugin_data(plugin_dir_path(__FILE__) . self::$prefix . '.php');
+        $plugin_data = get_plugin_data(plugin_dir_path(__FILE__).self::$prefix.'.php');
         wp_enqueue_style(
-            self::$prefix . '-alert-style',
+            self::$prefix.'-alert-style',
             plugins_url('css/alerts.css', __FILE__),
             false,
             $plugin_data['Version']
@@ -789,21 +800,21 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
           
         
         wp_register_script(
-            self::$prefix . '-script',
-            plugins_url(self::$prefix . '.js', __FILE__),
+            self::$prefix.'-script',
+            plugins_url(self::$prefix.'.js', __FILE__),
             array('jquery'),
             $plugin_data['Version']
         );
         wp_register_script(
-            self::$prefix . '-setup',
+            self::$prefix.'-setup',
             plugins_url('includes/buoy-setup.js', __FILE__),
             array('jquery'),
             $plugin_data['Version']
         );
-        wp_localize_script(self::$prefix . '-script', self::$prefix . '_vars', self::localizeScript());
-        wp_localize_script(self::$prefix . '-setup', self::$prefix . '_vars', self::localizeScript());
-        wp_enqueue_script(self::$prefix . '-script');
-        wp_enqueue_script(self::$prefix . '-setup');
+        wp_localize_script(self::$prefix.'-script', self::$prefix.'_vars', self::localizeScript());
+        wp_localize_script(self::$prefix.'-setup', self::$prefix.'_vars', self::localizeScript());
+        wp_enqueue_script(self::$prefix.'-script');
+        wp_enqueue_script(self::$prefix.'-setup');
     }
 
     /**
@@ -821,12 +832,12 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         $usropt = new WP_Buoy_User_Settings(get_current_user_id());
         if (!$usropt->get('installer_dismissed')) {
             wp_enqueue_script(
-                self::$prefix . '-install-webapp',
+                self::$prefix.'-install-webapp',
                 plugins_url('includes/install-webapp.js', __FILE__),
                 array('jquery')
             );
             wp_enqueue_style(
-                self::$prefix . '-install-webapp',
+                self::$prefix.'-install-webapp',
                 plugins_url('includes/install-webapp.css', __FILE__)
             );
         }
@@ -858,7 +869,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
 
         wp_enqueue_script(
             'google-maps-api',
-            'https://maps.googleapis.com/maps/api/js?language=' . get_locale(),
+            'https://maps.googleapis.com/maps/api/js?language='.get_locale(),
             array(),
             null,
             true
@@ -866,7 +877,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
 
         // Enqueue a custom pulse loader CSS animation.
         wp_enqueue_style(
-            self::$prefix . '-pulse-loader',
+            self::$prefix.'-pulse-loader',
             plugins_url('includes/pulse-loader.css', __FILE__)
         );
     }
@@ -918,14 +929,14 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             // TODO: Figure out if the Google Maps API can also be SRI-enabled
         );
         if ($integrity = array_search($handle, $integrities)) {
-            $sri_att = ' crossorigin="anonymous" integrity="' . $integrity . '"';
+            $sri_att = ' crossorigin="anonymous" integrity="'.$integrity.'"';
             $insertion_pos = strpos($html, '>');
             // account for self-closing tags
             if (0 === strpos($html, '<link ')) {
                 $insertion_pos--;
                 $sri_att .= ' ';
             }
-            return substr($html, 0, $insertion_pos) . $sri_att . substr($html, $insertion_pos);
+            return substr($html, 0, $insertion_pos).$sri_att.substr($html, $insertion_pos);
         }
         return $html;
     }
@@ -953,7 +964,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             'i18n_responding_to_alert' => __('Responding to alert', 'buoy'),
             'i18n_schedule_alert' => __('Schedule alert', 'buoy'),
             'i18n_scheduling_alert' => __('Scheduling alert', 'buoy'),
-            'incident_nonce' => wp_create_nonce(self::$prefix . '_incident_nonce')
+            'incident_nonce' => wp_create_nonce(self::$prefix.'_incident_nonce')
         );
     }
 
@@ -980,7 +991,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function handleNewAlert () {
-        check_ajax_referer(self::$prefix . '_new_alert', self::$prefix . '_nonce');
+        check_ajax_referer(self::$prefix.'_new_alert', self::$prefix.'_nonce');
 
         $postarr    = array();
         $meta_input = array();
@@ -991,8 +1002,8 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             $meta_input['geo_latitude'] = $alert_position['latitude'];
             $meta_input['geo_longitude'] = $alert_position['longitude'];
         }
-        if (isset($_POST[self::$prefix . '_teams']) && is_array($_POST[self::$prefix . '_teams'])) {
-            $my_teams = array_map('absint', $_POST[self::$prefix . '_teams']);
+        if (isset($_POST[self::$prefix.'_teams']) && is_array($_POST[self::$prefix.'_teams'])) {
+            $my_teams = array_map('absint', $_POST[self::$prefix.'_teams']);
             $valid_teams = array();
             foreach ($my_teams as $team_id) {
                 $team = new WP_Buoy_Team($team_id);
@@ -1000,7 +1011,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
                     $valid_teams[] = $team_id;
                 }
             }
-            $meta_input[self::$prefix . '_teams'] = $valid_teams;
+            $meta_input[self::$prefix.'_teams'] = $valid_teams;
         }
         // Create and publish the new alert.
         $buoy_user = new WP_Buoy_User(get_current_user_id());
@@ -1052,10 +1063,10 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             // Construct the redirect URL to the alerter's chat room
             $next_url = wp_nonce_url(
                 admin_url(
-                    '?page=' . self::$prefix . '_chat'
-                    . '&' . self::$prefix . '_hash=' . $buoy_alert->get_hash()
+                    '?page='.self::$prefix.'_chat'
+                   .'&'.self::$prefix.'_hash='.$buoy_alert->get_hash()
                 ),
-                self::$prefix . '_chat', self::$prefix . '_nonce'
+                self::$prefix.'_chat', self::$prefix.'_nonce'
             );
 
             if (isset($_SERVER['HTTP_ACCEPT'])) {
@@ -1081,9 +1092,9 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function handleMediaUpload () {
-        check_ajax_referer(self::$prefix . '_incident_nonce', self::$prefix . '_nonce');
+        check_ajax_referer(self::$prefix.'_incident_nonce', self::$prefix.'_nonce');
 
-        $alert = new self($_GET[self::$prefix . '_hash']);
+        $alert = new self($_GET[self::$prefix.'_hash']);
         $keys = array_keys($_FILES);
         $k  = array_shift($keys);
         $id = media_handle_upload($k, $alert->wp_post->ID);
@@ -1126,8 +1137,8 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function handleUnscheduleAlert () {
-        if (isset($_GET[self::$prefix . '_nonce']) && wp_verify_nonce($_GET[self::$prefix . '_nonce'], self::$prefix . '_unschedule_alert')) {
-            $alert = new WP_Buoy_Alert($_GET[self::$prefix . '_hash']);
+        if (isset($_GET[self::$prefix.'_nonce']) && wp_verify_nonce($_GET[self::$prefix.'_nonce'], self::$prefix.'_unschedule_alert')) {
+            $alert = new WP_Buoy_Alert($_GET[self::$prefix.'_hash']);
             if ($alert && get_current_user_id() == $alert->wp_post->post_author) {
                 wp_delete_post($alert->wp_post->ID, true);
                 if (isset($_SERVER['HTTP_ACCEPT']) && false === strpos($_SERVER['HTTP_ACCEPT'], 'application/json')) {
@@ -1157,7 +1168,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function handleLocationUpdate () {
-        check_ajax_referer(self::$prefix . '_incident_nonce', self::$prefix . '_nonce');
+        check_ajax_referer(self::$prefix.'_incident_nonce', self::$prefix.'_nonce');
 
         if (isset($_POST['incident_hash'])) {
             $alert = new WP_Buoy_Alert($_POST['incident_hash']);
@@ -1190,12 +1201,12 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      */
     public static function handleNewPostCommentChat ($open, $post_id) {
         $post = get_post($post_id);
-        if (self::$prefix . '_alert' !== $post->post_type
+        if (self::$prefix.'_alert' !== $post->post_type
             || 'post_comments' !== $post->buoy_chat_system
-            || !isset($_POST[self::$prefix . '_chat_comment_nonce'])
+            || !isset($_POST[self::$prefix.'_chat_comment_nonce'])
         ) { return $open; }
 
-        if (1 === wp_verify_nonce($_POST[self::$prefix . '_chat_comment_nonce'], self::$prefix . '_chat_comment')) {
+        if (1 === wp_verify_nonce($_POST[self::$prefix.'_chat_comment_nonce'], self::$prefix.'_chat_comment')) {
             add_filter('duplicate_comment_id', '__return_false'); // allow dupes
             add_filter('comment_flood_filter', '__return_false'); // allow floods
             add_filter('pre_comment_approved', '__return_true');  // always approve
@@ -1220,7 +1231,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function handleDismissInstaller () {
-        check_ajax_referer(self::$prefix . '_incident_nonce', self::$prefix . '_nonce');
+        check_ajax_referer(self::$prefix.'_incident_nonce', self::$prefix.'_nonce');
 
         $usropt = new WP_Buoy_User_Settings(get_current_user_id());
         $usropt->set('installer_dismissed', true)->save();
@@ -1234,8 +1245,8 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      */
     public static function getActiveAlerts () {
         return get_posts(array(
-            'post_type' => self::$prefix . '_alert',
-            'meta_key' => self::$prefix . '_hash',
+            'post_type' => self::$prefix.'_alert',
+            'meta_key' => self::$prefix.'_hash',
             'posts_per_page' => -1
         ));
     }
@@ -1249,7 +1260,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      */
     public static function getScheduledAlerts ($uid = false) {
         $args = array(
-            'post_type' => self::$prefix . '_alert',
+            'post_type' => self::$prefix.'_alert',
             'post_status' => 'future',
             'posts_per_page' => -1
         );
@@ -1279,7 +1290,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         );
 
         foreach ($posts as $type => $set) {
-            $html .= '<li class="' . esc_attr($type) . ' list-group">';
+            $html .= '<li class="'.esc_attr($type).' list-group">';
             $html .= '<div class="list-group-item">';
             $html .= '<h4 class="list-group-item-heading">';
             switch ($type) {
@@ -1293,13 +1304,13 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
                     $html .= esc_html('Audio attachments', 'buoy');
                     break;
             }
-            $html .= ' <span class="badge">' . count($set) . '</span>';
+            $html .= ' <span class="badge">'.count($set).'</span>';
             $html .= '</h4>';
             $html .= '<ul>';
 
             foreach ($set as $post) {
                 $html .= '<li id="incident-media-'. $post->ID .'" class="list-group-item">';
-                $html .= '<h5 class="list-group-item-header">' . esc_html($post->post_title) . '</h5>';
+                $html .= '<h5 class="list-group-item-header">'.esc_html($post->post_title).'</h5>';
                 $html .= self::getIncidentMediaHtml($type, $post->ID);
                 $html .= '<p class="list-group-item-text">';
                 $html .= sprintf(
@@ -1307,7 +1318,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
                     human_time_diff(strtotime($post->post_date_gmt))
                 );
                 $u = get_userdata($post->post_author);
-                $html .= ' ' . sprintf(
+                $html .= ' '.sprintf(
                     esc_html_x('by %1$s', 'a byline, like "written by Bob"', 'buoy'),
                     $u->display_name
                 );
@@ -1340,7 +1351,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
                 ));;
                 break;
             case 'image':
-                $html .= '<a href="' . wp_get_attachment_url($post_id) . '" target="_blank">';
+                $html .= '<a href="'.wp_get_attachment_url($post_id).'" target="_blank">';
                 $html .= wp_get_attachment_image($post_id);
                 $html .= '</a>';
                 break;

@@ -9,11 +9,8 @@
  * @license https://www.gnu.org/licenses/gpl-3.0.en.html
  */
 
-/** Sets up the WordPress Environment. */
-require( dirname(__FILE__) . '/../../../../wp-load.php' );
-
 /** Loads the additional chat room class. */
-require plugin_dir_path(dirname(__FILE__)) . 'class-buoy-chat-room.php';
+require plugin_dir_path(dirname(__FILE__)).'class-buoy-chat-room.php';
 
 nocache_headers();
 

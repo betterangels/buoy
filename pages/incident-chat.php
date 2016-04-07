@@ -60,7 +60,7 @@ $auto_show_modal = ($curr_user->ID === $alerter->wp_user->ID) ? 'auto-show-modal
 <?php } else if ('post_comments' === $alert->get_chat_system()) { ?>
     <div id="comments-chat">
         <iframe
-            src="<?php print esc_attr(plugins_url('post-comments-chat.php', __FILE__));?>?hash=<?php print esc_attr($alert->get_hash());?>#page-footer"
+            src="<?php print admin_url('admin-ajax.php');?>?action=<?php print esc_attr(self::$prefix.'_post_comments_chat');?>&amp;hash=<?php print esc_attr($alert->get_hash());?>#page-footer"
             name="<?php print esc_attr(self::$prefix);?>_post_comments_chat"
             width="100%"
             allowfullscreen="allowfullscreen"
@@ -73,9 +73,9 @@ add_filter('comments_open', '__return_true');
 $submit_field  = '<div class="input-group">';
 $submit_field .= '<input type="text" id="comment" name="comment"';
 $submit_field .= ' class="form-control" aria-requred="true" required="required"';
-$submit_field .= ' placeholder="' . $curr_user->display_name . '&hellip;" />';
+$submit_field .= ' placeholder="'.$curr_user->display_name.'&hellip;" />';
 $submit_field .= '<span class="input-group-btn">%1$s</span> %2$s';
-$submit_field .= wp_nonce_field(self::$prefix . '_chat_comment', self::$prefix . '_chat_comment_nonce', true, false);
+$submit_field .= wp_nonce_field(self::$prefix.'_chat_comment', self::$prefix.'_chat_comment_nonce', true, false);
 $submit_field .= '</div><!-- .input-group -->';
 ob_start();
 comment_form(array(
@@ -94,7 +94,7 @@ comment_form(array(
 ), $alert->wp_post->ID);
 $comment_form = ob_get_contents();
 ob_end_clean();
-print links_add_target($comment_form, self::$prefix . '_post_comments_chat', array('form'));
+print links_add_target($comment_form, self::$prefix.'_post_comments_chat', array('form'));
 ?>
     </div>
 <?php } ?>

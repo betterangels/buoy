@@ -13,18 +13,18 @@
 <head>
 	<meta charset="<?php bloginfo( 'charset' ); ?>" />
 	<meta name="viewport" content="width=device-width" />
-    <title><?php print sprintf(esc_html__('Buoy chat: %s', 'buoy'), $buoy_chat_room->get_title());?></title>
+    <title><?php print sprintf(esc_html__('Buoy chat: %s', 'buoy'), $this->get_title());?></title>
 	<?php wp_head();?>
 </head>
 <body <?php body_class(); // TODO: Make the comments list a Microformats2 `h-feed` structure. ?>>
     <div id="page">
         <header id="masthead" class="site-header" role="banner">
-            <h1 class="site-title"><?php print esc_html($buoy_chat_room->get_title());?></h1>
+            <h1 class="site-title"><?php print esc_html($this->get_title());?></h1>
         </header>
 
         <section id="chat-room">
             <ul class="media-list">
-                <?php $buoy_chat_room->list_comments();?>
+                <?php $this->list_comments();?>
             </ul>
         </section>
 
