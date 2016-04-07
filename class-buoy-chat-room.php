@@ -279,9 +279,12 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
         remove_all_actions('wp_head');
         remove_all_actions('wp_footer');
 
+        // Then we re-add only the script we actually need for a very
+        // minimalist "chat room" template page.
         add_action('wp_head', array(__CLASS__, 'renderMetaRefresh'), 10, 2);
         add_action('wp_head', 'wp_print_styles');
         add_action('wp_head', 'wp_print_head_scripts');
+        add_action('wp_head', 'rest_register_scripts', -100); // -100 cuz that's how the REST API plugin does it
 
         WP_Buoy_Alert::enqueueBootstrapFramework();
         wp_enqueue_style(
@@ -293,7 +296,7 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
         wp_enqueue_script(
             self::$prefix.'-chat-room',
             plugins_url('/templates/comments-chat-room.js', __FILE__),
-            array('common'),
+            array('common', 'wp-api'),
             null
         );
 

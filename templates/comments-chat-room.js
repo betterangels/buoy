@@ -8,6 +8,10 @@
 
 /**
  * A module for the built-in chat room functionality.
+ *
+ * @todo Consider using the WP-API JavaScript client instead of using
+ *       custom methods defined ourselves. See its documentation:
+ *       http://v2.wp-api.org/extending/javascript-client/
  */
 var BUOY_CHAT_ROOM = (function () {
 
@@ -42,7 +46,8 @@ var BUOY_CHAT_ROOM = (function () {
      * Checks for any new comments.
      */
     var pollForNewComments = function () {
-        var url = api_base + '/comments&post=' + getPostId() + '&offset=' + getCommentCount();
+        var url = api_base + '/comments&post=' + getPostId() + '&offset=' + getCommentCount()
+            + '&_wpnonce=' + wpApiSettings.nonce;
         jQuery.get(url, function (response) {
             if (response.length) {
                 appendComments(response);

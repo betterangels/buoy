@@ -471,7 +471,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         add_action('publish_'.self::$prefix.'_alert', array('WP_Buoy_Notification', 'publishAlert'), 10, 2);
 
         add_filter('comments_open', array(__CLASS__, 'handleNewPostCommentChat'), 1, 2);    // run early
-        add_filter('comments_clauses', array(__CLASS__, 'filterChatRoomComments'), 900, 2); // run late
+        add_filter('comments_clauses', array(__CLASS__, 'filterCommentsClauses'), 900, 2); // run late
     }
 
     /**
@@ -485,16 +485,18 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      *
      * See also {@link https://github.com/meitar/better-angels/issues/157 issue #157}.
      *
+     * @link https://developer.wordpress.org/reference/hooks/comments_clauses/
+     *
      * @global wpdb $wpdb
      *
      * @param string[] $clauses
      * @param WP_Comment_Query $wp_comment_query
      *
-     * @link https://developer.wordpress.org/reference/hooks/comments_clauses/
+     * @uses get_current_user_id()
      *
      * @return string[]
      */
-    public static function filterChatRoomComments ($clauses, $wp_comment_query) {
+    public static function filterCommentsClauses ($clauses, $wp_comment_query) {
         global $wpdb;
         // When querying for "comments on posts" there will be a JOIN clause,
         // but when querying for comments only, there won't be. We only want
@@ -503,8 +505,42 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         // query. In cases where the comments are queried directly, we don't
         // need to make any change because such cases are, for instance, the
         // comments admin screen or the Buoy Alert chat room itself.
+        $w = $wpdb->prepare(" AND {$wpdb->posts}.post_type != %s", self::$prefix.'_alert');
         if ($clauses['join']) {
-            $clauses['where'] .= $wpdb->prepare(" AND {$wpdb->posts}.post_type != %s", self::$prefix.'_alert');
+            $clauses['where'] .= $w;
+        } else if (0 === get_current_user_id()) {
+            // If there isn't a JOIN clause then the comment query is
+            // only quering the comments table itself but the request
+            // might still be from an anonymous visitor. If it is, we
+            // still need to exlude any comments associated with each
+            // Buoy Alet, so we add the JOIN ourselves
+            $clauses['join'] = "JOIN {$wpdb->posts} ON {$wpdb->posts}.ID = {$wpdb->comments}.comment_post_ID";
+            // and make the same modification to the WHERE clause.
+            $clauses['where'] .= $w;
+        } else {
+            // Finally, if there is no JOIN clause but the request is
+            // coming from a logged-in user we need to check that the
+            // user has permission to view the given comments. That
+            // will be the case if the given user is a "responder" of
+            // the Buoy Alert to which the comments are attached.
+            $post_ids = $wp_comment_query->query_vars['post__in'];
+            if (!empty($post_ids)) {
+                foreach ($post_ids as $id) {
+                    $post = get_post($id);
+                    if (self::$prefix . '_alert' === $post->post_type) {
+                        $alert = new self($id);
+                        // If they're not a responder for the given post ID,
+                        // and are also not the alerter themselves (author),
+                        if (!$alert->is_responder(get_current_user_id()) && get_current_user_id() != $post->post_author) {
+                            // then we remove that post's ID from the SQL query.
+                            $clauses['where'] = preg_replace("/$id,?/", '', $clauses['where']);
+                        }
+                    }
+                }
+                // If we removed all post IDs, then we need to fix the SQL statement
+                // by adding an empty string inside the parenthesis.
+                $clauses['where'] = preg_replace('/AND comment_post_ID IN \(  \)/', "AND comment_post_ID IN ('')", $clauses['where']);
+            }
         }
         return $clauses;
     }
