@@ -452,7 +452,8 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             'has_archive' => false,
             'rewrite' => false,
             'can_export' => false,
-            'delete_with_user' => true
+            'delete_with_user' => true,
+            'show_in_rest' => true
         ));
 
         add_action('send_headers', array(__CLASS__, 'redirectShortUrl'));

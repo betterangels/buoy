@@ -22,7 +22,7 @@
             <h1 class="site-title"><?php print esc_html($this->get_title());?></h1>
         </header>
 
-        <section id="chat-room">
+        <section id="chat-room" data-post-id="<?php print esc_attr($this->getPostId());?>">
             <ul class="media-list">
                 <?php $this->list_comments();?>
             </ul>

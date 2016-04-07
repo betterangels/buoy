@@ -38,8 +38,17 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
     public function __construct ($lookup) {
         $this->alert = new WP_Buoy_Alert($lookup);
         $this->comments = get_comments(array(
-            'post_id' => $this->alert->wp_post->ID
+            'post_id' => $this->getPostId()
         ));
+    }
+
+    /**
+     * Gets the ID of the WordPress post.
+     *
+     * @return int
+     */
+    public function getPostId () {
+        return $this->alert->wp_post->ID;
     }
 
     /**
@@ -104,9 +113,8 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
      */
     public static function renderComment ($comment, $args, $depth) {
         $side = (get_current_user_id() == $comment->user_id) ? 'right': 'left';
-?>
-<li id="comment-<?php print esc_attr($comment->comment_ID)?>" <?php comment_class("media media-on-$side", $comment);?>>
-<?php
+        print '<li id="comment-'.esc_attr($comment->comment_ID).'" ';
+        print comment_class("media media-on-$side", $comment, $comment->comment_post_ID, false).'>';
         switch ($side) {
             case 'right': // Body first, then media.
                 WP_Buoy_Chat_Room::renderCommentBody($comment, $args, $depth);
@@ -117,9 +125,7 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
                 WP_Buoy_Chat_Room::renderCommentBody($comment, $args, $depth);
                 break;
         }
-?>
-</li>
-<?php
+        // omit closing `</li>`, WordPress adds it automatically
     }
 
     /**
@@ -188,7 +194,7 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
          */
         $url     = esc_attr(apply_filters(self::$prefix.'_chat_room_meta_refresh_url', $_SERVER['REQUEST_URI']));
 
-        $html = '<meta http-equiv="refresh" content="%1$s;url=%2$s" />';
+        $html = '<noscript><meta http-equiv="refresh" content="%1$s;url=%2$s" /></noscript>';
         $options = WP_Buoy_Settings::get_instance();
         if ($options->get('debug')) {
             return; // don't print anything
@@ -286,7 +292,7 @@ class WP_Buoy_Chat_Room extends WP_Buoy_Plugin {
         wp_enqueue_script(
             self::$prefix.'-chat-room',
             plugins_url('/templates/comments-chat-room.js', __FILE__),
-            array(),
+            array('jquery'),
             null
         );
 
