@@ -57,7 +57,28 @@ $auto_show_modal = ($curr_user->ID === $alerter->wp_user->ID) ? 'auto-show-modal
         </noscript>
     </div>
     <script async src="https://tlk.io/embed.js" type="text/javascript"></script>
-<?php } else if ('post_comments' === $alert->get_chat_system()) { ?>
+<?php } else if ('meet.jit.si' === $alert->get_chat_system()) { ?>
+    <noscript>
+        <div class="notice error">
+            <p><?php esc_html_e('To access the incident chat room, JavaScript must be enabled in your browser.', 'buoy');?></p>
+        </div>
+    </noscript>
+    <script src="https://meet.jit.si/external_api.js"></script>
+    <style scoped="scoped">
+        #jitsiConference0 { height: 100%; }
+    </style>
+    <script>
+        var JitsiMeetAPI = new JitsiMeetExternalAPI(
+            'meet.jit.si',
+            '<?php print str_replace('_', '', esc_js($alert->get_chat_room_name()));?>',
+            '100%',
+            '100%'
+        );
+        // Not sure why this isn't working.
+        // See the API docs: https://github.com/jitsi/jitsi-meet/blob/master/doc/api.md
+        JitsiMeetApi.executeCommand('displayName', ['<?php print esc_js($curr_user->display_name);?>']);
+    </script>
+<?php } else { ?>
     <div id="comments-chat">
         <iframe
             src="<?php print admin_url('admin-ajax.php');?>?action=<?php print esc_attr(self::$prefix.'_post_comments_chat');?>&amp;hash=<?php print esc_attr($alert->get_hash());?>#page-footer"
