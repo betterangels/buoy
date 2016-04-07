@@ -77,6 +77,7 @@ class Buoy_Team_Membership_List_Table extends WP_List_Table {
                 $items[] = array(
                     'ID' => $post->ID,
                     'team_name' => $post->post_title,
+                    'team_status' => $post->post_status,
                     'author' => $author->display_name,
                     'confirmed' => get_post_meta($post->ID, "_member_{$user_id}_is_confirmed", true)
                 );
@@ -126,7 +127,8 @@ class Buoy_Team_Membership_List_Table extends WP_List_Table {
         $actions = array(
             'toggle_confirm' => $toggle_html
         );
-        return sprintf('%1$s %2$s', $item['team_name'], $this->row_actions($actions));
+        $private_marker = ('private' === $item['team_status']) ? ' <strong>&mdash; '.esc_html__('Private', 'buoy').'</strong>' : '';
+        return sprintf('%1$s %2$s', "{$item['team_name']}$private_marker", $this->row_actions($actions));
     }
 
     public function no_items () {

@@ -29,6 +29,7 @@ class WP_Buoy_Notification extends WP_Buoy_Plugin {
      */
     public static function register () {
         add_action('publish_' . self::$prefix . '_team', array(__CLASS__, 'inviteUsers'), 10, 2);
+        add_action('private_' . self::$prefix . '_team', array(__CLASS__, 'inviteUsers'), 10, 2);
         add_action(self::$prefix . '_team_member_added', array(__CLASS__, 'addedToTeam'), 10, 3);
         add_action(self::$prefix . '_team_member_removed', array(__CLASS__, 'removedFromTeam'), 10, 2);
 

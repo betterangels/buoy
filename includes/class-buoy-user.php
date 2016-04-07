@@ -341,6 +341,9 @@ class WP_Buoy_User extends WP_Buoy_Plugin {
                     <td>
                         <label for="<?php print esc_attr(self::$prefix);?>_team-<?php print esc_attr($team_id);?>">
                             <?php print esc_html($team->wp_post->post_title);?>
+                            <?php if ('private' === $team->wp_post->post_status) { ?>
+                                — <?php esc_html_e('Private', 'buoy');?>
+                            <?php } ?>
                         </label>
                     </td>
                     <td>
