@@ -1,0 +1,344 @@
+/**
+ * Buoy Map.
+ *
+ * @license GPL-3.0
+ */
+
+/**
+ * Buoy Map module.
+ */
+var BUOY_MAP = (function () {
+
+    /**
+     * Leaflet Map object itself
+     *
+     * @type {Map}
+     */
+    var map;
+
+    /**
+     * Bounding box for all markers.
+     *
+     * @type {LatLngBounds}
+     */
+    var marker_bounds;
+
+    /**
+     * Markers (pins) attached to the map.
+     *
+     * @type {object}
+     */
+    var map_markers = {};
+
+    /**
+     * Whether the user has manually interacted with the map.
+     *
+     * @type {boolean}
+     */
+    var map_touched = false;
+
+    /**
+     * Custom Leaflet map icon.
+     *
+     * @see {@link http://leafletjs.com/examples/custom-icons.html}
+     */
+    var GravatarIcon = L.Icon.extend({
+        'options': {
+            'iconSize': [32, 32]
+        }
+    });
+
+    /**
+     * Get a Buoy "gravatar map icon."
+     *
+     * @param {object} options A {@link http://leafletjs.com/reference.html#icon-options Leaflet icon options object}
+     *
+     * @return {Leaflet.Icon}
+     */
+    var gravatarIcon = function (options) {
+        return new GravatarIcon(options);
+    };
+
+    /**
+     * Makes a URL for linking to directions.
+     *
+     * @todo Currently uses Google Maps, worth changing?
+     *
+     * @param {Array} latlng
+     *
+     * @return {string}
+     */
+    var getDirectionsUrl = function (latlng) {
+        return 'https://maps.google.com/?saddr=Current+Location&daddr=' + encodeURIComponent(latlng.join(','));
+    };
+
+    /**
+     * @param success
+     */
+    var getMyPosition = function (success) {
+        if (!navigator.geolocation){
+            if (console && console.error) {
+                console.error('Geolocation is not supported by your browser');
+            }
+            return;
+        }
+        navigator.geolocation.getCurrentPosition(success, logGeoError, {'timeout': 5000});
+    };
+
+    /**
+     * @param {Position} position
+     */
+    var updateMyLocation = function (position) {
+        var data = {
+            'action': 'buoy_update_location',
+            'pos': position.coords,
+            'incident_hash': jQuery('#buoy-map-container').data('incident-hash'),
+            'buoy_nonce': buoy_vars.incident_nonce
+        };
+        jQuery.post(ajaxurl, data,
+            function (response) {
+                if (response.success) {
+                    updateMapMarkers(response.data);
+                }
+            }
+        );
+    };
+
+    var updateMapMarkers = function (marker_info) {
+        for (var i = 0; i < marker_info.length; i++) {
+            var responder = marker_info[i];
+            if (!responder.geo) { continue; } // no geo for this responder
+            var new_pos = [
+                parseFloat(responder.geo.latitude),
+                parseFloat(responder.geo.longitude)
+            ];
+            if (map_markers[responder.id]) {
+                map_markers[responder.id].setLatLng(new_pos);
+            } else {
+                var marker = L.marker(new_pos, {
+                    'title': responder.display_name,
+                    'icon': responder.avatar_url
+                }).addTo(map);
+                map_markers[responder.id] = marker;
+                var iw_data = {
+                    'directions': getDirectionsUrl([responder.geo.latitude, rseponder.geo.longitude])
+                };
+                if (responder.call) { iw_data.call = 'tel:' + responder.call; }
+                var infowindow = L.popup().setContent(
+                    '<p>' + responder.display_name + '</p>'
+                    + infoWindowContent(iw_data)
+                );
+                marker.bindPopup(infowindow);
+            }
+            marker_bounds.extend(new_pos);
+            if (!map_touched) {
+                map.fitBounds(marker_bounds);
+            };
+        }
+    };
+
+    var logGeoError = function () {
+        if (console && console.error) {
+            console.error("Unable to retrieve location.");
+        }
+    };
+
+    /**
+     * Gets the HTML for an info window pop up on the map.
+     *
+     * @param data
+     *
+     * @return {string}
+     */
+    var infoWindowContent = function (data) {
+        var html = '<ul>';
+        for (var key in data) {
+            if (data[key]) {
+                html += '<li>' + jQuery('<span>').append(
+                            jQuery('<a>')
+                            .attr('href', data[key])
+                            .attr('target', '_blank')
+                            .html(buoy_vars['i18n_' + key])
+                        ).html() + '</li>';
+            }
+        }
+        html += '</ul>';
+        return html;
+    };
+
+    /**
+     * Creates a Leaflet Map centered on the given coordinates.
+     *
+     * @param {object} coords An object of geolocated data with properties named `lat` and `lng`.
+     * @param {boolean} mark_coords Whether or not to create a marker and infowindow for the coords location.
+     */
+    var initMap = function (coords, mark_coords) {
+        if ('undefined' === typeof L) { return; }
+
+        map = new L.Map(document.getElementById('buoy-map'))
+            .setView(coords, 10);
+        map.attributionControl.setPrefix('');
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            'maxZoom': 19
+        }).addTo(map);
+        marker_bounds = L.latLngBounds([0,0]);
+
+        if (mark_coords) {
+            var infowindow = L.popup().setContent(
+                '<p>' + buoy_vars.i18n_crisis_location + '</p>'
+                + infoWindowContent({
+                    'directions': getDirectionsUrl([coords.lat, coords.lng])
+                })
+            );
+            var marker = L.marker([coords.lat, coords.lng], {
+                'title': buoy_vars.i18n_crisis_location
+            }).addTo(map).bindPopup(infowindow);
+            marker_bounds.extend([coords.lat, coords.lng]);
+            map_markers.incident = marker;
+        }
+
+        if (jQuery('#buoy-map-container').data('responder-info')) {
+            debugger;
+            jQuery.each(jQuery('#buoy-map-container').data('responder-info'), function (i, v) {
+                if (v.geo) {
+                    var responder_geo = [
+                        parseFloat(v.geo.latitude),
+                        parseFloat(v.geo.longitude)
+                    ];
+                    var infowindow = L.popup().setContent(
+                        '<p>' + v.display_name + '</p>'
+                        + infoWindowContent({
+                            'directions': 'https://maps.google.com/?saddr=Current+Location&daddr=' + encodeURIComponent(v.geo.latitude) + ',' + encodeURIComponent(v.geo.longitude),
+                            'call': (v.call) ? 'tel:' + v.call : ''
+                        })
+                    );
+                    var marker = L.marker(responder_geo, {
+                        'title': v.display_name,
+                        'icon': gravatarIcon({
+                            'iconUrl': v.avatar_url
+                        })
+                    }).addTo(map).bindPopup(infowindow);
+                    map_markers[v.id] = marker;
+                    marker_bounds.extend(responder_geo);
+                }
+            });
+        }
+
+        map.fitBounds(marker_bounds);
+
+        map.on('click', touchMap);
+        map.on('drag', touchMap);
+    };
+
+    /**
+     * Records that the `map` has been manually interacted with.
+     */
+    var touchMap = function () {
+        map_touched = true;
+    };
+
+    var addMarkerForCurrentLocation = function () {
+        getMyPosition(function (position) {
+            var my_geo = [position.coords.latitude, position.coords.longitude];
+            var my_marker = L.marker(my_geo, {
+                'title': buoy_vars.i18n_my_location,
+                'icon': gravatarIcon({
+                    'iconUrl': jQuery('#buoy-map-container').data('my-avatar-url')
+                })
+            }).addTo(map);
+            marker_bounds.extend(my_geo);
+            map.fitBounds(marker_bounds);
+        });
+    };
+
+    /**
+     * Attaches user interface handlers.
+     */
+    var attachHandlers = function () {
+        jQuery('#toggle-incident-map-btn').on('click', toggleMap);
+        jQuery('#fit-map-to-markers-btn').on('click', fitToMarkers);
+        jQuery('#go-to-my-location').on('click', panToLocation);
+
+        // TODO: This should probably be moved to somewhere else...?
+        if (jQuery('.dashboard_page_buoy_review_alert #buoy-map').length) {
+            addMarkerForCurrentLocation();
+        }
+
+        // Start tracking current location.
+        // TODO: This should probably also be moved to somewhere else...?
+        var emergency_location = {
+            'lat': parseFloat(jQuery('#buoy-map-container').data('incident-latitude')),
+            'lng': parseFloat(jQuery('#buoy-map-container').data('incident-longitude'))
+        };
+        if (isNaN(emergency_location.lat) || isNaN(emergency_location.lng)) {
+            jQuery('<div class="notice error is-dismissible"><p>' + buoy_vars.i18n_missing_crisis_location + '</p></div>')
+                .insertBefore('#buoy-map-container');
+            navigator.geolocation.getCurrentPosition(function (pos) {
+                initMap({'lat': pos.coords.latitude, 'lng': pos.coords.longitude}, false);
+            });
+        } else {
+            initMap(emergency_location, true);
+        }
+
+        if (jQuery('.dashboard_page_buoy_chat').length) {
+            // TODO: Clear the watcher when failing to get position?
+            //       Then what? Keep trying? Show a dialog asking the user to
+            //       turn on location services?
+            geowatcher_id = navigator.geolocation.watchPosition(updateMyLocation, logGeoError, {
+                'timeout': 5000
+            });
+        }
+    };
+
+    /**
+     * Toggles map visibility.
+     */
+    var toggleMap = function () {
+        var map_container = jQuery('#buoy-map-container');
+        if (map_container.is(':visible')) {
+            map_container.slideUp();
+            this.textContent = buoy_vars.i18n_show_map;
+        } else {
+            map_container.slideDown({
+                'complete': function () {
+                    map.invalidateSize(true);
+                    map.fitBounds(marker_bounds);
+                }
+            });
+            this.textContent = buoy_vars.i18n_hide_map;
+        }
+    };
+
+    /**
+     * Fits the map view to the markers on the map.
+     */
+    var fitToMarkers = function (e) {
+        e.preventDefault();
+        if (jQuery('#buoy-map-container').is(':hidden')) {
+            jQuery('#toggle-incident-map-btn').click();
+        }
+        map.fitBounds(marker_bounds);
+    };
+
+    /**
+     * Pans the map to a given location.
+     */
+    var panToLocation = function (e) {
+        e.preventDefault();
+        if (jQuery('#buoy-map-container').is(':hidden')) {
+            jQuery('#toggle-incident-map-btn').click();
+        }
+        // Pan map view.
+        map.setView(
+                map_markers[jQuery(this).data('user-id')].getLatLng(),
+                map.getZoom(),
+                {animation: true}
+                );
+        touchMap();
+    };
+
+    return {
+        'attachHandlers': attachHandlers
+    };
+
+})();
