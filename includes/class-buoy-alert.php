@@ -972,21 +972,27 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             false,
             $plugin_data['Version']
         );
-          
-        
+
+        // Enqueue main "buoy.js" file
         wp_register_script(
             self::$prefix.'-script',
-            plugins_url('../'.self::$prefix.'.js', __FILE__),
-            array('jquery', 'leaflet'),
+            plugins_url(self::$prefix.'.js', dirname(__FILE__)),
+            array('jquery'),
             $plugin_data['Version']
         );
         wp_localize_script(self::$prefix.'-script', self::$prefix.'_vars', self::localizeScript());
         wp_enqueue_script(self::$prefix.'-script');
 
         wp_enqueue_script(
-            self::$prefix.'-setup',
-            plugins_url('buoy-setup.js', __FILE__),
+            self::$prefix.'-alert',
+            plugins_url(self::$prefix.'-alert.js', __FILE__),
             array(self::$prefix.'-script'),
+            $plugin_data['Version']
+        );
+        wp_enqueue_script(
+            self::$prefix.'-map',
+            plugins_url(self::$prefix.'-map.js', __FILE__),
+            array(self::$prefix.'-script', 'leaflet'),
             $plugin_data['Version']
         );
     }

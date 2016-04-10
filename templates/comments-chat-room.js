@@ -35,12 +35,12 @@ var BUOY_CHAT_ROOM = (function () {
      *
      * @type {string}
      */
-    var ajaxurl = buoy_chat_room_vars.ajaxurl;
+    var ajaxurl = ajaxurl || buoy_chat_room_vars.ajaxurl;
 
     /**
      * Gets the post ID of the current chat room.
      *
-     * @return {Number}
+     * @return {number}
      */
     var getPostId = function () {
         return jQuery('#chat-room').data('post-id');
