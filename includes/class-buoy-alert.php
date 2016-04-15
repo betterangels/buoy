@@ -1140,7 +1140,6 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             'i18n_hide_map' => __('Hide Map', 'buoy'),
             'i18n_show_map' => __('Show Map', 'buoy'),
             'i18n_crisis_location' => __('Location of emergency alert signal', 'buoy'),
-            'i18n_missing_crisis_location' => __('Emergency alert signal could not be pinpointed on a map.', 'buoy'),
             'i18n_my_location' => __('My location', 'buoy'),
             'i18n_directions' => __('Directions to here', 'buoy'),
             'i18n_call' => __('Call', 'buoy'),

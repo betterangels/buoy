@@ -111,6 +111,13 @@ var BUOY_ALERT = (function () {
         navigator.geolocation.getCurrentPosition(postAlert, postAlert, {
             'timeout': 5000 // wait max of 5 seconds to get a location
         });
+        // In Firefox, if the user clicks "Not now" when asked to give
+        // geolocation permissions, the above timeout never gets called.
+        // See the debate at
+        // https://bugzilla.mozilla.org/show_bug.cgi?id=675533
+        // Until this debate is resolved, we need to manually detect this
+        // timeout ourselves.
+        setTimeout(postAlert, 6000);
     };
 
     /**
@@ -125,7 +132,7 @@ var BUOY_ALERT = (function () {
             'action': jQuery('#activate-alert-form input[name="action"]').val(),
             'buoy_nonce': jQuery('#buoy_nonce').val()
         };
-        if (position.coords) {
+        if (position && position.coords) {
             data.pos = position.coords;
         }
         if (jQuery('#crisis-message').val()) {

@@ -31,10 +31,21 @@ $auto_show_modal = ($curr_user->ID === $alerter->wp_user->ID) ? 'auto-show-modal
         </div>
     </div><!-- /.btn-toolbar -->
 </div><!-- /.well.well-sm -->
+<?php
+$incident_lat = get_post_meta($alert->wp_post->ID, 'geo_latitude', true);
+$incident_lon = get_post_meta($alert->wp_post->ID, 'geo_longitude', true);
+if (empty($incident_lat) || empty($incident_lon)) {
+?>
+<div class="notice error is-dismissible">
+    <p><?php esc_html_e('Emergency alert signal could not be pinpointed on a map.', 'buoy');?></p>
+</div>
+<?php
+}
+?>
 <div id="buoy-map-container"
     data-incident-hash="<?php print esc_attr($alert->get_hash());?>"
-    data-incident-latitude="<?php print esc_attr(get_post_meta($alert->wp_post->ID, 'geo_latitude', true));?>"
-    data-incident-longitude="<?php print esc_attr(get_post_meta($alert->wp_post->ID, 'geo_longitude', true));?>"
+    data-incident-latitude="<?php print esc_attr($incident_lat);?>"
+    data-incident-longitude="<?php print esc_attr($incident_lon);?>"
     data-responder-info='<?php print esc_attr(json_encode($alert->get_incident_state()));?>'
     data-my-avatar-url="<?php print esc_attr(get_avatar_url(get_current_user_id(), array('size' => 32)));?>"
     >
