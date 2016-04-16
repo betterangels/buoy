@@ -99,6 +99,10 @@
     }
 }
 
+#alert-chat-room-container {
+    background: url('../img/spinner-2x.gif') no-repeat center;
+}
+
 /**
  * Styles for the built-in comments-as-chat-room.
  *
@@ -115,6 +119,8 @@
 #comments-chat #respond {
     height: 34px;
 }
+
+#wpfooter { display: none; }
 
 /**
  * Styles for the Tlk.io chat integration.

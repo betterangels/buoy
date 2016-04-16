@@ -1161,8 +1161,6 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             'i18n_install_btn_content' => __('Install Buoy by tapping this button, then choosing "Add to home screen" from the menu.', 'buoy'),
             'i18n_dismiss' => __('Dismiss', 'buoy'),
             'i18n_map_title' => __('Incident Map', 'buoy'),
-            'i18n_hide_map' => __('Hide Map', 'buoy'),
-            'i18n_show_map' => __('Show Map', 'buoy'),
             'i18n_crisis_location' => __('Location of emergency alert signal', 'buoy'),
             'i18n_my_location' => __('My location', 'buoy'),
             'i18n_directions' => __('Directions to here', 'buoy'),

@@ -297,7 +297,6 @@ var BUOY_MAP = (function () {
         var map_container = jQuery('#buoy-map-container');
         if (map_container.is(':visible')) {
             map_container.slideUp();
-            this.textContent = buoy_vars.i18n_show_map;
         } else {
             map_container.slideDown({
                 'complete': function () {
@@ -305,7 +304,6 @@ var BUOY_MAP = (function () {
                     map.fitBounds(marker_bounds);
                 }
             });
-            this.textContent = buoy_vars.i18n_hide_map;
         }
     };
 

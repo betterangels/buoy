@@ -116,6 +116,33 @@ jQuery(document).ready(function () {
     });
 });
 
+// Prepare videochat button with Jitsi Meet API.
+// TODO: Make more use of the Jitsi Meet External API. For example,
+//       instead of hiding the video conference, use api.dispose().
+jQuery(document).ready(function () {
+    jQuery(document.body).append('<script src="https://meet.jit.si/external_api.js"></script>');
+    jQuery('#buoy-videochat-btn').on('click', function (e) {
+        jQuery(this).removeClass('btn-default');
+        if (jQuery('#jitsiConference0').is(':visible')) {
+            jQuery(this).removeClass('btn-danger');
+            jQuery(this).addClass('btn-success');
+            jQuery('#jitsiConference0').hide();
+            jQuery('#alert-chat-room-container').children().first().show();
+        } else {
+            jQuery(this).removeClass('btn-success');
+            jQuery(this).addClass('btn-danger');
+            jQuery('#alert-chat-room-container').children().first().hide();
+            if (jQuery('#jitsiConference0').length) {
+                jQuery('#jitsiConference0').show();
+            } else {
+                var t = document.querySelector('#buoy-jitsi-template');
+                buoy_vars.jitsi_fragment = document.importNode(t.content, true);
+                jQuery('#alert-chat-room-container').append(buoy_vars.jitsi_fragment);
+            }
+        }
+    });
+});
+
 // Show "safety information" on page load,
 // TODO: this should automatically be dismissed when another user
 // enters the chat room.
