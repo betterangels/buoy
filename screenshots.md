@@ -18,18 +18,18 @@ See Buoy in action helping to make your community more resilient in the face of 
     <div class="carousel-inner" role="listbox">
 
         <div class="item active">
-            <img alt="Screenshot showing map" src="https://ps.w.org/buoy/assets/screenshot-13.png?rev=1328749" />
+            <img alt="Screenshot showing map" src="https://ps.w.org/buoy/assets/screenshot-10.png?rev=1397119" />
             <div class="carousel-caption">
                 <h2>Find your friends</h2>
-                <p>Buoy&rsquo;s real-time map updates as you move. You can recognize your friends by their Gravatars. Clicking on their gravatar gives you one-click access to turn-by-turn directions, a phone call, or any other feature (if your friend enables it in their profile).</p>
+                <p>Buoy shows you where your friends are in real time, updating the map as you move. You can recognize your friends by their Gravatars. Clicking on their gravatar gives you access to turn-by-turn directions, a direct phone call, and any other relevant information your friends want you to know (such as any allergies or special skills they may have).</p>
             </div><!-- .carousel-caption -->
         </div><!-- .item -->
 
         <div class="item">
-            <img alt="Screenshot showing Buoy chat room" src="https://ps.w.org/buoy/assets/screenshot-9.png?rev=1328749" />
+            <img alt="Screenshot showing Buoy chat room" src="https://ps.w.org/buoy/assets/screenshot-9.png?rev=1397119" />
             <div class="carousel-caption">
                 <h2>Integrated chat</h2>
-                <p>Every time you send an alert, Buoy creates a secure, private chat room that all responders can use. This lets you communicate with anyone who answers your alert, but also lets responders coordinate with one another regarding how best to help you. Buoy comes with a built-in chat system (pictured), and can be configured to use other chat systems with the touch of a button. (We hope to add videoconferencing soon. If you can help, join <a href="https://github.com/betterangels/better-angels/issues/165">the conversation on our issue tracker</a>!)</p>
+                <p>Every time you send an alert, Buoy creates a secure, private chat room for responders to share. This lets you communicate with anyone who answers your alert, but also lets responders coordinate with one another regarding how best to help you. Buoy comes with a built-in chat system (pictured) that provides real-time text or video chat out of the box. It can be configured to use other chat systems with the flip of a switch.</p>
             </div><!-- .carousel-caption -->
         </div><!-- .item -->
 
