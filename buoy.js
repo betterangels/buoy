@@ -29,11 +29,11 @@ var BUOY = (function () {
             jQuery('body').append(jQuery('.modal').detach());
         }
 
-        if (jQuery('.dashboard_page_buoy_activate_alert').length && BUOY_ALERT) {
+        if (jQuery('.dashboard_page_buoy_activate_alert').length) {
             BUOY_ALERT.attachHandlers();
         }
 
-        if (jQuery('#buoy-map-container').length && BUOY_MAP) {
+        if (jQuery('#buoy-map-container').length) {
             BUOY_MAP.attachHandlers();
         }
 

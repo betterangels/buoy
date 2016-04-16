@@ -121,7 +121,7 @@ class Buoy_Team_Membership_List_Table extends WP_List_Table {
             . '&action=' . $toggle_action,
             'single-' . $this->_args['plural']
         );
-        $toggle_html = '<a href="' . $url . '">';
+        $toggle_html = '<a href="' . $url . '" onclick="return confirm(commonL10n.warnDelete);">';
         $toggle_html .= ($item['confirmed']) ? esc_html__('Leave Team', 'buoy') : esc_html__('Join Team', 'buoy');
         $toggle_html .= '</a>';
         $actions = array(
