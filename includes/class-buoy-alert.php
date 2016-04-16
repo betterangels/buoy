@@ -898,6 +898,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         // See http://nginx.org/en/docs/http/ngx_http_fastcgi_module.html#fastcgi_buffering
         header('X-Accel-Buffering: no');
 
+        $start_time = time();
         while (true) {
             $comments = get_comments(array(
                 'post_id' => $post_id,
@@ -921,23 +922,46 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
                     $comment->content = new stdClass();
                     $comment->content->rendered = $comment->comment_content;
                 }
-                $json = json_encode($comments);
-                echo "event: updated\n";
-                echo "data: $json\n";
-                echo "\n";
+                print self::eventStreamMessage(json_encode($comments), 'updated');
             } else {
-                // Heartbeat.
-                echo ':';
-                echo "\n\n";
+                print self::eventStreamMessage(); // Heartbeat.
             }
 
             ob_end_flush();
             flush();
 
+            // Prevent server exhaustion by killing this thread eventually.
+            if ((time() - $start_time) > (1 * MINUTE_IN_SECONDS)) {
+                print self::eventStreamMessage('', 'RESTART');
+                break;
+            }
             sleep(1);
         }
 
         exit(0);
+    }
+
+    /**
+     * Utility function to create an HTML5 SSE message.
+     *
+     * Call without arguments to send a heartbeat.
+     *
+     * @param string $data
+     * @param string $type
+     *
+     * @return string
+     */
+    public static function eventStreamMessage ($data = '', $type = '') {
+        $msg = '';
+        if ($type) {
+            $msg .= "event: $type\n";
+        }
+        if ($data) {
+            $msg .= "data: $data\n";
+        } else {
+            $msg .= ":\n"; // Heartbeat.
+        }
+        return "$msg\n";
     }
 
     /**
