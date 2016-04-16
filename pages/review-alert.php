@@ -8,13 +8,19 @@ $respond_url = wp_nonce_url(
     parent::$prefix . '_chat', parent::$prefix . '_nonce'
 );
 ?>
-<div id="map-container"
+<div id="buoy-map-container"
     data-incident-hash="<?php print esc_attr($alert->get_hash());?>"
     data-incident-latitude="<?php print esc_attr(get_post_meta($alert->wp_post->ID, 'geo_latitude', true));?>"
     data-incident-longitude="<?php print esc_attr(get_post_meta($alert->wp_post->ID, 'geo_longitude', true));?>"
     data-my-avatar-url="<?php print esc_attr(get_avatar_url(get_current_user_id(), array('size' => 32)));?>"
     >
-    <div id="map">
+    <div id="buoy-map">
+        <p style="padding-top: 3em; text-align:center;">
+            <img
+                src="<?php print esc_url(plugins_url('img/spinner-2x.gif', dirname(__FILE__)));?>"
+                alt="<?php esc_attr_e('Loading&hellip;.', 'buoy');?>"
+            />
+        </p>
         <noscript>
             <div class="notice error">
                 <p><?php esc_html_e('To view a map of the crisis area, JavaScript must be enabled in your browser.', 'buoy');?></p>
