@@ -3,7 +3,7 @@
         src="<?php print admin_url('admin-ajax.php');?>?action=<?php print esc_attr(self::$prefix.'_post_comments_chat');?>&amp;hash=<?php print esc_attr($alert->get_hash());?>#page-footer"
         name="<?php print esc_attr(self::$prefix);?>_post_comments_chat"
         width="100%"
-        allowfullscreen="allowfullscreen"
+        height="100%"
         seamless="seamless"
     >
         <?php esc_html_e('To access the incident chat room, inline frames must be supported by your browser.', 'buoy');?>

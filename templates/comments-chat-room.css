@@ -39,12 +39,11 @@
     border-radius: 50%;
 }
 
-#new-comments-notice {
+#chat-room .notice {
     display: none;
     z-index: 1;
     position: fixed;
     top: 0;
     left: 50%;
-    width: 300px;
     margin-left: -150px;
 }

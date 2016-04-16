@@ -56,7 +56,10 @@
     margin: 20px 0;
 }
 
-.dashboard_page_buoy_chat #alert-map { margin-bottom: 0; }
+.dashboard_page_buoy_chat #alert-map {
+    margin-bottom: 0;
+    border-top-width: 0;
+}
 .dashboard_page_buoy_chat #buoy-map-container,
 .dashboard_page_buoy_review_alert #buoy-map-container {
     height: 250px;
@@ -86,16 +89,22 @@
     top: 148px; /* when the toolbar buttons wrap */
     padding: 1em;
     max-width: 100vw;
+    z-index: 2000; /* position above Leaflet map controls */
 }
 @media screen and (min-width: 600px) {
     #incident-media-group .dropdown-menu {
         top: 56px;
     }
 }
-@media screen and (min-width: 360px) and (max-width: 600px) {
+@media screen and (min-width: 468px) and (max-width: 600px) {
     #incident-media-group .dropdown-menu {
         top: 102px;
     }
+}
+
+#alert-chat-room-container {
+    height: 100%;
+    background: url('../img/spinner-2x.gif') no-repeat center top;
 }
 
 /**
@@ -103,17 +112,18 @@
  *
  * @group post_comments
  */
-#comments-chat {
-    height: calc(100% - 40px);
-    display: flex;
-    flex-direction: column;
-}
-#comments-chat iframe {
-    flex-grow: 1;
-}
 #comments-chat #respond {
+    width: 100%;
     height: 34px;
 }
+@media screen and (max-width: 782px) {
+    #comments-chat #respond {
+        position: fixed;
+        bottom: 0;
+    }
+}
+
+#wpfooter { display: none; }
 
 /**
  * Styles for the Tlk.io chat integration.

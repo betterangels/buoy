@@ -90,13 +90,27 @@ var BUOY_CHAT_ROOM = (function () {
             appendComments(JSON.parse(e.data));
             showNewCommentsNotice();
         });
+        // Manually restart the connection when commanded to do so.
+        // This is necessary to support Firefox, which has a bug that
+        // prevents it from auto-reconnecting upon server disconnect.
+        es.addEventListener('RESTART', function (e) {
+            es.close()
+            connectSource(url);
+        });
+        // TODO: Fancier error handling?
+        es.onerror = function (e) {
+            jQuery('.notice.error').show();
+        };
+        es.onopen = function (e) {
+            jQuery('.notice.error').hide();
+        };
     };
 
     /**
      * Shows a notice that there are new comments.
      */
     var showNewCommentsNotice = function () {
-        jQuery('#new-comments-notice.notice').show();
+        jQuery('#new-comments-notice').show();
     };
 
     /**

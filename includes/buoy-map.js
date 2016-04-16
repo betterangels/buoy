@@ -117,11 +117,13 @@ var BUOY_MAP = (function () {
             } else {
                 var marker = L.marker(new_pos, {
                     'title': responder.display_name,
-                    'icon': responder.avatar_url
+                    'icon': gravatarIcon({
+                        'iconUrl': responder.avatar_url
+                    })
                 }).addTo(map);
                 map_markers[responder.id] = marker;
                 var iw_data = {
-                    'directions': getDirectionsUrl([responder.geo.latitude, rseponder.geo.longitude])
+                    'directions': getDirectionsUrl([responder.geo.latitude, responder.geo.longitude])
                 };
                 if (responder.call) { iw_data.call = 'tel:' + responder.call; }
                 var infowindow = L.popup().setContent(
@@ -198,7 +200,6 @@ var BUOY_MAP = (function () {
         }
 
         if (jQuery('#buoy-map-container').data('responder-info')) {
-            debugger;
             jQuery.each(jQuery('#buoy-map-container').data('responder-info'), function (i, v) {
                 if (v.geo) {
                     var responder_geo = [
@@ -225,6 +226,7 @@ var BUOY_MAP = (function () {
         }
 
         map.fitBounds(marker_bounds);
+        map.setView(coords, map.getZoom(), {'animation': true});
 
         map.on('click', touchMap);
         map.on('drag', touchMap);
@@ -257,7 +259,7 @@ var BUOY_MAP = (function () {
     var attachHandlers = function () {
         jQuery('#toggle-incident-map-btn').on('click', toggleMap);
         jQuery('#fit-map-to-markers-btn').on('click', fitToMarkers);
-        jQuery('#go-to-my-location').on('click', panToLocation);
+        jQuery('#go-to-my-location').on('click', panToUserLocation);
 
         // TODO: This should probably be moved to somewhere else...?
         if (jQuery('.dashboard_page_buoy_review_alert #buoy-map').length) {
@@ -271,8 +273,6 @@ var BUOY_MAP = (function () {
             'lng': parseFloat(jQuery('#buoy-map-container').data('incident-longitude'))
         };
         if (isNaN(emergency_location.lat) || isNaN(emergency_location.lng)) {
-            jQuery('<div class="notice error is-dismissible"><p>' + buoy_vars.i18n_missing_crisis_location + '</p></div>')
-                .insertBefore('#buoy-map-container');
             navigator.geolocation.getCurrentPosition(function (pos) {
                 initMap({'lat': pos.coords.latitude, 'lng': pos.coords.longitude}, false);
             });
@@ -297,7 +297,6 @@ var BUOY_MAP = (function () {
         var map_container = jQuery('#buoy-map-container');
         if (map_container.is(':visible')) {
             map_container.slideUp();
-            this.textContent = buoy_vars.i18n_show_map;
         } else {
             map_container.slideDown({
                 'complete': function () {
@@ -305,7 +304,6 @@ var BUOY_MAP = (function () {
                     map.fitBounds(marker_bounds);
                 }
             });
-            this.textContent = buoy_vars.i18n_hide_map;
         }
     };
 
@@ -323,17 +321,19 @@ var BUOY_MAP = (function () {
     /**
      * Pans the map to a given location.
      */
-    var panToLocation = function (e) {
+    var panToUserLocation = function (e) {
         e.preventDefault();
         if (jQuery('#buoy-map-container').is(':hidden')) {
             jQuery('#toggle-incident-map-btn').click();
         }
         // Pan map view.
         map.setView(
-                map_markers[jQuery(this).data('user-id')].getLatLng(),
-                map.getZoom(),
-                {animation: true}
-                );
+            map_markers[jQuery(this).data('user-id')].getLatLng(),
+            map.getZoom(),
+            {
+                'animation': true
+            }
+        );
         touchMap();
     };
 

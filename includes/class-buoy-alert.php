@@ -898,6 +898,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         // See http://nginx.org/en/docs/http/ngx_http_fastcgi_module.html#fastcgi_buffering
         header('X-Accel-Buffering: no');
 
+        $start_time = time();
         while (true) {
             $comments = get_comments(array(
                 'post_id' => $post_id,
@@ -921,23 +922,46 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
                     $comment->content = new stdClass();
                     $comment->content->rendered = $comment->comment_content;
                 }
-                $json = json_encode($comments);
-                echo "event: updated\n";
-                echo "data: $json\n";
-                echo "\n";
+                print self::eventStreamMessage(json_encode($comments), 'updated');
             } else {
-                // Heartbeat.
-                echo ':';
-                echo "\n\n";
+                print self::eventStreamMessage(); // Heartbeat.
             }
 
             ob_end_flush();
             flush();
 
+            // Prevent server exhaustion by killing this thread eventually.
+            if ((time() - $start_time) > (3 * MINUTE_IN_SECONDS)) {
+                print self::eventStreamMessage('', 'RESTART');
+                break;
+            }
             sleep(1);
         }
 
         exit(0);
+    }
+
+    /**
+     * Utility function to create an HTML5 SSE message.
+     *
+     * Call without arguments to send a heartbeat.
+     *
+     * @param string $data
+     * @param string $type
+     *
+     * @return string
+     */
+    public static function eventStreamMessage ($data = '', $type = '') {
+        $msg = '';
+        if ($type) {
+            $msg .= "event: $type\n";
+        }
+        if ($data) {
+            $msg .= "data: $data\n";
+        } else {
+            $msg .= ":\n"; // Heartbeat.
+        }
+        return "$msg\n";
     }
 
     /**
@@ -1137,10 +1161,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             'i18n_install_btn_content' => __('Install Buoy by tapping this button, then choosing "Add to home screen" from the menu.', 'buoy'),
             'i18n_dismiss' => __('Dismiss', 'buoy'),
             'i18n_map_title' => __('Incident Map', 'buoy'),
-            'i18n_hide_map' => __('Hide Map', 'buoy'),
-            'i18n_show_map' => __('Show Map', 'buoy'),
             'i18n_crisis_location' => __('Location of emergency alert signal', 'buoy'),
-            'i18n_missing_crisis_location' => __('Emergency alert signal could not be pinpointed on a map.', 'buoy'),
             'i18n_my_location' => __('My location', 'buoy'),
             'i18n_directions' => __('Directions to here', 'buoy'),
             'i18n_call' => __('Call', 'buoy'),
