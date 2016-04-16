@@ -15,6 +15,10 @@
 	<meta name="viewport" content="width=device-width" />
     <title><?php print sprintf(esc_html__('Buoy chat: %s', 'buoy'), $this->get_title());?></title>
 	<?php wp_head();?>
+<style>
+html { background: #fff; }
+header h1 { margin-top: 0; }
+</style>
 </head>
 <body <?php body_class(); // TODO: Make the comments list a Microformats2 `h-feed` structure. ?>>
     <div id="page">

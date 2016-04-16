@@ -69,7 +69,7 @@ if (empty($incident_lat) || empty($incident_lon)) {
     </div>
 </div>
 
-<div id="alert-chat-room-container" style="height: 100%;">
+<div id="alert-chat-room-container">
     <?php do_action(self::$prefix.'_chat_room', $alert, $curr_user);?>
     <template id="buoy-jitsi-template">
         <style scoped="scoped"><?php // Note scoping only actually scopes styles in Firefox; they're global on every other browser. ?>
