@@ -22,6 +22,7 @@ $auto_show_modal = ($curr_user->ID === $alerter->wp_user->ID) ? 'auto-show-modal
             <button id="upload-media-btn" type="button" class="btn btn-default"><?php esc_html_e('Upload media', 'buoy');?></button>
             <input type="file" multiple="multiple" accept="audio/*,video/*,image/*" style="display:none;" />
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" type="button">
+                <span class="badge"><?php print esc_html(count(get_attached_media('', $alert->wp_post->ID)));?></span>
                 <span class="caret"></span>
                 <span class="sr-only"><?php esc_html_e('Toggle incident media', 'buoy');?></span>
             </button>
