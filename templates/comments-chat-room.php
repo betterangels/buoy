@@ -28,7 +28,7 @@
             </div>
             <div class="notice error is-dismissible">
                 <p><?php print sprintf(
-                    esc_html__('An error ocurred. %1$sClick here to reconnect%2$s.', 'buoy'),
+                    esc_html__('Reconnecting&hellip;. (%1$sClick here to reconnect manually%2$s).', 'buoy'),
                     '<a href="'.esc_url($_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'">', '</a>'
                 );?></p>
             </div>

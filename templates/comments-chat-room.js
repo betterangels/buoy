@@ -99,7 +99,10 @@ var BUOY_CHAT_ROOM = (function () {
         });
         // TODO: Fancier error handling?
         es.onerror = function (e) {
-            showErrorNotice();
+            jQuery('.notice.error').show();
+        };
+        es.onopen = function (e) {
+            jQuery('.notice.error').hide();
         };
     };
 
@@ -108,13 +111,6 @@ var BUOY_CHAT_ROOM = (function () {
      */
     var showNewCommentsNotice = function () {
         jQuery('#new-comments-notice').show();
-    };
-
-    /**
-     * Shows a generic error notice with the option to refresh.
-     */
-    var showErrorNotice = function () {
-        jQuery('.notice.error').show();
     };
 
     /**
