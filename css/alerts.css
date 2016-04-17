@@ -56,7 +56,7 @@
     margin: 20px 0;
 }
 
-.dashboard_page_buoy_chat #alert-map {
+.dashboard_page_buoy_chat #alert-tools {
     margin-bottom: 0;
     border-top-width: 0;
 }
@@ -82,23 +82,16 @@
     display: list-item; /* always show, even on narrow screens */
 }
 
-#incident-media-group.open {
-    position: static;
-}
 #incident-media-group .dropdown-menu {
-    top: 148px; /* when the toolbar buttons wrap */
     padding: 1em;
-    max-width: 100vw;
+    min-width: 600px;
     z-index: 2000; /* position above Leaflet map controls */
 }
-@media screen and (min-width: 600px) {
+@media screen and (max-width: 767px) {
     #incident-media-group .dropdown-menu {
-        top: 56px;
-    }
-}
-@media screen and (min-width: 468px) and (max-width: 600px) {
-    #incident-media-group .dropdown-menu {
-        top: 102px;
+        left: -92px;
+        width: 100vw;
+        min-width: initial;
     }
 }
 
