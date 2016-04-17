@@ -18,6 +18,7 @@
 <style>
 html { background: #fff; }
 header h1 { margin-top: 0; }
+#page { padding-bottom: 22px; }
 </style>
 </head>
 <body <?php body_class(); // TODO: Make the comments list a Microformats2 `h-feed` structure. ?>>
