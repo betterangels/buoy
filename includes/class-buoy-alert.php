@@ -996,6 +996,12 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             false,
             $plugin_data['Version']
         );
+        wp_enqueue_style(
+            self::$prefix.'-css-hacks',
+            plugins_url('../css/hacks.css', __FILE__),
+            false,
+            $plugin_data['Version']
+        );
 
         // Enqueue main "buoy.js" file
         wp_register_script(
