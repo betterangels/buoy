@@ -32,7 +32,9 @@
                 <h4 class="modal-title" id="emergency-message-modal-label"><?php esc_html_e('Message to my team', 'buoy');?></h4>
             </div>
             <div class="modal-body">
-                <textarea id="crisis-message"></textarea>
+                <div class="form-group">
+                    <textarea id="crisis-message" class="form-control"></textarea>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" data-dismiss="modal"><?php esc_html_e('Send', 'buoy');?></button>
