@@ -22,6 +22,7 @@ This is a great time to contribute code to Buoy, no matter what level of program
 Right now, we're working on a new Buoy version&mdash;v0.2.0&mdash;which moves Buoy fully into the realm of free/libre software, replacing Google Maps with OpenStreetMap for real-time location tracking, and dramatically improving performance of the built-in incident chat by integrating Jitsi Meet. We would love to hear how you like it!
 
 To get started, check out:
+
 * the [Buoy Wiki](https://github.com/betterangels/buoy/wiki) on GitHub
 * the [Buoy README](https://github.com/betterangels/buoy)
 * some [good first issues](https://github.com/betterangels/buoy/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) in our Github issue tracker
