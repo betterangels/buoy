@@ -1,0 +1,8 @@
+{% assign pages = site.pages | sort: "weight", "last" %}
+{% for p in pages %}
+<li>
+    <a href="{{ p.url | prepend: site.baseurl }}">
+        {{ p.title }}
+    </a>
+</li>
+{% endfor %}

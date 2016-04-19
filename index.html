@@ -1,38 +1,78 @@
 ---
-layout: page
+title: Home
+weight: 0
 ---
 
-<div class="home">
+<h1 id="need-help-call-a-friend-not-the-cops">Need help? Call a friend, not the cops.</h1>
 
-  {% assign pages = site.pages | where: "front-page", true | sort: "front-page-weight" %}
-  {% for page in pages %}
-  <article id="{{ page.name | split: ".md" | first }}-container">
-    {{ page.content | markdownify }}
-  </article>
-  {% endfor %}
+<p>Buoy is a decentralized 9-1-1 alternative built for people who are not well served by existing emergency response services.</p>
 
-  {% capture postnum %}{{ site.posts | size | minus: 1}}{% endcapture %}
-  {% unless postnum contains '-' %}
-  <section id="recent-posts">
-      <h1 class="page-heading">Recent posts</h1>
+<blockquote>
+    <p>If you feel protected by the police, then you are not the one being policed.<br>
+    <cite>—<a href="https://maymay.net/">maymay</a>, Buoy developer</cite></p>
+</blockquote>
 
-      <ul class="post-list">
-        {% for post in site.posts %}
-          <li>
-            <span class="post-meta">{{ post.date | date: "%b %-d, %Y" }}</span>
+<p>Read more about <a href="https://github.com/betterangels/better-angels/wiki/Buoy-as-an-alternative-to-police-and-EMS">Buoy as an alternative to police</a>.</p>
 
-            <h2>
-              <a class="post-link" href="{{ post.url | prepend: site.baseurl }}">{{ post.title }}</a>
-            </h2>
-          </li>
-          {% if forloop.index == 3 %}
-            {% break %}
-          {% endif %}
-        {% endfor %}
-      </ul>
+{% include video-buoy-ux-prototype-jan-2016.html %}
 
-      <p class="rss-subscribe">subscribe <a href="{{ "/feed.xml" | prepend: site.baseurl }}">via RSS</a></p>
-  </section><!-- #recent-posts -->
-  {% endunless %}
+<h1 id="screenshots">Screenshots</h1>
 
-</div>
+<p>See Buoy in action helping to make your community more resilient in the face of any emergency.</p>
+
+<div id="carousel-screenshots" class="carousel slide" data-ride="carousel" data-interval="20000">
+    <ol class="carousel-indicators">
+        <li data-target="#carousel-screenshots" data-slide-to="0" class="active"></li>
+        <li data-target="#carousel-screenshots" data-slide-to="1"></li>
+        <li data-target="#carousel-screenshots" data-slide-to="2"></li>
+        <li data-target="#carousel-screenshots" data-slide-to="3"></li>
+    </ol>
+
+    <div class="carousel-inner" role="listbox">
+
+        <div class="item active">
+            <img alt="Screenshot showing map" src="https://ps.w.org/buoy/assets/screenshot-10.png?rev=1397119" />
+            <div class="carousel-caption">
+                <h2>Find your friends</h2>
+                <p>Buoy shows you where your friends are in real time, updating the map as you move. You can recognize your friends by their Gravatars. Clicking on their gravatar gives you access to turn-by-turn directions, a direct phone call, and any other relevant information your friends want you to know (such as any allergies or special skills they may have).</p>
+            </div><!-- .carousel-caption -->
+        </div><!-- .item -->
+
+        <div class="item">
+            <img alt="Screenshot showing Buoy chat room" src="https://ps.w.org/buoy/assets/screenshot-9.png?rev=1397119" />
+            <div class="carousel-caption">
+                <h2>Integrated chat</h2>
+                <p>Every time you send an alert, Buoy creates a secure, private chat room for responders to share. This lets you communicate with anyone who answers your alert, but also lets responders coordinate with one another regarding how best to help you. Buoy comes with a built-in chat system (pictured) that provides real-time text or video chat out of the box. It can be configured to use other chat systems with the flip of a switch.</p>
+            </div><!-- .carousel-caption -->
+        </div><!-- .item -->
+
+        <div class="item">
+            <img alt="Screenshot showing Buoy alert" src="https://ps.w.org/buoy/assets/screenshot-7.png?rev=1328749" />
+            <div class="carousel-caption">
+                <h2>Built for mobile</h2>
+                <p>Send an alert in one click. If you are in a really severe situation, <em>you can put your phone back in your pocket</em> and deal with the situation at hand. Responders will still be able to find you even if you never again touch Buoy. One tap is all it takes to get help from the people you trust most.</p>
+            </div><!-- .carousel-caption -->
+        </div><!-- .item -->
+
+        <div class="item">
+            <img alt="Screenshot showing team editing page" src="https://ps.w.org/buoy/assets/screenshot-2.png?rev=1328749"/>
+            <div class="carousel-caption">
+                <h2>Unlimited teams, free, <em>forever</em></h2>
+                <p>Create as many teams as you want, customized for specific purposes, or not! Only people you invite will be able to join your team. You are always in complete control of who receives alerts that you send.</p>
+            </div><!-- .carousel-caption -->
+        </div><!-- .item -->
+
+    </div><!-- .carousel-inner -->
+
+    <a class="left carousel-control" href="#carousel-screenshots" role="button" data-slide="prev">
+        <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+        <span class="sr-only">Previous</span>
+    </a>
+    <a class="right carousel-control" href="#carousel-screenshots" role="button" data-slide="next">
+        <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+        <span class="sr-only">Next</span>
+    </a>
+
+</div><!-- #carousel-screenshots -->
+
+<p>View <a href="https://wordpress.org/plugins/buoy/screenshots/">more screenshots</a>.</p>

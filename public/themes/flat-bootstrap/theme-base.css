@@ -1,0 +1,899 @@
+/**
+ * Theme:	Flat Bootstrap
+ * File:	theme-base.css
+ * 
+ * The stylesheet for basic WordPress styles
+ *
+ * Contains padding, margins, list styles, etc.
+ *
+ * @package flat-bootstrap
+ */
+ 
+/*--------------------------------------------------------------
+>>> TABLE OF CONTENTS:
+----------------------------------------------------------------
+# Typography
+# Accessibility
+# Alignments
+# Clearings
+# Content
+	## Header
+	## Sidebars
+	## Footer
+	## Posts and pages
+	## Asides (not used)
+	## Comments
+# Media
+	## Captions and Galleries
+	## Profile Pictures ("avatars")
+# Widgets & Plugins
+	## Widgets
+	## Plugins
+
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# Typography
+--------------------------------------------------------------*/
+
+/*
+ * Bootstrap handles basic typography and theme-specific typography should be set in the
+ * theme's style.css
+ */
+
+/* Set some basic body styles */
+body {
+    -webkit-font-smoothing: antialiased;
+    -webkit-overflow-scrolling: touch;
+}
+
+/*--------------------------------------------------------------
+# Accessibility
+--------------------------------------------------------------*/
+
+/* 
+ * Text meant only for screen readers. Required only for WordPress as Bootstrap uses
+ * .sr-only and we apply that in this theme.
+ */
+.screen-reader-text {
+	clip: rect(1px, 1px, 1px, 1px);
+	position: absolute !important;
+}
+p.screen-reader-text {
+	margin-bottom: 0;
+}
+.screen-reader-text:focus {
+	background-color: #f1f1f1;
+	-webkit-border-radius: 4px;
+	-moz-border-radius: 4px;
+	border-radius: 4px;
+	box-shadow: 0 0 2px 2px rgba(0, 0, 0, 0.6);
+	clip: auto;
+	color: #21759b;
+	display: block;
+	font-size: 14px;
+	font-weight: 700;
+	height: auto;
+	line-height: normal;
+	padding: 15px 23px 14px;
+	position: absolute;
+	left: 5px;
+	top: 5px;
+	text-decoration: none;
+	text-transform: none;
+	width: auto;
+	z-index: 100000; /* Above WP toolbar */
+}
+
+/*--------------------------------------------------------------
+# Alignments
+--------------------------------------------------------------*/
+
+/* 
+ * Note that bootstrap.css has alignment as well (such as text-center, pull-left, pull-
+ * right), but these are required by WordPress for all themes. Note we have included
+ * versions both with a dash as well to make them easier for users to remember. 
+ */
+.alignleft, 
+.align-left {
+	display: inline;
+	float: left;
+	margin-right: 10px; /*1.5em*/
+}
+.alignright, 
+.align-right {
+	display: inline;
+	float: right;
+	margin-left: 10px; /*1.5em*/
+}
+.aligncenter, 
+.align-center {
+	clear: both;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+}
+
+/*
+ * Note that these were moved here from theme-flat.css in Flat Bootstrap v1.9.
+ * 
+ * TO-DO: Consider deprecating this as Bootstrap already has text-center class
+ */
+.centered {
+    text-align: center;
+}
+
+.nocenter {
+	text-align: left;
+}
+
+/* For reference purposes, this is what core Bootstrap has for centering text
+.text-center {
+  text-align: center;
+}
+*/
+
+/* For reference purposes, this is what core Bootstrap has for centering blocks
+.center-block { // Bootstrap
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}*/
+
+/* For reference purposes, this is what WordPress core has
+.aligncenter { // WordPress _S
+	clear: both;
+	display: block;
+	margin-left: auto;
+	margin-right: auto;
+}
+*/
+
+/*--------------------------------------------------------------
+# Clearings
+--------------------------------------------------------------*/
+
+/*
+ * Note that bootstrap.css clears its floats. These are extra ones for WordPress.
+ */
+
+/* Clearing floats */
+.clear:before,
+.clear:after,
+.entry-content:before,
+.entry-content:after,
+.entry-meta:before,
+.entry-meta:after,
+.pager:before,
+.pager:after,
+.comment-content:before,
+.comment-content:after,
+.site-header:before,
+.site-header:after,
+.site-content:before,
+.site-content:after,
+.site-footer:before,
+.site-footer:after {
+	content: '';
+	display: table;
+}
+
+.clear:after,
+.entry-content:after,
+.entry-meta:before,
+.entry-meta:after,
+.pager:after,
+.comment-content:after,
+.site-header:after,
+.site-content:after,
+.site-footer:after {
+	clear: both;
+}
+
+/*--------------------------------------------------------------
+# Content
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+## Header
+--------------------------------------------------------------*/
+
+/* 
+ * Limit the entire page for really wide screens, such as an iMac.
+ *
+ * TO-DO: Consider having #page wrap absolutely everything, so we wouldn't need to limit
+ * page bottom, footer, etc.
+ */
+#page, 
+.navbar, 
+.after-footer {
+	max-width: 1600px;
+	margin: 0 auto;
+}
+
+/* Prevent the page layout from breaking even if the user's CSS is bad */
+#page {
+	overflow: hidden;
+}
+
+/* 
+ * Site Branding is a wrapper for both site title and description so they can be hidden
+ * together more easily.
+ */
+/*.site-branding {
+	padding-top: 3px;
+	padding-bottom: 14px;
+}*/
+
+.site-title {
+	margin-top: 25px;
+}
+
+.site-description {
+	font-size: 24px;
+	margin-top: 10px;
+	margin-bottom: 25px;
+}
+
+.site-title a, .site-title a:hover, .site-title a:active {
+	text-decoration: none;
+}
+
+header.site-header.page-header {
+	border-bottom: 0;
+}
+
+.custom-header-text-color a:hover,
+.custom-header-text-color a:focus {
+	opacity: 0.75;
+}
+
+.custom-header-image {
+	margin: 0 auto;
+	background-repeat: none;
+	background-position: center center;	
+	max-width: 100%;
+}
+ .custom-header-image h1 {
+	font-weight: 700;
+}
+.custom-header-image h2 {
+	font-size: 24px;
+}
+
+/* 
+ * This is our scroll down arrow for a custom header on the home page, but also match it
+ * to a carousel that might be at the top of a page instead.
+ */
+a.scroll-down, 
+a.scroll-down:hover span, 
+a.scroll-down:focus span, 
+.carousel-control:hover, 
+.carousel-control:focus {
+	color: #fff;
+	font-size: 20px;
+}
+
+/* 
+ * This is our content header that is below the header and before the content area. Top
+ * margin is set to 24px because Bootstrap already has 22px top margin on h1-h3 tags.
+ * It also adds 11px bottom margin. So this equates to 46px top and bottom spacing.
+ */
+.content-header {
+    padding-top: 24px;
+    padding-bottom: 35px;
+}
+header.content-header {
+	min-height: 170px;
+}
+.content-header i {
+    font-size: 35px;
+    text-align: center;
+}
+
+/* Set initial image background so light text is readable before image loads */
+.content-header-image {
+	background-color: #e7e7e7;
+}
+
+/*
+ * These are our cover (home page) and section (other page) large content-header images.
+ */
+.section-image, 
+.cover-image {
+  	display: table;
+	background-repeat: no-repeat;
+	text-align:center;
+	background-attachment: scroll;
+	background-position: top center;
+	background-color: #e7e7e7; /*gray*/
+	width: 100%;
+  	position: relative;
+  	vertical-align: top;
+	
+	-webkit-background-size: 100%;
+    -moz-background-size: 100%;
+    -o-background-size: 100%;
+    background-size: 100%;
+
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+.section-image-overlay, 
+.cover-image-overlay {
+  	display: table-cell;
+  	vertical-align: middle;
+	overflow: hidden;
+	padding: 50px;
+	padding: 5%;
+	z-index: 2;	
+}
+.cover-image, 
+.cover-image-overlay {
+  height: 100%; /* For at least Firefox */
+  min-height: 480px;
+}
+.section-image, 
+.section-image-overlay {
+	min-height: 340px;
+}
+.section-image h1, 
+.cover-image h1 {
+	font-size: 42px;
+	color: #fff;
+	line-height: 1.1;
+}
+.section-image h2, 
+.cover-image h2 {
+	font-size: 30px;
+	color: #fff;
+	line-height: 1.1;
+}
+.section-image h3, 
+.section-image h4, 
+.section-image p, 
+.cover-image h2, 
+.cover-image h3, 
+.cover-image h4, 
+.cover-image p {
+	color: #fff;
+}
+
+.cover-image .spacer {
+    margin-top: 100px
+}
+
+.section-featured h1 {
+	font-size: 42px;
+	line-height: 1.1;
+}
+.section-featured h2 {
+	font-size: 30px;
+	line-height: 1.1;
+}
+.section-featured {
+	padding-top: 60px;
+	border-bottom: #bdc3c7 solid 5px;
+}
+
+/* For larger screens, increase font size and spacing */
+@media (min-width: 768px) {
+
+	.cover-image h1,
+	.section-image h1,
+	.wp-caption-text-fullwidth h1 {
+		font-size: 70px;
+		letter-spacing: 3px;
+	}
+	.cover-image h2,
+	.section-image h2,
+	.wp-caption-text-fullwidth h2 {
+		font-size: 42px;
+		letter-spacing: 2px;
+	}
+	.cover-image .spacer {
+		margin-top: 200px;
+	}
+	.cover-image, .cover-image-overlay {
+		min-height: 700px;
+	}
+	.section-image, .section-image-overlay {
+		min-height: 400px;
+	}
+}
+
+/*--------------------------------------------------------------
+## Sidebars
+--------------------------------------------------------------*/
+
+/* For main sidebar, add some whitespace */
+#secondary {
+	padding-bottom: 35px;
+}
+#secondary aside.widget {
+	margin-bottom: 10px; /* Heading will add 25px */
+}
+
+/* Get rid of bullets on sidebars, footer, page top, page bottom, and home page */
+#secondary ul, 
+#sidebar-pagetop ul,
+#sidebar-pagebottom ul,
+#sidebar-home ul,
+footer#colophon.site-footer ul {
+	list-style: none;
+	padding-left: 0;
+}
+#secondary ul ul, 
+#sidebar-pagetop ul ul,
+#sidebar-pagebottom ul ul,
+#sidebar-home ul ul,
+footer#colophon.site-footer ul ul {
+	list-style: none;
+	padding-left: 25px;
+}
+
+#secondary ul li, 
+footer#colophon.site-footer ul li {
+	margin-top: 10px;
+}
+
+/* Make custom menus in page top, page bottom, and home page inline (horizontal). */
+/*
+#sidebar-pagetop ul > li,
+#sidebar-pagebottom ul > li,
+#sidebar-home ul > li { 
+    display: inline-block;
+    padding-left: 5px;
+    padding-right: 5px
+}
+.#sidebar-pagetop ul > li:first-child, 
+.#sidebar-pagebottom ul > li:first-child,
+.#sidebar-home ul > li:first-child {
+    padding-left: 0
+}
+
+#sidebar-pagetop .widget_nav_menu,
+#sidebar-pagebottom .widget_nav_menu, 
+#sidebar-home .widget_nav_menu { 
+	margin-top: 11px;
+}
+*/
+
+/*--------------------------------------------------------------
+## Footer
+--------------------------------------------------------------*/
+
+/* Format the footer widget area */
+.sidebar-footer {
+	padding-top: 35px;
+}
+.sidebar-footer h1, 
+.sidebar-footer h2, 
+.sidebar-footer h3, 
+.sidebar-footer h4, 
+.sidebar-footer h5, 
+.sidebar-footer h6 {
+	margin-top: 11px;
+	padding-bottom: 11px;
+}
+.sidebar-footer aside.widget {
+	margin-bottom: 35px;
+}
+
+/* Format the "after footer", which has the footer nav menu and site credits */
+.after-footer {
+	padding-top: 15px;
+	padding-bottom: 15px;
+}
+
+/* Let's put dividers between footer menu items */
+#footer-navigation ul.dividers > li:nth-child(n+2):before {
+  content: "";
+  display: inline-block;
+  height: 10px;
+  margin-right: 10px;
+  border-left: 1px solid #dddddd;
+}
+
+/* 
+ * Format the sample footer menu "top of page" icon. Since this stylesheet is WordPress
+ * rather than relying on font-awesome, make the caret icon look the same. For some
+ * reason the WordPress glyphicons are twice as large as the font-awesome ones.
+*/
+#footer-navigation .glyphicon-menu-up {
+	font-size: 50%;
+}
+
+/* Need to pad site credits to line up with the footer nav menu */
+#site-credits {
+	padding-top: 10px;
+}
+
+/* Center the text after the footer for smartphones */
+@media (max-width: 640px) {
+	.footer-nav-menu, .site-credits {
+		text-align: center;
+		float: none !important;
+	}
+	.site-credits {
+		padding-bottom: 15px;
+	}
+}
+
+/*--------------------------------------------------------------
+## Posts and pages
+--------------------------------------------------------------*/
+
+/* Content areas */
+
+.content-area {
+	padding-top: 35px;
+}
+.content-area-wide .comments-area {
+	padding-bottom: 35px;
+}
+
+.page .entry-content {
+	padding-top: 0;
+}
+
+.entry-summary {
+	margin-bottom: 25px;
+}
+
+article.post {
+	margin-bottom: 25px;
+}
+
+/* When full-width pages are changed back to have a sidebar, fix the layout */
+.content-area .entry-content .container {
+	max-width: 100%;
+	padding-left: 0;
+	padding-right: 0;
+}
+.content-area .entry-content .container .row {
+	margin-left: 0;
+	margin-right: 0;
+}
+
+/* Entry meta */
+footer.entry-meta, 
+div.entry-meta, 
+.edit-link {
+	font-size: 16px;
+}
+.edit-link a {
+	color: #7f8c8d;
+}
+.edit-link a:hover, 
+.edit-link a:focus {
+	color: #3bc492;
+}
+
+.cat-links, .tags-links {
+	margin-right: 10px;
+}
+
+.posted-on {
+	margin-right: 5px;
+}
+.by-line, .comments-link {
+	margin-left: 5px;
+	margin-right: 5px;
+}
+
+/* Style tables like TwentyEleven theme with lines between entries */
+.entry-content table,
+.comment-content table {
+	border-bottom: 1px solid #ddd;
+	margin: 0 0 1.625em;
+	width: 100%;
+}
+.entry-content th,
+.comment-content th {
+	font-weight: 500;
+	letter-spacing: 0.1em;
+	line-height: 2.6em;
+	text-transform: uppercase;
+}
+.entry-content td,
+.comment-content td {
+	border-top: 1px solid #ddd;
+	padding: 6px 10px 6px 0;
+}
+
+/* Mark "sticky" (featured) posts as "Featured" */
+.sticky .entry-title:after {
+	content: "Featured";
+	display: inine-block;
+	font-size: 20px;
+	margin-left: 15px;
+	padding: 10px;
+	vertical-align: middle;
+}
+
+/* When sidebar not collapsed, add more padding. Make sure this is below both the #sidebar
+ * and #posts and pages CSS sections as it applies to both
+ */
+@media (min-width: 992px) {
+
+	.content-area {
+		padding-bottom: 35px;
+	}
+	#secondary {
+		padding-top: 35px;
+	}
+}
+
+/*--------------------------------------------------------------
+## Asides
+--------------------------------------------------------------*/
+
+/* 
+ * This theme doesn't provide templates or styles for any post formats, but it's easy
+ * to add them to a child theme
+ */
+
+/*--------------------------------------------------------------
+## Comments
+--------------------------------------------------------------*/
+
+/* Get rid of bullets on comment <ul> and set some padding and indenting */
+.comment-list,
+.comment-list .children {
+	list-style-type: none;
+	padding: 0;
+}
+
+/* Set child comment indent to a percentage for better responsive handling */
+.comment-list .children {
+	/*margin-left: 25px;*/
+	margin-left: 5%;
+}
+
+/* Style the standard WordPress comment form. Note Jetpack comments styled later. */
+.comment-form [for="author"],
+.comment-form [for="email"],
+.comment-form [for="url"],
+.comment-form [for="comment"] {
+	float: left;
+	width: 80px;
+}
+.comment-form input[type="text"],
+.comment-form input[type="email"],
+.comment-form input[type="url"] {
+	max-width: 310px;
+	width: 70%;
+}
+
+.comment-form, 
+.comment-textarea, 
+textarea {
+	max-width: 100%;
+	border-color: #ccc;
+}
+
+/* Styles for default WordPress comments */
+textarea#comment {
+	max-width: 743px; /*largest width of content area w/sidebar*/
+	width: 100%;
+	max-height: 140px;
+}
+
+/* Hide the label "Comment" above the comment box as its pretty obvious already */
+.comment-form-comment label {
+	display: none;
+}
+p.comment-subscription-form {
+	margin-bottom: 10px;
+}
+
+.reply {
+	margin-bottom: 25px;
+}
+
+/* Get rid of the word "says" from comments */
+.says {
+	display: none;
+}
+
+/* Space out pingbacks ("trackbacks") */
+li.pingback {
+	margin-bottom: 15px;
+}
+
+/* Come on now, of course we need a margin before their name and comment */
+.avatar {
+	float: left;
+	margin-right: 10px;
+	margin-bottom: 10px;
+}
+
+/* 
+ * Not used here, but required for inclusion by WordPress. Set this in the theme's
+ * stylesheet if you want 
+ */
+.bypostauthor {
+}
+
+/* Set the comment box height via CSS for consistency across browsers */
+form.contact-form textarea {
+	height: 108px;
+}
+
+/*--------------------------------------------------------------
+# Media
+--------------------------------------------------------------*/
+
+/* Make sure these elements don't break the layout */
+img, embed, iframe, media, swf, pre, code, container, select, .videopress-placeholder {
+	/*display: block;*/
+	max-width: 100%;
+	overflow: hidden;
+	white-space: pre;           /* CSS 2.0 */
+	white-space: pre-wrap;      /* CSS 2.1 */
+	white-space: pre-line;      /* CSS 3.0 */
+	white-space: -pre-wrap;     /* Opera 4-6 */
+	white-space: -o-pre-wrap;   /* Opera 7 */
+	white-space: -moz-pre-wrap; /* Mozilla */
+	white-space: -hp-pre-wrap;  /* HP Printers */
+	word-wrap: break-word;      /* IE 5+ */
+}
+
+/* Set images and videopress videos to auto-height to preserve proper aspect ratio */
+img, 
+.videopress-placeholder {
+	height: auto;
+}
+
+/*--------------------------------------------------------------
+## Captions and Galleries
+--------------------------------------------------------------*/
+
+/* Normal WordPress captions and galleries */
+.wp-caption {
+	max-width: 100%;
+}
+.wp-caption-text,
+.gallery-caption {
+	text-shadow: none;
+	font-size: 16px;
+	font-weight: 500;
+	text-align: center;
+	/*margin-top: -22px;*/ /* Offset Bootstrap .thumbnail class */
+	margin-bottom: 22px;
+}
+
+/* Center the thumbnails since WordPress centers the caption text */
+.gallery-icon img {
+	margin: auto;
+}
+
+/* For standard WordPress slideshow, get rid of black background. We want to leave 
+ * whatever color background we have 
+ */
+.slideshow-window {
+	background-color: transparent !important; 
+	border: none !important;
+}
+
+/* Style Bootstrap carousel's ("sliders") */
+
+.carousel-inner img {
+	margin-left: auto;
+	margin-right: auto;
+}
+.carousel-caption {
+	max-width: 100%;
+	text-shadow: none;
+	padding-left: 10px;
+	padding-right: 10px;	
+}
+
+/* Push the carousel indicators down below the image or content */
+.carousel-indicators {
+	bottom: -35px;
+}
+
+/* 
+ * Get rid of gradient on Bootstrap carousel left and right buttons
+ */
+.carousel-control.left, .carousel-control.right {
+	background-image: none;
+	background-repeat: none;
+}
+
+/*--------------------------------------------------------------
+## Profile Pictures ("avatars")
+--------------------------------------------------------------*/
+
+/* Make user profile pics (avatars) circles */
+.avatar {
+	-webkit-border-radius: 50%;
+	-moz-border-radius: 50%;
+	border-radius: 50%;
+}
+img.avatar.thumbnail {
+	border: none;
+	padding: 0;
+}
+
+/*--------------------------------------------------------------
+# Widgets and Plugins
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+## Widgets
+--------------------------------------------------------------*/
+
+/* 
+ * Style the WordPress calendar widget because Bootstrap doesn't even add a 'table'
+ * class to tables. Ugh.
+ */
+#calendar_wrap {
+	font-size: 14px;
+	max-width: 300px;
+}
+.widget_calendar #wp-calendar {
+	color: #555;
+	width: 95%;
+	text-align: center;
+}
+.widget_calendar #wp-calendar caption,
+.widget_calendar #wp-calendar td,
+.widget_calendar #wp-calendar th {
+	text-align: center;
+}
+.widget_calendar #wp-calendar caption {
+	font-weight: 500;
+	padding: 5px 0 5px 0;
+	text-transform: uppercase;
+}
+.widget_calendar #wp-calendar th {
+	background: #f4f4f4;
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+	font-weight: bold;
+}
+.widget_calendar #wp-calendar tfoot td {
+	background: #f4f4f4;
+	border-top: 1px solid #ccc;
+	border-bottom: 1px solid #ccc;
+}
+
+/*--------------------------------------------------------------
+## Plugins
+--------------------------------------------------------------*/
+
+/* Hide JetPack's sharing module from pages with posts */
+.page-posts .sharedaddy {
+	display: none;
+}
+
+/* Get rid of the smiley face when using Jetpack stats */
+img.wp-smiley {
+     display: inline-block;
+}
+
+/* 
+ * Format Jetpack infinite scroll feature. These are globally hidden elements when
+ * infinite scroll is supported and in use. Older / Newer Posts Navigation is always
+ * hidden. Theme Footer and Page Bottom widget area are hidden while scrolling.
+ */
+.infinite-scroll .paging-navigation, 
+.infinite-scroll.neverending .site-footer,
+.infinite-scroll.neverending .sidebar-pagebottom { 
+	display: none;
+}
+
+/* 
+ * When Infinite Scroll has reached its end we need to re-display elements that
+ * were hidden before (via .neverending) 
+ */
+.infinity-end.neverending .site-footer,
+.infinity-end.neverending .sidebar-pagebottom {
+	display: block;
+}
