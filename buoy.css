@@ -7,3 +7,8 @@
 #wp-toolbar > ul > li#wp-admin-bar-buoy-alerts-menu {
     display: list-item; /* always show, even on narrow screens */
 }
+@media screen and (max-width: 728px) {
+    #wpadminbar #wp-admin-bar-buoy-alerts-menu {
+        position: static;
+    }
+}
