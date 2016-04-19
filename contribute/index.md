@@ -3,9 +3,9 @@ title: Contribute
 weight: 40
 ---
 
-# Contribute
-
 Buoy wouldn’t be where it is today without the people who support it by dedicating their time, skills, knowledge, by giving talks about it, and supporting the project with material resources.
+
+# Contribute
 
 There’s always a lot of work to do for everyone, for example for people who do programming, design, writing, testing, organizing, outreach and many more. We especially love collaborating with folks who want to try out and improve new skills by working on a real world project they care about. Do you have a few hours to contribute or an idea you want to run by us? Please jump in!
 
