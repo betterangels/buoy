@@ -6,6 +6,9 @@ description: > # this means to ignore newlines until "baseurl:"
 baseurl: "/buoy"
 url: "https://betterangels.github.io" # the base hostname & protocol for your site
 
+# Project-specific settings.
+github_repo: "betterangels/buoy"
+
 # Build settings
 markdown: kramdown
 
@@ -14,6 +17,6 @@ exclude: [vendor]
 defaults:
   -
     scope:
-      path: "_posts" 
+      path: "" 
     values:
-      layout: "post"
+      layout: "default"

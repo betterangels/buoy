@@ -3,17 +3,189 @@
 
   {% include head.html %}
 
-  <body>
+<body class="home singular page page-template-default featured-image">
+<div id="page" class="hfeed site">
 
-    {% include header.html %}
+    <header id="masthead" class="site-header" role="banner">
+        <nav class="offcanvas-menu" id="theMenu">
+            <!-- menu-open -->
+            <div class="menu-wrap">
+                <span class="fa fa-arrow-left menu-close"></span>
+                <h1 class="logo">
+                    <a class="custom-header-text-color" href="{{ "/" | prepend: site.baseurl }}" rel="home">{{ site.title }}</a>
+                </h1>
+                <div class="offcanvas-links">
+                    <ul>
+                        {% include nav-items.html %}
+                    </ul>
+                    <ul>
+                        {% include nav-items-external.html %}
+                    </ul>
+                </div>
+            </div>
+            <!-- Menu button -->
+            <div id="menuToggle" class="menu-close">
+                <!-- active -->
+                <span class="fa fa-bars"></span>
+            </div>
+        </nav>
+    </header><!-- #masthead -->
 
-    <section class="main-content">
+    <div id="content" class="site-content">
+        <header class="content-header-image">
+            <div class="cover-image" style="background-image: url('{{ site.baseurl }}/public/img/buoy-demo-header-1600x900.png')">
+                <div class="cover-image-overlay">
+                    <h1 class="header-image-title"><a href="{{ "/" | prepend: site.baseurl }}" style="color:inherit;">{{ site.title }}</a></h1>
+                    <h2 class="header-image-caption">{{ site.tagline }}</h2>
 
-        {{ content }}
+                    <div class="spacer"></div>
+                    <a href="#pagetop" class="scroll-down smoothscroll">
+                        <span class="glyphicon glyphicon-chevron-down"></span>
+                    </a>
+                </div><!-- .cover-image-overlay or .section-image-overlay -->
+            </div><!-- .cover-image or .section-image -->
+        </header><!-- content-header-image -->
 
-        {% include footer.html %}
+        <a id="pagetop"></a>
 
-    </section>
+        <div class="container">
 
-  </body>
+            <div id="main-grid" class="row">
+
+                <div id="primary" class="content-area col-md-8">
+                    <main id="main" class="site-main" role="main">
+                        <article id="" class="page type-page has-post-thumbnail hentry">
+                            <div id="xsbf-entry-content" class="entry-content">
+
+                                {{ content }}
+
+                                <div id="xsbf-after-content" class="after-content">
+                                </div><!-- .after-content -->
+                            </div><!-- .entry-content -->
+                        </article><!-- #post-## -->
+                    </main><!-- #main -->
+                </div><!-- #primary -->
+
+                <div id="secondary" class="widget-area col-md-4" role="complementary">
+                    <aside class="widget clearfix widget_text">
+                        <h2 class="widget-title">Community-based crisis response</h2>
+                        <div class="textwidget" style="text-align:center;">
+                            <p>Already host your own WordPress blog?</p>
+                            <p style="">
+                                <a href="https://wordpress.org/plugins/buoy/installation/" class="btn btn-lg btn-success">
+                                    Install Buoy now
+                                </a>
+                            </p>
+                            <p>Want help getting Buoy running?</p>
+                            <p>
+                                <a href="{{ "/contact/" | prepend: site.baseurl }}" class="btn btn-lg btn-info">
+                                    Request a personal demo
+                                </a>
+                            </p>
+                        </div>
+                    </aside>
+                    <aside class="widget clearfix widget_text">
+                        <h2 class="widget-title">Learn more about Buoy</h2>
+                        <div class="textwidget">
+                            <ul style="list-style-type: disc;list-style-position: inside;">
+                                {% include nav-items.html %}
+                                {% include nav-items-external.html %}
+                            </ul>
+                        </div>
+                    </aside>
+                </div><!-- #secondary -->
+
+            </div><!-- .row -->
+
+        </div><!-- .container -->
+
+    </div><!-- #content -->
+
+    <div id="sidebar-pagebottom" class="sidebar-pagebottom">
+        <aside id="" class="widget widget_text clearfix">
+            <div class="container">
+                <div class="textwidget"><!-- Empty to avoid default sidebar content. --></div>
+            </div><!-- container -->
+        </aside>
+    </div><!-- .sidebar-pagebottom -->
+
+    <footer id="colophon" class="site-footer" role="contentinfo">
+        <div class="sidebar-footer clearfix">
+            <div class="container">
+                <div class="row">
+                    <aside id="" class="widget col-md-4 clearfix widget_text">
+                        <h2 class="widget-title">Community-owned &amp; operated</h2>
+                        <div class="textwidget">
+                            Buoy can be entirely self-hosted. Run it on your own blog to create a community crisis response system in your neighborhood, with absolutely zero involvement from corporate or government institutions of any kind.
+                        </div>
+                    </aside>
+                    <aside id="" class="widget col-md-4 clearfix widget_text">
+                        <h2 class="widget-title">Get the social support you need with none of the risk</h2>
+                        <div class="textwidget">
+                            Noise disturbance? Need parenting support? Use  Buoy to call friends and neighbors to the scene, instead of relying on the cops. Read more about <a href="http://talkpoverty.org/2016/03/10/when-low-income-mothers-call-the-police/">what happens when low-income mothers call the cops</a>.
+                        </div>
+                    </aside>
+                    <aside id="" class="widget col-md-4 clearfix widget_text">
+                        <h2 class="widget-title">Group multi-media coordination</h2>
+                        <div class="textwidget">
+                            Buoy combines real-time mapping, chat, and recording tools to ensure responders can coordinate effectively even if you are unresponsive. Recordings are immediately shared with the group, so your video is safe with them even if your phone is lost or destroyed.
+                        </div>
+                    </aside>
+                    <aside id="" class="widget col-md-4 clearfix widget_text">
+                        <h2 class="widget-title">Personalized response teams</h2>
+                        <div class="textwidget">
+                            Make different teams for different purposes. Make a "Family" team to notify relatives of car trouble, or a "Fire" team to make a volunteer neighborhood fire brigade. There is no limit on how many teams you can have or how many people can be on a team, and you can send alerts to any combination of teams you need to.
+                        </div>
+                    </aside>
+                    <aside id="" class="widget col-md-4 clearfix widget_text">
+                        <h2 class="widget-title">By activists, for activists</h2>
+                        <div class="textwidget">
+                            Buoy is built by the Better Angels collective, a friendly group of anarchist techies committed to feminist, anti-racist, and anti-capitalist struggle. Buoy is a 100% free and open source volunteer-driven project. No strings attached. Learn more <a href="https://github.com/betterangels/better-angels/wiki#who-are-the-better-angels">about the Better Angels collective</a>.
+                        </div>
+                    </aside>
+                    <aside id="" class="widget col-md-4 clearfix widget_text">
+                        <h2 class="widget-title">Decentralized</h2>
+                        <div class="textwidget">
+                            Any WordPress-powered website can become a Buoy, and you can use more than one Buoy at once. This means no single entity can control or shut down the Buoy network, and no single administrator can ban your account(s).
+                        </div>
+                    </aside>
+                </div><!-- .row -->
+            </div><!-- .container -->
+        </div><!-- .sidebar-footer -->
+
+        <div class="after-footer">
+            <div class="container">
+                <div class="footer-nav-menu pull-left">
+                    <nav id="footer-navigation" class="secondary-navigation" role="navigation">
+                        <h1 class="menu-toggle sr-only">Footer Menu</h1>
+                        <div class="sample-menu-footer-container">
+                            <ul class="list-inline dividers">
+                                <li>
+                                    <a class="smoothscroll" title="Back to top of page" href="#page">
+                                        <span class="fa fa-angle-up"></span> Top
+                                    </a>
+                                </li>
+                                {% include nav-items.html %}
+                            </ul>
+                            <ul class="list-inline dividers">
+                                {% include nav-items-external.html %}
+                            </ul>
+                        </div>
+                    </nav>
+                </div><!-- .footer-nav-menu -->
+
+                <div id="site-credits" class="site-credits pull-right">
+                    <span class="credits-copyright">&copy; 2016 <a href="{{ "/" | prepend: site.baseurl }}" rel="home">{{ site.title }}</a>. </span>
+                    <span class="credits-theme">Theme by <a href="http://xtremelysocial.com/wordpress/link/" rel="profile" target="_blank">XtremelySocial and Blacktie</a>.</span>
+                </div><!-- .site-credits -->
+            </div><!-- .container -->
+        </div><!-- .after-footer -->
+    </footer><!-- #colophon -->
+
+    {% include ribbon-github-forkme-left-red.html %}
+</div><!-- #page -->
+<script type='text/javascript' src='{{ "/" | prepend: site.baseurl }}public/themes/link/js/main.js'></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+<script type='text/javascript' src='{{ "/" | prepend: site.baseurl }}public/themes/flat-bootstrap/js/theme.js'></script>
+</body>
 </html>

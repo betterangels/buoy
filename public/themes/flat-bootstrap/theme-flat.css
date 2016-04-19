@@ -1,0 +1,942 @@
+/**
+ * Theme:	Flat Bootstrap
+ * File:	theme-flat.css
+ * 
+ * The stylesheet for our flat ui
+ *
+ * Contains our custom fonts, color palette, sections with padding, etc.
+ *
+ * @package flat-bootstrap
+ */
+
+/*--------------------------------------------------------------
+>>> TABLE OF CONTENTS:
+----------------------------------------------------------------
+# Elements
+# Content
+	## Comments
+	## Colors
+	## Padding
+# Forms and Buttons
+# Media
+	## Captions and Galleries
+# Miscellaneous
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+# Elements
+--------------------------------------------------------------*/
+
+/* 
+ * For now, set some of our own generic icon sizes, since WordPress includes some icons
+ * already, such as glyphicons. This theme uses font-awesome which has way more icons and
+ * has its own size and padding options, such as fa-2x, fa-3x, etc.
+ * 
+ * NOTE that the WordPress visual editor strips blank icon (<i></i>) and span
+ * (<span></span>) tags. You MUST add a &nbsp; in between the tags to preserve them.
+ * 
+ * TO-DO: Find a filter to modify the WordPress function or TinyMCE editor function that 
+ * strips these and either prevent that or automatically add the &nbsp; in between. We
+ * can maybe even set &nbsp; in that case to be hidden although it doesn't seem to hurt
+ * anything anyway. 
+ * 
+ * TO-DO: Consider deprecating this with Bootstrap v4 because it doesn't have ANY font
+ * icons, so we will always load font-awesome in our themes and it has its own fa-2x, 
+ * fa-3x, etc. sizes
+ * 
+ */
+span.icon-lg,
+i.icon-lg {
+    font-size: 50px;
+	padding: 0 15px;
+}
+span.icon-xlg,
+i.icon-xlg {
+    font-size: 72px;
+	padding: 0 25px;
+}
+
+/*--------------------------------------------------------------
+# Content
+--------------------------------------------------------------*/
+
+/*--------------------------------------------------------------
+## Colors
+--------------------------------------------------------------*/
+
+/* 
+ * Our color palette based off of designmodo's "flat-ui", but with normal color names
+ * assigned instead and some additional ones added for lighter and darker colors.
+ */
+
+.bg-white {
+	background-color: #fff;
+}
+.color-white {
+	color: #fff;
+}
+
+.bg-offwhite {
+	background-color: #f2f2f2;
+}
+.color-offwhite {
+	color: #f2f2f2;
+}
+
+.bg-lightgray {
+	background-color: #ebebeb;
+}
+.color-lightgray {
+	color: #ebebeb;
+}
+
+.bg-gray {
+	background-color: #e7e7e7;
+}
+.color-gray {
+	color: #e7e7e7;
+}
+
+.bg-darkgray {
+	background-color: #e0e0e0;
+}
+.color-darkgray {
+	color: #e0e0e0;
+}
+
+.bg-lightgreen {
+    background-color: #1abc9c;
+	color: #fff;
+}
+.color-lightgreen {
+    color: #1abc9c;
+}
+.bg-lightgreen h1, 
+.bg-lightgreen h2, 
+.bg-lightgreen h3, 
+.bg-lightgreen h4,
+.bg-lightgreen h5, 
+.bg-lightgreen h6 {
+	color: #fff;
+}
+
+.bg-darkgreen {
+    background-color: #16a085;
+	color: #fff;
+}
+.color-darkgreen {
+    color: #16a085;
+}
+
+.bg-darkgreen h1, 
+.bg-darkgreen h2, 
+.bg-darkgreen h3, 
+.bg-darkgreen h4, 
+.bg-darkgreen h5, 
+.bg-darkgreen h6 {
+	color: #fff;
+}
+
+.bg-brightgreen {
+	background-color: #2ecc71;
+	color: white;
+}
+.color-brightgreen {
+    color: #2ecc71;
+}
+
+.bg-brightgreen h1, 
+.bg-brightgreen h2, 
+.bg-brightgreen h3, 
+.bg-brightgreen h4, 
+.bg-brightgreen h5, 
+.bg-brightgreen h6 {
+	color: #fff;
+}
+
+.bg-darkbrightgreen {
+	background-color: #27AE60;
+	color: white;
+}
+.color-darkbrightgreen {
+    color: #27AE60;
+}
+
+.bg-brightgreen h1, 
+.bg-brightgreen h2, 
+.bg-brightgreen h3, 
+.bg-brightgreen h4, 
+.bg-brightgreen h5, 
+.bg-brightgreen h6 {
+	color: #fff;
+}
+
+.bg-yellow {
+    background: #f1c40f;
+    color: #fff;
+}
+
+.bg-yellow h1, 
+.bg-yellow h2, 
+.bg-yellow h3, 
+.bg-yellow h4, 
+.bg-yellow h5, 
+.bg-yellow h6 {
+	color: #fff;
+}
+
+.bg-yellow p {
+    font-weight: 500
+}
+
+.bg-lightorange {
+    background-color: #F39C12;
+    color: #fff;
+}
+.color-lightorange {
+	color: #F39C12;
+}
+
+.bg-lightorange h1, 
+.bg-lightorange h2, 
+.bg-lightorange h3, 
+.bg-lightorange h4, 
+.bg-lightorange h5, 
+.bg-lightorange h6 {
+	color: #fff;
+}
+
+.bg-lightorange p {
+    font-weight: 500
+}
+
+.bg-orange {
+    background-color: #E67E22;
+    color: #fff;
+}
+.color-orange {
+	color: #E67E22;
+}
+
+.bg-orange h1, 
+.bg-orange h2, 
+.bg-orange h3, 
+.bg-orange h4, 
+.bg-orange h5, 
+.bg-orange h6 {
+	color: #fff;
+}
+
+.bg-darkorange {
+    background-color: #D35400;
+    color: #fff;
+}
+.color-darkorange {
+	color: #D35400;
+}
+
+.bg-darkorange h1, 
+.bg-darkorange h2, 
+.bg-darkorange h3, 
+.bg-darkorange h4, 
+.bg-darkorange h5, 
+.bg-darkorange h6 {
+	color: #fff;
+}
+
+.bg-blue {
+	background-color: #3498db;
+	color: #fff;
+}
+.color-blue {
+	color: #3498db;
+}
+
+.bg-blue h1, 
+.bg-blue h2, 
+.bg-blue h3, 
+.bg-blue h4, 
+.bg-blue h5, 
+.bg-blue h6 {
+	color: #fff;
+}
+
+.bg-darkblue {
+	background-color: #2980b9;
+	color: #fff;
+}
+.color-darkblue {
+	color: #2980b9;
+}
+
+.bg-darkblue h1, 
+.bg-darkblue h2, 
+.bg-darkblue h3, 
+.bg-darkblue h4, 
+.bg-darkblue h5, 
+.bg-darkblue h6 {
+	color: #fff;
+}
+
+
+.bg-purple {
+	background-color: #9B59B6;
+	color: #fff;
+}
+.color-purple {
+	color: #9B59B6;
+}
+
+.bg-purple h1, 
+.bg-purple h2, 
+.bg-purple h3, 
+.bg-purple h4, 
+.bg-purple h5, 
+.bg-purple h6 {
+	color: #fff;
+}
+
+.bg-darkpurple {
+	background-color: #8E44AD;
+	color: #fff;
+}
+.color-darkpurple {
+	color: #8E44AD;
+}
+
+.bg-darkpurple h1, 
+.bg-darkpurple h2, 
+.bg-darkpurple h3, 
+.bg-darkpurple h4, 
+.bg-darkpurple h5, 
+.bg-darkpurple h6 {
+	color: #fff;
+}
+
+.bg-midnightblue {
+	background-color: #34495e;
+	color: #fff;
+}
+.color-midnightblue {
+	color: #34495e;
+}
+
+.bg-midnightblue h1, 
+.bg-midnightblue h2, 
+.bg-midnightblue h3, 
+.bg-midnightblue h4, 
+.bg-midnightblue h5, 
+.bg-midnightblue h6 {
+	color: #fff;
+}
+
+.bg-darkmidnightblue {
+	background-color: #2C3E50;
+	color: #fff;
+}
+.color-darkmidnightblue {
+	color: #2C3E50;
+}
+
+.bg-darkmidnightblue h1, 
+.bg-darkmidnightblue h2, 
+.bg-darkmidnightblue h3, 
+.bg-darkmidnightblue h4, 
+.bg-darkmidnightblue h5, 
+.bg-darkmidnightblue h6 {
+	color: #fff;
+}
+
+.bg-red {
+	background-color: #ff7878;
+	color: #fff;
+}
+.color-red {
+	color: #ff7878;
+}
+
+.bg-red h1, 
+.bg-red h2, 
+.bg-red h3, 
+.bg-red h4, 
+.bg-red h5, 
+.bg-red h6 {
+	color: #fff;
+}
+
+.bg-brightred {
+	background-color: #E74C3C;
+	color: #fff;
+}
+.color-brightred {
+	color: #E74C3C;
+}
+
+.bg-brightred h1, 
+.bg-brightred h2, 
+.bg-brightred h3, 
+.bg-brightred h4, 
+.bg-brightred h5, 
+.bg-brightred h6 {
+	color: #fff;
+}
+
+.bg-darkred {
+	background-color: #C0392B;
+	color: #fff;
+}
+.color-darkred {
+	color: #C0392B;
+}
+
+.bg-darkred h1, 
+.bg-darkred h2, 
+.bg-darkred h3, 
+.bg-darkred h4, 
+.bg-darkred h5, 
+.bg-darkred h6 {
+	color: #fff;
+}
+
+.bg-almostblack {
+	background-color: #2f2f2f;
+	color: #fff;
+}
+.color-almostblack {
+	color: #2f2f2f;
+}
+
+.bg-almostblack h1, 
+.bg-almostblack h2, 
+.bg-almostblack h3, 
+.bg-almostblack h4, 
+.bg-almostblack h5, 
+.bg-almostblack h6 {
+	color: #fff;
+}
+
+.bg-notquiteblack {
+	background-color: #222;
+	color: #fff;
+}
+.color-notquiteblack {
+	color: #222;
+}
+
+.bg-notquiteblack h1, 
+.bg-notquiteblack h2, 
+.bg-notquiteblack h3, 
+.bg-notquiteblack h4, 
+.bg-notquiteblack h5, 
+.bg-notquiteblack h6 {
+	color: #fff;
+}
+
+.bg-black {
+	background-color: #000;
+	color: #fff;
+}
+.color-black {
+	color: #000;
+}
+
+.bg-black h1, 
+.bg-black h2, 
+.bg-black h3, 
+.bg-black h4, 
+.bg-black h5, 
+.bg-black h6 {
+	color: #fff;
+}
+
+/* Set the icons to white for all dark-colored sections */
+.bg-lightgreen i, 
+.bg-darkgreen i, 
+.bg-brightgreen i, 
+.bg-darkbrightgreen i, 
+.bg-blue i, 
+.bg-darkblue i, 
+.bg-purple i, 
+.bg-darkpurple i, 
+.bg-midnightblue i, 
+.bg-darkmidnightblue i, 
+.bg-yellow i,
+.bg-lightorange i,
+.bg-orange i,
+.bg-darkorange i,
+.bg-red i, 
+.bg-brightred i, 
+.bg-darkred i, 
+.bg-notquitetblack i, 
+.bg-almostblack i, 
+.bg-black i {
+	color: #fff;
+}
+
+.bg-lightgreen a i:hover, 
+.bg-darkgreen a i:hover, 
+.bg-brightgreen a i:hover, 
+.bg-darkbrightgreen a i:hover, 
+.bg-blue a i:hover, 
+.bg-darkblue a i:hover, 
+.bg-purple a i:hover, 
+.bg-darkpurple a i:hover, 
+.bg-midnightblue a i:hover, 
+.bg-darkmidnightblue a i:hover, 
+.bg-yellow a i:hover,
+.bg-lightorange a i:hover,
+.bg-orange a i:hover,
+.bg-darkorange a i:hover,
+.bg-red a i:hover, 
+.bg-brightred a i:hover, 
+.bg-darkred a i:hover, 
+.bg-notquitetblack a i:hover, 
+.bg-almostblack a i:hover, 
+.bg-black a i:hover {
+	color: #e7e7e7;
+}
+
+/* Set the link color to white and underlined for certain background colors */
+.bg-lightgreen a:not(.btn), 
+.bg-darkgreen a:not(.btn), 
+.bg-brightgreen a:not(.btn), 
+.bg-brightdarkgreen a:not(.btn), 
+.bg-yellow a:not(.btn), 
+.bg-lightorange a:not(.btn), 
+.bg-orange a:not(.btn), 
+.bg-darkorange a:not(.btn), 
+.bg-blue a:not(.btn), 
+.bg-darkblue a:not(.btn), 
+.bg-red a:not(.btn),
+.bg-brightred a:not(.btn),
+.bg-darkred a:not(.btn) {
+	color: #fff;
+	text-decoration: underline;
+}
+
+.bg-lightgreen a:hover:not(.btn), 
+.bg-darkgreen a:hover:not(.btn), 
+.bg-brightgreen a:hover:not(.btn), 
+.bg-darkbrightgreen a:hover:not(.btn), 
+.bg-yellow a:hover:not(.btn), 
+.bg-lightorange a:hover:not(.btn), 
+.bg-orange a:hover:not(.btn), 
+.bg-darkorange a:hover:not(.btn), 
+.bg-blue a:hover:not(.btn), 
+.bg-red a:hover:not(.btn),
+.bg-darkred a:not(.btn) {
+	color: #e7e7e7;
+}
+
+/*--------------------------------------------------------------
+## Padding
+--------------------------------------------------------------*/
+
+/* 
+ * Our sections with padding. These are mostly to add top and bottom padding since 
+ * Bootstrap adds left and right padding to containers and rows and even includes 
+ * "gutter" margins between columns.
+ */
+.section {
+	padding-top: 35px;
+	padding-bottom: 35px;
+}
+
+.section.nopadding {
+	padding-top: 0;
+	padding-bottom: 0;
+}
+.section.nopadding-top {
+	padding-top: 0;
+}
+.section.nopadding-bottom {
+	padding-bottom: 0;
+}
+.section.padding-top {
+	padding-top: 35px;
+}
+.section.padding-bottom {
+	padding-bottom: 35px;
+}
+.section.border-bottom {
+	border-bottom: #bdc3c7 solid 1px;
+}
+.section.border-bottom-thick {
+	border-bottom: #bdc3c7 solid 5px;
+}
+
+/* 
+ * For the first h1-h3 in a section, set top margin to bottom margin (11px) so the 
+ * section has equal padding. Note h4-h6 already have 11px instead of 22px.
+ * TO-DO: Do this for our main content area and sidebar as well.
+ */
+.section > .container > h1:first-child,
+.section > .container > .h1:first-child,
+.section > .container > h2:first-child,
+.section > .container > .h2:first-child,
+.section > .container > h3:first-child,
+.section > .container > .h3:first-child {
+	margin-top: 11px;
+}
+
+/* Bootstrap grids (rows) need this if not in a container. Its probably better to just 
+ * use container-fluid, but this is another more generic option.
+ * TO-DO: Consider getting rid of this if we change to container-fluid
+*/
+.section.fullwidth {
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+/* 
+ * General padding options
+ * TO-DO: Consider deprecating these and use Bootstrap 4's utility classes instead. We 
+ * can use those even with Bootstrap 3 since the latter doesn't have any so it won't 
+ * cause conflicts. Or perhaps just change them to match BS4's p-*-3 (33px).
+ */
+ .padding {
+ 	padding: 25px;
+ }
+.padding-top {
+	padding-top: 25px;  /* Bootstrap Hx and even p tags have top margins already */
+}
+.padding-bottom {
+	padding-bottom: 25px;
+}
+.padding-top-bottom {
+	padding-top: 25px;
+	padding-bottom: 25px;
+}
+.padding-right {
+	padding-right: 35px; /* Match grid gutters */
+}
+.padding-left {
+	padding-left: 35px; /* Match grid gutters */
+}
+.padding-left-right {
+	padding-left: 35px; /* Match grid gutters */
+	padding-right: 35px; /* Match grid gutters */
+}
+.nopadding-nomargin {
+    margin: 0;
+    padding: 0;
+}
+
+/* Bootstrap v4 margin and padding. Talk about future-proof, oh yeah! */
+.m-x-auto {
+  margin-right: auto !important;
+  margin-left: auto !important;
+}
+
+.m-a-0 {
+  margin: 0 0 !important;
+}
+
+.m-t-0 {
+  margin-top: 0 !important;
+}
+
+.m-r-0 {
+  margin-right: 0 !important;
+}
+
+.m-b-0 {
+  margin-bottom: 0 !important;
+}
+
+.m-l-0 {
+  margin-left: 0 !important;
+}
+
+.m-x-0 {
+  margin-right: 0 !important;
+  margin-left: 0 !important;
+}
+
+.m-y-0 {
+  margin-top: 0 !important;
+  margin-bottom: 0 !important;
+}
+
+.m-a-1 {
+  margin: 1rem 1rem !important;
+}
+
+.m-t-1 {
+  margin-top: 1rem !important;
+}
+
+.m-r-1 {
+  margin-right: 1rem !important;
+}
+
+.m-b-1 {
+  margin-bottom: 1rem !important;
+}
+
+.m-l-1 {
+  margin-left: 1rem !important;
+}
+
+.m-x-1 {
+  margin-right: 1rem !important;
+  margin-left: 1rem !important;
+}
+
+.m-y-1 {
+  margin-top: 1rem !important;
+  margin-bottom: 1rem !important;
+}
+
+.m-a-2 {
+  margin: 1.5rem 1.5rem !important;
+}
+
+.m-t-2 {
+  margin-top: 1.5rem !important;
+}
+
+.m-r-2 {
+  margin-right: 1.5rem !important;
+}
+
+.m-b-2 {
+  margin-bottom: 1.5rem !important;
+}
+
+.m-l-2 {
+  margin-left: 1.5rem !important;
+}
+
+.m-x-2 {
+  margin-right: 1.5rem !important;
+  margin-left: 1.5rem !important;
+}
+
+.m-y-2 {
+  margin-top: 1.5rem !important;
+  margin-bottom: 1.5rem !important;
+}
+
+.m-a-3 {
+  margin: 3rem 3rem !important;
+}
+
+.m-t-3 {
+  margin-top: 3rem !important;
+}
+
+.m-r-3 {
+  margin-right: 3rem !important;
+}
+
+.m-b-3 {
+  margin-bottom: 3rem !important;
+}
+
+.m-l-3 {
+  margin-left: 3rem !important;
+}
+
+.m-x-3 {
+  margin-right: 3rem !important;
+  margin-left: 3rem !important;
+}
+
+.m-y-3 {
+  margin-top: 3rem !important;
+  margin-bottom: 3rem !important;
+}
+
+.p-a-0 {
+  padding: 0 0 !important;
+}
+
+.p-t-0 {
+  padding-top: 0 !important;
+}
+
+.p-r-0 {
+  padding-right: 0 !important;
+}
+
+.p-b-0 {
+  padding-bottom: 0 !important;
+}
+
+.p-l-0 {
+  padding-left: 0 !important;
+}
+
+.p-x-0 {
+  padding-right: 0 !important;
+  padding-left: 0 !important;
+}
+
+.p-y-0 {
+  padding-top: 0 !important;
+  padding-bottom: 0 !important;
+}
+
+.p-a-1 {
+  padding: 1rem 1rem !important;
+}
+
+.p-t-1 {
+  padding-top: 1rem !important;
+}
+
+.p-r-1 {
+  padding-right: 1rem !important;
+}
+
+.p-b-1 {
+  padding-bottom: 1rem !important;
+}
+
+.p-l-1 {
+  padding-left: 1rem !important;
+}
+
+.p-x-1 {
+  padding-right: 1rem !important;
+  padding-left: 1rem !important;
+}
+
+.p-y-1 {
+  padding-top: 1rem !important;
+  padding-bottom: 1rem !important;
+}
+
+.p-a-2 {
+  padding: 1.5rem 1.5rem !important;
+}
+
+.p-t-2 {
+  padding-top: 1.5rem !important;
+}
+
+.p-r-2 {
+  padding-right: 1.5rem !important;
+}
+
+.p-b-2 {
+  padding-bottom: 1.5rem !important;
+}
+
+.p-l-2 {
+  padding-left: 1.5rem !important;
+}
+
+.p-x-2 {
+  padding-right: 1.5rem !important;
+  padding-left: 1.5rem !important;
+}
+
+.p-y-2 {
+  padding-top: 1.5rem !important;
+  padding-bottom: 1.5rem !important;
+}
+
+.p-a-3 {
+  padding: 3rem 3rem !important;
+}
+
+.p-t-3 {
+  padding-top: 3rem !important;
+}
+
+.p-r-3 {
+  padding-right: 3rem !important;
+}
+
+.p-b-3 {
+  padding-bottom: 3rem !important;
+}
+
+.p-l-3 {
+  padding-left: 3rem !important;
+}
+
+.p-x-3 {
+  padding-right: 3rem !important;
+  padding-left: 3rem !important;
+}
+
+.p-y-3 {
+  padding-top: 3rem !important;
+  padding-bottom: 3rem !important;
+}
+
+/*--------------------------------------------------------------
+# Forms and Buttons
+--------------------------------------------------------------*/
+
+/* 
+ * New button that is inverted (hollow) so works on any dark background 
+ * TO-DO: Bootstrap 4 has a new btn-outline which is similar but instead of white on
+ * hover, it uses the button color. Consider adding that sooner than Bootstrap 4.
+ */
+a.btn.btn-hollow,
+button.btn.btn-hollow {
+	color: #fff;
+  	border: 2px solid #fff;
+    background-color: transparent;
+}
+.btn-hollow:hover, 
+btn.btn-hollow:hover,
+button.btn.btn-hollow:hover {
+    color: #2f2f2f;
+    background-color: #fff
+}
+.bg-white button.btn.btn-hollow, 
+.bg-white .btn.btn-hollow, 
+.bg-offwhite button.btn.btn-hollow, 
+.bg-offwhite .btn.btn-hollow, 
+.bg-lightgray button.btn.btn-hollow, 
+.bg-lightgray .btn.btn-hollow, 
+.bg-gray button.btn.btn-hollow, 
+.bg-gray .btn.btn-hollow, 
+.bg-darkgray button.btn.btn-hollow, 
+.bg-darkgray .btn.btn-hollow {
+	color: #1abc9c;
+	border: 2px solid #1abc9c;
+    background-color: transparent;
+}
+button.btn.btn-hollow:hover, 
+.btn.btn-hollow:hover {
+    color: #2f2f2f;
+    background-color: #fff;
+}
+
+/* 
+ * New button that is partially transparent to let background color show through 
+ */
+.btn-transparent {
+    display: inline-block;
+    background-color: rgba(0, 0, 0, 0.35);
+    color: inherit;
+}
+
+.btn-transparent:hover, 
+.btn-transparent:focus {
+    color: #fff;
+    text-decoration: none;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* 
+ * Enhance Bootstrap to allow for columns with no gutter (margin) 
+ * TO-DO: Bootstrap 4 handles this stuff already, so consider removing at that time
+ */
+
+.row.no-gutters {
+  margin-right: 0;
+  margin-left: 0;
+}
+.row.no-gutters > [class^="col-"],
+.row.no-gutters > [class*=" col-"] {
+  padding-right: 0;
+  padding-left: 0;
+}
+
