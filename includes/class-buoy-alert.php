@@ -654,7 +654,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         if (!empty($alerts['my_alerts']) || !empty($alerts['my_responses']) || !empty($alerts['my_scheduled_alerts'])) {
             $wp_admin_bar->add_menu(array(
                 'id' => self::$prefix.'-alerts-menu',
-                'title' => __('Active alerts', 'buoy')
+                'title' => '<span class="ab-icon"></span><span class="ab-label">'.__('Active alerts', 'buoy').'</span></a>',
             ));
         }
 
