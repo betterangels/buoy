@@ -1,7 +1,7 @@
 {% assign pages = site.pages | sort: "weight", "last" %}
 {% for p in pages %}
 <li>
-    <a href="{{ p.url | prepend: site.baseurl }}">
+    <a href="{{ p.url | prepend: site.baseurl }}#main">
         {{ p.title }}
     </a>
 </li>
