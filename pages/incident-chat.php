@@ -4,12 +4,12 @@ $alerter = new WP_Buoy_User($alert->wp_post->post_author);
 $curr_user = wp_get_current_user();
 $auto_show_modal = ($curr_user->ID === $alerter->wp_user->ID) ? 'auto-show-modal' : '';
 ?>
-<div id="alert-map" class="well well-sm hide-if-no-js">
+<div id="alert-tools" class="well well-sm hide-if-no-js">
     <div role="toolbar" aria-label="<?php esc_html_e('Incident toolbar', 'buoy');?>" class="btn-toolbar">
         <div class="btn-group btn-group-lg" role="group">
             <button id="toggle-incident-map-btn" class="btn btn-default" type="button">
                 <span class="glyphicon glyphicon-map-marker"></span>
-                <?php esc_html_e('Map', 'buoy');?>
+                <span class="hidden-xs"><?php esc_html_e('Map', 'buoy');?></span>
             </button>
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" type="button">
                 <span class="caret"></span>
@@ -24,7 +24,7 @@ $auto_show_modal = ($curr_user->ID === $alerter->wp_user->ID) ? 'auto-show-modal
         <div id="incident-media-group" class="btn-group btn-group-lg" role="group">
             <button id="upload-media-btn" type="button" class="btn btn-default">
                 <span class="glyphicon glyphicon-record"></span>
-                <?php esc_html_e('Record', 'buoy');?>
+                <span><?php esc_html_e('Record', 'buoy');?></span>
             </button>
             <input type="file" multiple="multiple" accept="audio/*,video/*,image/*" style="display:none;" />
             <button class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" type="button">
@@ -38,7 +38,7 @@ $auto_show_modal = ($curr_user->ID === $alerter->wp_user->ID) ? 'auto-show-modal
         </div>
         <button id="buoy-videochat-btn" class="btn btn-lg btn-default">
             <span class="glyphicon glyphicon-facetime-video"></span>
-            <?php esc_html_e('Videochat', 'buoy');?>
+            <span class="hidden-xs"><?php esc_html_e('Videochat', 'buoy');?></span>
         </button>
     </div><!-- /.btn-toolbar -->
 </div><!-- /.well.well-sm -->

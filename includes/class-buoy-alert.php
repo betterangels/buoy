@@ -654,7 +654,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         if (!empty($alerts['my_alerts']) || !empty($alerts['my_responses']) || !empty($alerts['my_scheduled_alerts'])) {
             $wp_admin_bar->add_menu(array(
                 'id' => self::$prefix.'-alerts-menu',
-                'title' => __('Active alerts', 'buoy')
+                'title' => '<span class="ab-icon"></span><span class="ab-label">'.__('Active alerts', 'buoy').'</span></a>',
             ));
         }
 
@@ -931,7 +931,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             flush();
 
             // Prevent server exhaustion by killing this thread eventually.
-            if ((time() - $start_time) > (3 * MINUTE_IN_SECONDS)) {
+            if ((time() - $start_time) > (1 * MINUTE_IN_SECONDS)) {
                 print self::eventStreamMessage('', 'RESTART');
                 break;
             }
@@ -993,6 +993,12 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         wp_enqueue_style(
             self::$prefix.'-alert-style',
             plugins_url('../css/alerts.css', __FILE__),
+            false,
+            $plugin_data['Version']
+        );
+        wp_enqueue_style(
+            self::$prefix.'-css-hacks',
+            plugins_url('../css/hacks.css', __FILE__),
             false,
             $plugin_data['Version']
         );

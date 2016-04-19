@@ -84,8 +84,8 @@ var BUOY_CHAT_ROOM = (function () {
      * @param {string} url
      */
     var connectSource = function (url) {
-        url += '?action=buoy_chat_event_stream&post_id=' + getPostId() + '&offset=' + getCommentCount();
-        var es = new EventSource(url);
+        url += '?action=buoy_chat_event_stream&post_id=' + getPostId();
+        var es = new EventSource(url + '&offset=' + getCommentCount());
         es.addEventListener('updated', function (e) {
             appendComments(JSON.parse(e.data));
             showNewCommentsNotice();
@@ -95,7 +95,7 @@ var BUOY_CHAT_ROOM = (function () {
         // prevents it from auto-reconnecting upon server disconnect.
         es.addEventListener('RESTART', function (e) {
             es.close()
-            connectSource(url);
+            connectSource(url + '&offset=' + getCommentCount());
         });
         // TODO: Fancier error handling?
         es.onerror = function (e) {

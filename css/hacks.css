@@ -1,0 +1,13 @@
+/**
+ * Browser-specific styles, because fuuuuuuuuuuuuuuuuuu
+ */
+
+/**
+ * @group Webkit-based browsers (Safari and Google Chrome)
+ */
+@media screen and (-webkit-min-device-pixel-ratio: 0) {
+
+    /* Make <iframe height="100%"> behave like it should. */
+    iframe[height="100%"] { height: 100vh; }
+
+}

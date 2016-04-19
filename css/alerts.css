@@ -1,13 +1,24 @@
 .wp-admin .modal { top: 40px; }
+#wpbody { background: #fff; }
 
 #activate-alert-form { height: 100%; }
-.dashboard_page_buoy_activate_alert #wpbody-content,
-.dashboard_page_buoy_chat #wpbody-content {
-    height: calc(100vh - 32px); /* 32px is height of WP's fixed-position toolbar */
+
+.dashboard_page_buoy_chat #wpwrap,
+.dashboard_page_buoy_chat #wpbody { height: 100%; }
+
+.dashboard_page_buoy_activate_alert #wpbody-content {
+    height: calc(100vh - 32px); /* 32px is the height of WP's admin toolbar */
+    padding-bottom: 32px;
 }
+
 .dashboard_page_buoy_chat #wpcontent {
     padding: 0;
 }
+.dashboard_page_buoy_chat #wpbody-content {
+    height: 100%;
+    padding-bottom: 0;
+}
+
 .dashboard_page_buoy_activate_alert #custom-message-alert-btn,
 .dashboard_page_buoy_activate_alert #schedule-future-alert-btn,
 .dashboard_page_buoy_activate_alert #activate-btn-submit {
@@ -43,7 +54,6 @@
     max-width: 100%;
 }
 .dashboard_page_buoy_activate_alert #crisis-message {
-    height: 30vh;
     width: 100%;
 }
 .dashboard_page_buoy_activate_alert .btn-success {
@@ -56,7 +66,7 @@
     margin: 20px 0;
 }
 
-.dashboard_page_buoy_chat #alert-map {
+.dashboard_page_buoy_chat #alert-tools {
     margin-bottom: 0;
     border-top-width: 0;
 }
@@ -82,28 +92,23 @@
     display: list-item; /* always show, even on narrow screens */
 }
 
-#incident-media-group.open {
-    position: static;
-}
 #incident-media-group .dropdown-menu {
-    top: 148px; /* when the toolbar buttons wrap */
     padding: 1em;
-    max-width: 100vw;
+    min-width: 600px;
     z-index: 2000; /* position above Leaflet map controls */
 }
-@media screen and (min-width: 600px) {
+@media screen and (max-width: 767px) {
     #incident-media-group .dropdown-menu {
-        top: 56px;
-    }
-}
-@media screen and (min-width: 468px) and (max-width: 600px) {
-    #incident-media-group .dropdown-menu {
-        top: 102px;
+        left: -92px;
+        width: 100vw;
+        min-width: initial;
     }
 }
 
 #alert-chat-room-container {
-    height: 100%;
+    display: flex;
+    flex-direction: column;
+    height: calc(100% - 65px); /* 65px is the height of the #alert-tools bar */
     background: url('../img/spinner-2x.gif') no-repeat center top;
 }
 
@@ -112,15 +117,10 @@
  *
  * @group post_comments
  */
-#comments-chat #respond {
-    width: 100%;
-    height: 34px;
-}
-@media screen and (max-width: 782px) {
-    #comments-chat #respond {
-        position: fixed;
-        bottom: 0;
-    }
+#comments-chat {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
 }
 
 #wpfooter { display: none; }
