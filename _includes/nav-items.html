@@ -1,8 +1,8 @@
 {% assign pages = site.pages | sort: "weight", "last" %}
-{% for p in pages %}
+{% for p in pages %}{% assign ext = p.name | split: '.' | last %}{% unless 'css' == ext %}
 <li>
     <a href="{{ p.url | prepend: site.baseurl }}#main">
         {{ p.title }}
     </a>
 </li>
-{% endfor %}
+{% endunless %}{% endfor %}
