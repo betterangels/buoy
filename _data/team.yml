@@ -1,0 +1,59 @@
+organizations:
+    betterangels:
+        name: Better Angels
+        homepage: 'https://betterangels.github.io/'
+        avatar_url: 'https://avatars.githubusercontent.com/u/18254254'
+    techforjustice:
+        name: Tech for Justice
+        homepage: 'http://www.techforjustice.org/'
+        avatar_url: 'http://www.techforjustice.org/wp-content/uploads/2015/10/techforjustice-logo-with-registered-trademark-symbol-e1444230805139.png'
+people:
+    unquietpirate:
+        name: R. Foxtale
+        organization: betterangels
+        title: User Experience Lead, Community Manager
+        role: >
+            User engagement! :) Happiness! Other good things!
+        github: unquietpirate
+        twitter: imnocowboy
+        avatar_url: 'https://avatars.githubusercontent.com/u/4370462'
+    maymay:
+        name: maymay
+        organization: betterangels
+        title: Lead Developer
+        diaspora: "https://joindiaspora.com/u/meitar"
+        github: meitar
+        twitter: maymaymx
+        avatar_url: 'https://avatars.githubusercontent.com/u/18677'
+    pnppl:
+        name: pnppl
+        organization: betterangels
+        title: Social Media Manager
+        github: pnppl
+        avatar_url: 'https://avatars.githubusercontent.com/u/9787286'
+    nitishnarula:
+        name: Nitish Narula
+        organization: betterangels
+        title: Creative Technologist and Developer
+        github: nitishnarula
+        avatar_url: 'https://avatars.githubusercontent.com/u/10969049'
+    corvinity:
+        name: Corvinity
+        organization: betterangels
+        title: Videurgist
+        twitter: corvinity
+        homepage: 'http://www.videurgy.com/'
+        avatar_url: 'https://cloud.githubusercontent.com/assets/4370462/14662239/78a92dba-0671-11e6-99d5-762ffb50bebd.jpg'
+    hannahhubbard:
+        name: Hannah Hubbard
+        organization: techforjustice
+        title: Communications and Outreach Lead
+        github: hannahhubbard
+        twitter: hannahhubb
+        avatar_url: 'https://avatars.githubusercontent.com/u/15039846'
+    christyleos:
+        name: Christy Leos
+        organization: techforjustice
+        title: Beta Test Program Coordinator, Translation Team Lead
+        custom_items:
+            - '<a href="https://www.transifex.com/cyberbusking/better-angels/">Transifex</a>'

@@ -1,0 +1,46 @@
+{% assign orgs = site.data.team.organizations %}
+<div class="container-fluid">
+    <ul class="row media-list buoy-team-members">
+        {% for person in site.data.team.people %}{% assign p = person[1] %}
+        <li class="col-md-6 h-card media">
+            <div class="media-left">
+                <img class="u-photo media-object"
+                    src="{{ p.avatar_url | default: "https://avatars.githubusercontent.com/u/0" }}"
+                    alt=""
+                />
+            </div>
+            <div class="media-body">
+                <p class="p-name media-heading"><span class="glyphicon glyphicon-user"></span> {{ p.name }}</p>
+                <p class="p-org h-card" data-organization-id="{{ p.organization }}">
+                    <span class="glyphicon glyphicon-briefcase"></span>
+                    <a href="{{ orgs[p.organization].homepage }}">{{ orgs[p.organization].name }}</a>
+                </p>
+                <p class="p-job-title"><span class="glyphicon glyphicon-blackboard"></span> {{ p.title }}</p>
+                <p class="p-role">{{ p.role }}</p>
+                <ul class="list-unstyled">
+                    {% if p.diaspora %}
+                    {% assign username = p.diaspora | split: "/" | last %}
+                    <li>{% include icon-diaspora.html username=username profile_url=p.diaspora %}</li>
+                    {% endif %}
+                    {% if p.github %}<li>{% include icon-github.html username=p.github %}</li>{% endif %}
+                    {% if p.twitter %}<li>{% include icon-twitter.html username=p.twitter %}</li>{% endif %}
+                    {% if p.homepage %}<li><span class="glyphicon glyphicon-globe"></span> <a class="u-url" href="{{ p.homepage }}">Website</a></li>{% endif %}
+                    {% if p.custom_items %}{% for item in p.custom_items %}<li>{{ item }}</li>{% endfor %}{% endif %}
+                </ul>
+            </div>
+        </li>
+        {% endfor %}
+        <li class="col-md-6 media">
+            <div class="media-left">
+                <img class="media-object"
+                    src="https://avatars.githubusercontent.com/u/0"
+                    alt=""
+                />
+            </div>
+            <div class="media-body">
+                <p class="media-heading">And <strong>you!</strong></p>
+                <p><a href="{{ "/contribute/" | prepend: site.baseurl }}">Get involved today</a>.</p>
+            </div>
+        </li>
+    </ul>
+</div><!-- .container-fluid -->
