@@ -3,8 +3,18 @@
 /**
  * @group Masthead/header/cover images.
  */
+@media all {
+    /* WEIRD! Jekyll doesn't apply the very first CSS rule, so here's a do-nothing rule */
+}
 h1.header-image-title {
-    position: relative; top: -1em;
+    position: relative;
+    top: -0.5em;
+}
+h1.header-image-title a:hover {
+    text-decoration: underline;
+}
+h1.header-image-title a {
+    color: inherit;
 }
 h2.header-image-caption {
     visibility: hidden;
@@ -14,7 +24,7 @@ h2.header-image-caption {
     display: block;
     width: 100%;
     height: 100%;
-    background: url("{{ "/" | prepend: site.baseurl }}public/img/buoy-icon-256x256.png") no-repeat center;
+    background: url("{{ "/public/img/buoy-icon-256x256.png" | prepend: site.baseurl }}") no-repeat center;
     background-size: contain;
     opacity: .05;
     z-index: -1;

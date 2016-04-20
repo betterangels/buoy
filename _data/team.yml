@@ -1,8 +1,15 @@
+# We're not using the GitHub repository metadata on purpose, because
+# not all "team members" actually have accounts on GitHub.
 organizations:
     betterangels:
         name: Better Angels
         homepage: 'https://betterangels.github.io/'
         avatar_url: 'https://avatars.githubusercontent.com/u/18254254'
+        twitter: BetterAngelsCR
+        facebook: BetterAngelsCollective
+        tumblr: BetterAngelsCollective
+        diaspora: 'https://diaspora.permutationsofchaos.com/u/betterangelscollective'
+        email: BetterAngels@RiseUp.net
     techforjustice:
         name: Tech for Justice
         homepage: 'http://www.techforjustice.org/'
