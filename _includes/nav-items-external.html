@@ -2,7 +2,7 @@
     <a href="{{ "/docs/" | prepend: site.baseurl }}"><abbr title="Application Programming Interface">API</abbr> docs</a>
 </li>
 <li>
-    <a href="https://github.com/{{ site.github_repo }}/zipball/master">Download .zip</a>
+    <a href="{{ site.github.zip_url | replace: 'gh-pages', 'master' }}">Download .zip</a>
 </li>
 <li>
     <a href="https://www.generosity.com/community-fundraising/buoy-empowering-community-based-crisis-response">Donate</a>

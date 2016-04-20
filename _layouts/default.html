@@ -33,9 +33,9 @@
 
     <div id="content" class="site-content">
         <header class="content-header-image">
-            <div class="cover-image" style="background-image: url('{{ site.baseurl }}/public/img/buoy-demo-header-1600x900.png')">
+            <div class="cover-image" style="background-image: url('{{ "/public/img/buoy-demo-header-1600x900.png" | prepend: site.baseurl }}')">
                 <div class="cover-image-overlay">
-                    <h1 class="header-image-title"><a href="{{ "/" | prepend: site.baseurl }}" style="color:inherit;">{{ site.title }}</a></h1>
+                    <h1 class="header-image-title"><a href="{{ "/" | prepend: site.baseurl }}">{{ site.title }}</a></h1>
                     <h2 class="header-image-caption">{{ site.tagline }}</h2>
 
                     <div class="spacer"></div>
@@ -71,14 +71,14 @@
                         <h2 class="widget-title">Community-based crisis response</h2>
                         <div class="textwidget" style="text-align:center;">
                             <p>Already host your own WordPress blog?</p>
-                            <p style="">
+                            <p>
                                 <a href="https://wordpress.org/plugins/buoy/installation/" class="btn btn-lg btn-success">
                                     Install Buoy now
                                 </a>
                             </p>
                             <p>Want help getting Buoy running?</p>
                             <p>
-                                <a href="{{ "/contact/" | prepend: site.baseurl }}" class="btn btn-lg btn-info">
+                                <a href="{{ "/contact/#main" | prepend: site.baseurl }}" class="btn btn-lg btn-info">
                                     Request a personal demo
                                 </a>
                             </p>
@@ -87,7 +87,7 @@
                     <aside class="widget clearfix widget_text">
                         <h2 class="widget-title">Learn more about Buoy</h2>
                         <div class="textwidget">
-                            <ul style="list-style-type: disc;list-style-position: inside;">
+                            <ul class="list-unstyled">
                                 {% include nav-items.html %}
                                 {% include nav-items-external.html %}
                             </ul>
