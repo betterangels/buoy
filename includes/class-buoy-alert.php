@@ -865,10 +865,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
     public static function renderChatRoom ($alert, $curr_user) {
         switch ($alert->get_chat_system()) {
             case 'tlk.io':
-                include plugin_dir_path(dirname(__FILE__)).'/pages/chat-room-tlk-io.php';
-                break;
-            case 'meet.jit.si':
-                include plugin_dir_path(dirname(__FILE__)).'/pages/chat-room-jit-si.php';
+                include plugin_dir_path(dirname(__FILE__)).'pages/chat-room-tlk-io.php';
                 break;
             default:
                 include plugin_dir_path(dirname(__FILE__)).'/pages/chat-room-wordpress-comments.php';
