@@ -34,6 +34,60 @@ h2.header-image-caption {
 }
 
 /**
+ * @group Screenshots carousel.
+ */
+#carousel-screenshots.carousel .carousel-control .glyphicon {
+    z-index: 20;
+}
+#carousel-screenshots.carousel {
+    box-shadow: -10px 15px 20px #ccc;
+    border: 1px solid black;
+    border-radius: 10px;
+    background: #eee;
+    margin-bottom: 2em;
+}
+#carousel-screenshots.carousel .carousel-inner::before {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: url({{"/public/img/buoy-icon-no-fill.svg" | prepend: site.baseurl}}) no-repeat center;
+    background-size: contain;
+    opacity: 0.2;
+}
+#carousel-screenshots.carousel img {
+    float: left;
+    margin: 0 1em 1em 10%;
+}
+#carousel-screenshots.carousel .carousel-caption {
+    position: static;
+    margin: auto 10%;
+    padding: 0;
+    background: transparent;
+    font-size: 1.5rem;
+    color: #333;
+    text-align: left;
+}
+#carousel-screenshots.carousel .carousel-caption p {
+    text-align: justify;
+    font-weight: normal;
+}
+#carousel-screenshots.carousel .carousel-indicators .active {
+    background-color: green;
+}
+
+@media screen and (max-width: 480px) {
+    #carousel-screenshots.carousel img {
+        margin-left: 0;
+        margin-right: 0;
+    }
+    #carousel-screenshots.carousel .carousel-caption {
+        margin: auto;
+        padding: 0 5px;
+    }
+}
+
+/**
  * @group Team members list.
  */
 .buoy-team-members .media {
