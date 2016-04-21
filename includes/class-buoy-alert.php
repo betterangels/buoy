@@ -796,7 +796,12 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         if (empty($_GET[self::$prefix.'_hash'])) {
             return;
         }
-        $alert = new WP_Buoy_Alert($_GET[self::$prefix.'_hash']);
+        try {
+            $alert = new WP_Buoy_Alert($_GET[self::$prefix.'_hash']);
+        } catch (Exception $e) {
+            esc_html_e('You do not have sufficient permissions to access this page.', 'buoy');
+            return;
+        }
         if (!current_user_can('read') || !$alert->can_respond(get_current_user_id())) {
             esc_html_e('You do not have sufficient permissions to access this page.', 'buoy');
             return;
@@ -1420,7 +1425,9 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             add_filter('duplicate_comment_id', '__return_false'); // allow dupes
             add_filter('comment_flood_filter', '__return_false'); // allow floods
             add_filter('pre_comment_approved', '__return_true');  // always approve
-            add_filter('comment_notification_recipients', '__return_false'); // don't email
+            add_filter('comment_notification_recipients', function ($emails) {
+                return array(); // don't send chat room email notifications to anyone
+            });
             add_filter('comment_post_redirect', array(__CLASS__, 'redirectChatComment'), 10, 2);
             return true;
         } else {
