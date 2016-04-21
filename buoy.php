@@ -107,6 +107,15 @@ class WP_Buoy_Plugin {
      * @return void
      */
     public static function initialize () {
+        // Make sure the WP REST API plugin is installed.
+        // We can remove this if block once that plugin is merged
+        // into WP Core.
+        if (is_plugin_inactive('rest-api/plugin.php')) {
+            if (is_wp_error(activate_plugin('rest-api/plugin.php'))) {
+                self::install_plugin_dependency('rest-api');
+            }
+        }
+
         require_once 'includes/class-buoy-helper.php';
         require_once 'includes/class-buoy-settings.php';
         require_once 'includes/class-buoy-user-settings.php';
@@ -185,6 +194,70 @@ class WP_Buoy_Plugin {
                 $min_wp_version, $wp_version
             ));
         }
+
+        // It turns out WordPress 4.5 did not include the WP REST API
+        // in core. :( SADNESS! We need it so let's make sure we have
+        // it installed. If we don't, let's install it automatically.
+        if (is_plugin_inactive('rest-api/plugin.php')) {
+            if (is_wp_error(activate_plugin('rest-api/plugin.php'))) {
+                self::install_plugin_dependency('rest-api');
+            }
+        }
+    }
+
+    /**
+     * Automates installation of other plugins that we need.
+     *
+     * We only use this for the WP REST API at the moment. It's the 1
+     * and only dependency we have on other plugins. When that plugin
+     * gets added to WP Core, we can remove this code.
+     *
+     * As a result, note that this code is SPECIFIC to the `rest-api`
+     * plugin. It will not work as-is for other plugins.
+     *
+     * @param string $slug
+     * @param string $version
+     */
+    public static function install_plugin_dependency ($slug, $version = '') {
+        if ($version) { $version = ".$version"; }
+        $resp = wp_remote_get("https://downloads.wordpress.org/plugin/$slug$version.zip");
+        if (is_wp_error($resp)) {
+            add_action('admin_notices', array(__CLASS__, 'rest_api_install_failure_notice'));
+        }
+        require_once ABSPATH.'wp-admin/includes/file.php';
+        $url = admin_url('plugin-install.php');
+        $dir = plugin_dir_path(dirname(__FILE__));
+        if (false === ($creds = request_filesystem_credentials($url, '', false, $dir, null) ) ) {
+            add_action('admin_notices', array(__CLASS__, 'rest_api_install_failure_notice'));
+            return; // stop processing here
+        }
+        if ( ! WP_Filesystem($creds) ) {
+            request_filesystem_credentials($url, '', true, $dir, null);
+            return;
+        }
+        global $wp_filesystem;
+        $wp_filesystem->put_contents(
+            $wp_filesystem->wp_plugins_dir()."$slug$version.zip",
+            $resp['body']
+        );
+        unzip_file(
+            $wp_filesystem->wp_plugins_dir()."$slug$version.zip",
+            $wp_filesystem->wp_plugins_dir()
+        );
+        if (is_wp_error(activate_plugin('rest-api/plugin.php'))) {
+            add_action('admin_notices', array(__CLASS__, 'rest_api_install_failure_notice'));
+        } else {
+            $wp_filesystem->delete($wp_filesystem->wp_plugins_dir()."$slug$version.zip");
+        }
+    }
+
+    public static function rest_api_install_failure_notice () {
+?>
+<div class="error notice is-dismissible">
+    <p><?php esc_html_e('Buoy requires the REST API plugin, but it cannot be installed. Please install it manually or deactivate Buoy.', 'buoy');?></p>
+    <p><a href="<?php print admin_url('plugin-install.php?tab=plugin-information&plugin=rest-api&TB_iframe=true&width=600&height=550')?>"><?php esc_html_e('Click here to install the REST API plugin.', 'buoy');?></a></p>
+</div>
+<?php
     }
 
     /**
