@@ -1,11 +1,28 @@
 ---
 ---
-/**
- * @group Masthead/header/cover images.
- */
 @media all {
     /* WEIRD! Jekyll doesn't apply the very first CSS rule, so here's a do-nothing rule */
 }
+
+/**
+ * @group Icons.
+ */
+.icon {
+    float: left;
+    width: 18px;
+    height: 22px;
+    margin-top: 2px;
+    margin-right: 3px;
+}
+.icon--diaspora {
+    background: url({{ "/public/img/icon-diaspora.png" | prepend: site.baseurl }}) no-repeat 0 2px;
+    background-size: contain;
+    opacity: .5;
+}
+
+/**
+ * @group Masthead/header/cover images.
+ */
 h1.header-image-title {
     position: relative;
     top: -0.5em;
@@ -19,6 +36,10 @@ h1.header-image-title a {
 h2.header-image-caption {
     visibility: hidden;
 }
+
+/**
+ * @group Column layout and backgrounds.
+ */
 #secondary .widget_text:first-of-type::before {
     position: absolute;
     display: block;
@@ -115,16 +136,4 @@ h2.header-image-caption {
 .buoy-team-members .media-object {
     max-width: 96px;
     border-radius: 10%;
-}
-.buoy-team-members .icon {
-    float: left;
-    width: 18px;
-    height: 22px;
-    margin-top: 2px;
-    margin-right: 3px;
-}
-.buoy-team-members .icon--diaspora {
-    background: url({{ "/public/img/icon-diaspora.png" | prepend: site.baseurl }}) no-repeat 0 2px;
-    background-size: contain;
-    opacity: .5;
 }
