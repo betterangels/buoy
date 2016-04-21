@@ -67,6 +67,7 @@ class Buoy_Team_Membership_List_Table extends WP_List_Table {
 
         $posts = get_posts(array(
             'post_type' => $this->post_type,
+            'post_status' => 'publish,private',
             'meta_key' => '_team_members',
             'meta_value' => $user_id
         ));
