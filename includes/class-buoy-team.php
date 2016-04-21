@@ -421,7 +421,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         $team = new self($post->ID);
         add_meta_box(
             'add-team-member',
-            esc_html__('Add a team member', 'buoy'),
+            esc_html__('Add new member', 'buoy'),
             array(__CLASS__, 'renderAddTeamMemberMetaBox'),
             null,
             'normal',
