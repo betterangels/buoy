@@ -110,6 +110,7 @@ class WP_Buoy_Plugin {
         // Make sure the WP REST API plugin is installed.
         // We can remove this if block once that plugin is merged
         // into WP Core.
+        require_once ABSPATH.'wp-admin/includes/plugin.php';
         if (is_plugin_inactive('rest-api/plugin.php')) {
             if (is_wp_error(activate_plugin('rest-api/plugin.php'))) {
                 self::install_plugin_dependency('rest-api');
