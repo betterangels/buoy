@@ -7,6 +7,15 @@ if ( ! $_tests_dir ) {
 
 require_once $_tests_dir . '/includes/functions.php';
 
+// We need to ensure the filesystem API and other functions have loaded.
+// We use these on plugin activation, now. This can be removed once the
+// WP REST API has been merged into WordPress core.
+$_core_dir = getenv('WP_CORE_DIR');
+if (!$_core_dir) {
+    $_core_dir = '/tmp/wordpress/';
+}
+require_once "{$_core_dir}wp-admin/includes/plugin.php";
+
 function _manually_load_plugin() {
 	require dirname( dirname( __FILE__ ) ) . '/buoy.php';
 }

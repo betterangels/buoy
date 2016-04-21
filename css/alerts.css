@@ -3,6 +3,10 @@
 
 #activate-alert-form { height: 100%; }
 
+.dropdown-menu {
+    z-index: 2000; /* position above Leaflet map controls */
+}
+
 .dashboard_page_buoy_chat #wpwrap,
 .dashboard_page_buoy_chat #wpbody { height: 100%; }
 
@@ -95,7 +99,6 @@
 #incident-media-group .dropdown-menu {
     padding: 1em;
     min-width: 600px;
-    z-index: 2000; /* position above Leaflet map controls */
 }
 @media screen and (max-width: 767px) {
     #incident-media-group .dropdown-menu {
