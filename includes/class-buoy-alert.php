@@ -995,13 +995,13 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         wp_enqueue_style(
             self::$prefix.'-alert-style',
             plugins_url('../css/alerts.css', __FILE__),
-            false,
+            array('bootstrap-css'),
             $plugin_data['Version']
         );
         wp_enqueue_style(
             self::$prefix.'-css-hacks',
             plugins_url('../css/hacks.css', __FILE__),
-            false,
+            array(self::$prefix.'-alert-style'),
             $plugin_data['Version']
         );
 
