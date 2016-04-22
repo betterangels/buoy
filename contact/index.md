@@ -28,4 +28,4 @@ weight: 20
 
 # Chat
 
-* <span class="glyphicon glyphicon-phone"></span> [Better Angels' Buoy project chat room](https://gitter.im/{{ site.github.repository_nwo }}/)
+* <span class="glyphicon glyphicon-comment"></span> [Better Angels' Buoy project chat room](https://gitter.im/{{ site.github.repository_nwo }}/)
