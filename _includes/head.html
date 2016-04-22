@@ -27,4 +27,12 @@
         src="https://code.jquery.com/jquery-migrate-1.4.0.min.js"
         integrity="sha256-nxdiQ4FdTm28eUNNQIJz5JodTMCF5/l32g5LwfUwZUo="
         crossorigin="anonymous"></script>
+
+    <meta name="og:site_name" content="{{ site.title }}" />
+    <meta name="og:description" content="{{ site.description | strip_newlines }}" />
+    <meta name="og:url" content="{{ page.url }}" />
+    <meta name="og:image" content="{{ "/public/img/buoy-demo-header-1600x900.png" | prepend: site.baseurl | prepend: site.url }}" />
+    <meta name="og:image:width" content="1600" />
+    <meta name="og:image:height" content="900" />
+
 </head>
