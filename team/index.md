@@ -14,4 +14,4 @@ Want to join the team? Check out our [Contributing]({{ "/contribute/" | prepend:
 {% include team.html %}
 
 <span class="glyphicon glyphicon-envelope"></span> Email us at [{{ site.data.team.organizations.betterangels.email }}](mailto:{{ site.data.team.organizations.betterangels.email }})  
-<span class="glyphicon glyphicon-lock"></span> PGP/GPG Fingerprint: [6121 4D68 E0E3 54AA DE65 3B15 6FAE 063A 2F94 2A02](https://pgp.mit.edu/pks/lookup?search=0x6FAE063A2F942A02&fingerprint=on&op=vindex)
+<span class="glyphicon glyphicon-lock"></span> PGP/GPG Fingerprint: [`6121 4D68 E0E3 54AA DE65 3B15 6FAE 063A 2F94 2A02`](https://pgp.mit.edu/pks/lookup?search=0x6FAE063A2F942A02&fingerprint=on&op=vindex)

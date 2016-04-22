@@ -20,7 +20,7 @@ people:
         organization: betterangels
         title: User Experience Lead, Community Manager
         role: >
-            User engagement! :) Happiness! Other good things!
+            Rebecca brings a background in domestic violence victim advocacy and two decades of community-based political organizing to the team. Fun Fact: Rebecca spent several seasons working at a research station in Antarctica!
         github: unquietpirate
         twitter: imnocowboy
         avatar_url: 'https://avatars.githubusercontent.com/u/4370462'
@@ -28,6 +28,8 @@ people:
         name: maymay
         organization: betterangels
         title: Lead Developer
+        role: >
+            Maymay has contributed code to WordPress Core and hosts anti-surveillance trainings called Cryptoparties. In their former life, they were a consultant for Fortune 100 companies. They quit corporate America in 2007 and now live as a “tech-nomad,” couchsurfing and hopping from one hackerspace to the next writing free software for a free world.
         diaspora: "https://joindiaspora.com/u/meitar"
         github: meitar
         twitter: maymaymx

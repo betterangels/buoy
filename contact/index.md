@@ -13,7 +13,7 @@ weight: 20
 # Email
 
 * <span class="glyphicon glyphicon-envelope"></span> Our email address: [{{ site.data.team.organizations.betterangels.email }}](mailto:{{ site.data.team.organizations.betterangels.email }})
-* <span class="glyphicon glyphicon-lock"></span> PGP/GPG key: `6121 4D68 E0E3 54AA DE65 3B15 6FAE 063A 2F94 2A02`
+* <span class="glyphicon glyphicon-lock"></span> PGP/GPG Fingerprint: [`6121 4D68 E0E3 54AA DE65 3B15 6FAE 063A 2F94 2A02`](https://pgp.mit.edu/pks/lookup?search=0x6FAE063A2F942A02&fingerprint=on&op=vindex)
 * <span class="glyphicon glyphicon-bullhorn"></span> Join our low-volume announcement list:
   <form class="bold_label" action="https://lists.riseup.net/www" method="post">
     <fieldset>
