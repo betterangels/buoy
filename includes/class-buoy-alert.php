@@ -1309,7 +1309,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         $alert = new self($_GET[self::$prefix.'_hash']);
         $keys = array_keys($_FILES);
         $k  = array_shift($keys);
-        $id = media_handle_upload($k, $alert->wp_post->ID);
+        $id = media_handle_upload($k, $alert->wp_post->ID, array('post_status' => 'private'));
         $m = wp_get_attachment_metadata($id);
         if (is_wp_error($id)) {
             wp_send_json_error($id);
