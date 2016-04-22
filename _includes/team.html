@@ -16,7 +16,10 @@
                     <a href="{{ orgs[p.organization].homepage }}">{{ orgs[p.organization].name }}</a>
                 </p>
                 <p class="p-job-title"><span class="glyphicon glyphicon-blackboard"></span> {{ p.title }}</p>
-                <p class="p-role">{{ p.role }}</p>
+                {% if p.role %}
+                <p class="p-role"> {{ p.role }} </p>
+                <span class="glyphicon glyphicon-chevron-down"></span>
+                {% endif %}
                 <ul class="list-unstyled">
                     {% if p.diaspora %}
                     {% assign username = p.diaspora | split: "/" | last %}

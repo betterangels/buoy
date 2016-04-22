@@ -137,3 +137,25 @@ h2.header-image-caption {
     max-width: 96px;
     border-radius: 10%;
 }
+.buoy-team-members .h-card .p-role {
+    cursor: pointer; /* Make iOS play nice with :hover and :focus on non-links. */
+    max-height: 3.75em;
+    transition: max-height 1s ease-in-out;
+    overflow-y: hidden;
+    box-shadow: 0 2px 2px #ccc;
+}
+.buoy-team-members .h-card:hover .p-role,
+.buoy-team-members .h-card:focus .p-role {
+    max-height: 1000em;
+    box-shadow: none;
+}
+.buoy-team-members .h-card .p-role + .glyphicon-chevron-down {
+    position: relative;
+    top: -0.5em;
+    width: 100%;
+    text-align: center;
+}
+.buoy-team-members .h-card:hover .p-role + .glyphicon-chevron-down,
+.buoy-team-members .h-card:focus .p-role + .glyphicon-chevron-down {
+    display: none;
+}
