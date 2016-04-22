@@ -159,3 +159,6 @@ h2.header-image-caption {
 .buoy-team-members .h-card:focus .p-role + .glyphicon-chevron-down {
     display: none;
 }
+.buoy-team-members .urls .glyphicon {
+    opacity: 0.5;
+}

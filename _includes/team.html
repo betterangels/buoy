@@ -20,7 +20,7 @@
                 <p class="p-role"> {{ p.role }} </p>
                 <span class="glyphicon glyphicon-chevron-down"></span>
                 {% endif %}
-                <ul class="list-unstyled">
+                <ul class="list-unstyled urls">
                     {% if p.diaspora %}
                     {% assign username = p.diaspora | split: "/" | last %}
                     <li>{% include icon-diaspora.html username=username profile_url=p.diaspora %}</li>
