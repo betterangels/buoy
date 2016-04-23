@@ -10,6 +10,16 @@
 var BUOY_ALERT = (function () {
 
     /**
+     * Backup timer.
+     *
+     * This is the window timer ID used for ensuring that an alert is
+     * still POST'ed to the server if the user clicks "Not now" when
+     * they are asked for location sharing permissions. In FireFox, a
+     * user who answers "Not now" will otherwise never send the POST.
+     */
+    var submit_alert_timer_id;
+
+    /**
      * Attaches event listeners to the Panic buttons.
      */
     var attachHandlers = function () {
@@ -117,7 +127,7 @@ var BUOY_ALERT = (function () {
         // https://bugzilla.mozilla.org/show_bug.cgi?id=675533
         // Until this debate is resolved, we need to manually detect this
         // timeout ourselves.
-        setTimeout(postAlert, 6000);
+        submit_alert_timer_id = setTimeout(postAlert, 6000);
     };
 
     /**
@@ -128,6 +138,7 @@ var BUOY_ALERT = (function () {
      * @param {Position}
      */
     var postAlert = function (position) {
+        if (submit_alert_timer_id) { clearTimeout(submit_alert_timer_id); }
         var data = {
             'action': jQuery('#activate-alert-form input[name="action"]').val(),
             'buoy_nonce': jQuery('#buoy_nonce').val()
