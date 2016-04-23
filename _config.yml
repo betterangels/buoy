@@ -3,8 +3,6 @@ title: Buoy
 tagline: A community-based crisis response system. Because friends don&rsquo;t let friends call the cops.
 description: > # this means to ignore newlines until "baseurl:"
   Buoy is a community-based crisis response system.
-baseurl: "/buoy"
-url: "https://betterangels.github.io" # the base hostname & protocol for your site
 
 # Project-specific settings.
 # Needs https://help.github.com/articles/setting-up-your-github-pages-site-locally-with-jekyll/#keeping-your-site-up-to-date-with-the-github-pages-gem

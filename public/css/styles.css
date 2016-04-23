@@ -1,4 +1,5 @@
 ---
+layout: null
 ---
 @media all {
     /* WEIRD! Jekyll doesn't apply the very first CSS rule, so here's a do-nothing rule */
@@ -15,7 +16,7 @@
     margin-right: 3px;
 }
 .icon--diaspora {
-    background: url({{ "/public/img/icon-diaspora.png" | prepend: site.baseurl }}) no-repeat 0 2px;
+    background: url({{ "/public/img/icon-diaspora.png" | prepend: site.github.url }}) no-repeat 0 2px;
     background-size: contain;
     opacity: .5;
 }
@@ -45,7 +46,7 @@ h2.header-image-caption {
     display: block;
     width: 100%;
     height: 100%;
-    background: url("{{ "/public/img/buoy-icon-256x256.png" | prepend: site.baseurl }}") no-repeat center;
+    background: url("{{ "/public/img/buoy-icon-256x256.png" | prepend: site.github.url }}") no-repeat center;
     background-size: contain;
     opacity: .05;
     z-index: -1;
@@ -72,7 +73,7 @@ h2.header-image-caption {
     position: absolute;
     width: 100%;
     height: 100%;
-    background: url({{"/public/img/buoy-icon-no-fill.svg" | prepend: site.baseurl}}) no-repeat center;
+    background: url({{"/public/img/buoy-icon-no-fill.svg" | prepend: site.github.url}}) no-repeat center;
     background-size: contain;
     opacity: 0.2;
 }
