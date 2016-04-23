@@ -1,5 +1,14 @@
 <head>
     <meta charset="UTF-8">
+    <script>
+        // HTML redirects won't work, because GitHub always reports
+        // the site URL as the CNAME we're using. So, check manually.
+        (function () {
+            if (-1 !== window.location.href.indexOf('betterangels.github.io/buoy')) {
+                window.location = '{{ site.github.url }}';
+            }
+        })();
+    </script>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="profile" href="http://gmpg.org/xfn/11">
     <link rel="profile" href="http://microformats.org/profile/h-card">
