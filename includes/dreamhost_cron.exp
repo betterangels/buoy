@@ -1,0 +1,18 @@
+#
+# This is an Expect script.
+#
+# Specifically, it is used for interacting with DreamHost's `crontab`
+# wrapper, which asks the user to enter an email address if they do
+# not already have one set for their crontab file. Since this isn't
+# standard behavior, we have to detect this aberration and interact
+# with the CLI ourselves.
+#
+# See issue tracker:
+# https://github.com/betterangels/buoy/issues/102
+#
+spawn crontab [lindex $argv 0]
+expect ": "
+send "\r"
+expect "confirm? (y/N): "
+send "y\r"
+expect eof
