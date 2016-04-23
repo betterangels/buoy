@@ -15,4 +15,6 @@ expect ": "
 send "\r"
 expect "confirm? (y/N): "
 send "y\r"
-expect eof
+set waitval [wait -i $spawn_id]
+set exitval [lindex $waitval 3]
+exit $exitval
