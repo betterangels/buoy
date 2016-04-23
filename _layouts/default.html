@@ -12,7 +12,7 @@
             <div class="menu-wrap">
                 <span class="fa fa-arrow-left menu-close"></span>
                 <h1 class="logo">
-                    <a class="custom-header-text-color" href="{{ "/" | prepend: site.baseurl }}" rel="home">{{ site.title }}</a>
+                    <a class="custom-header-text-color" href="{{ "/" | prepend: site.github.url }}" rel="home">{{ site.title }}</a>
                 </h1>
                 <div class="offcanvas-links">
                     <ul>
@@ -33,9 +33,9 @@
 
     <div id="content" class="site-content">
         <header class="content-header-image">
-            <div class="cover-image" style="background-image: url('{{ "/public/img/buoy-demo-header-1600x900.png" | prepend: site.baseurl }}')">
+            <div class="cover-image" style="background-image: url('{{ "/public/img/buoy-demo-header-1600x900.png" | prepend: site.github.url }}')">
                 <div class="cover-image-overlay">
-                    <h1 class="header-image-title"><a href="{{ "/" | prepend: site.baseurl }}">{{ site.title }}</a></h1>
+                    <h1 class="header-image-title"><a href="{{ "/" | prepend: site.github.url }}">{{ site.title }}</a></h1>
                     <h2 class="header-image-caption">{{ site.tagline }}</h2>
 
                     <div class="spacer"></div>
@@ -78,7 +78,7 @@
                             </p>
                             <p>Want help getting Buoy running?</p>
                             <p>
-                                <a href="{{ "/contact/#main" | prepend: site.baseurl }}" class="btn btn-lg btn-info">
+                                <a href="{{ "/contact/#main" | prepend: site.github.url }}" class="btn btn-lg btn-info">
                                     Request a personal demo
                                 </a>
                             </p>
@@ -175,7 +175,7 @@
                 </div><!-- .footer-nav-menu -->
 
                 <div id="site-credits" class="site-credits pull-right">
-                    <span class="credits-copyright">&copy; 2016 <a href="{{ "/" | prepend: site.baseurl }}" rel="home">{{ site.title }}</a>. </span>
+                    <span class="credits-copyright">&copy; 2016 <a href="{{ "/" | prepend: site.github.url }}" rel="home">{{ site.title }}</a>. </span>
                     <span class="credits-theme">Theme by <a href="http://xtremelysocial.com/wordpress/link/" rel="profile" target="_blank">XtremelySocial and Blacktie</a>.</span>
                 </div><!-- .site-credits -->
             </div><!-- .container -->
@@ -184,8 +184,8 @@
 
     {% include ribbon-github-forkme-left-red.html %}
 </div><!-- #page -->
-<script type='text/javascript' src='{{ "/" | prepend: site.baseurl }}public/themes/link/js/main.js'></script>
+<script type='text/javascript' src='{{ "/" | prepend: site.github.url }}public/themes/link/js/main.js'></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
-<script type='text/javascript' src='{{ "/" | prepend: site.baseurl }}public/themes/flat-bootstrap/js/theme.js'></script>
+<script type='text/javascript' src='{{ "/" | prepend: site.github.url }}public/themes/flat-bootstrap/js/theme.js'></script>
 </body>
 </html>

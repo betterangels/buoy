@@ -7,7 +7,7 @@ Buoy is a community-driven technology from top to bottom. Our team of core contr
 
 In the spirit of [software development as direct action](https://unquietpirate.wordpress.com/2015/07/25/maximum-social-impact-minimum-lines-of-code-software-development-as-direct-action%E2%80%A8/), we set out to design and implement [free software](https://www.gnu.org/philosophy/free-sw.en.html) that has the maximum social impact with the minimum lines of code, as quickly as possible.
 
-Want to join the team? Check out our [Contributing]({{ "/contribute/" | prepend: site.baseurl }}) page or come say hello in our [chat room](https://gitter.im/betterangels/buoy).
+Want to join the team? Check out our [Contributing]({{ "/contribute/" | prepend: site.github.url }}) page or come say hello in our [chat room](https://gitter.im/betterangels/buoy).
 
 # Team Members
 
