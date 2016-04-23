@@ -635,23 +635,38 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         $alerts = array(
             'my_alerts' => array(),
             'my_responses' => array(),
-            'my_scheduled_alerts' => array()
+            'my_scheduled_alerts' => array(),
+            'my_unanswered_alerts' => array(),
         );
+
         foreach (self::getActiveAlerts() as $post) {
             $alert = new WP_Buoy_Alert($post->ID);
             if (get_current_user_id() == $post->post_author) {
                 $alerts['my_alerts'][] = $post;
             } else if (in_array(get_current_user_id(), $alert->get_responders())) {
                 $alerts['my_responses'][] = $post;
+            } else {
+                $members = array();
+                foreach ($alert->teams as $team_id) {
+                    $team = new WP_Buoy_Team($team_id);
+                    $members = array_merge($members, $team->get_confirmed_members());
+                }
+                if (in_array(get_current_user_id(), $members)) {
+                    $alerts['my_unanswered_alerts'][] = $post;
+                }
             }
         }
+
         foreach (self::getScheduledAlerts(get_current_user_id()) as $post) {
             if (get_current_user_id() == $post->post_author) {
                 $alerts['my_scheduled_alerts'][] = $post;
             }
         }
 
-        if (!empty($alerts['my_alerts']) || !empty($alerts['my_responses']) || !empty($alerts['my_scheduled_alerts'])) {
+        if (!empty($alerts['my_alerts'])
+            || !empty($alerts['my_responses'])
+            || !empty($alerts['my_scheduled_alerts'])
+            || !empty($alerts['my_unanswered_alerts'])) {
             $wp_admin_bar->add_menu(array(
                 'id' => self::$prefix.'-alerts-menu',
                 'title' => '<span class="ab-icon"></span><span class="ab-label">'.__('Active alerts', 'buoy').'</span></a>',
@@ -706,11 +721,26 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             );
             $wp_admin_bar->add_node(array(
                 'id' => self::$prefix.'-alert-'.$alert->get_hash(),
-                'title' => sprintf(__('Cancel scheduled alert for %1$s','buoy'), date($dtfmt, strtotime($post->post_date))),
+                'title' => sprintf(__('Cancel scheduled alert for %1$s', 'buoy'), date($dtfmt, strtotime($post->post_date))),
                 'meta' => array(
                     'title' => __('Cancel this alert', 'buoy')
                 ),
                 'parent' => self::$prefix.'_my_scheduled_alerts',
+                'href' => $url
+            ));
+        }
+
+        foreach ($alerts['my_unanswered_alerts'] as $post) {
+            $alert = new WP_Buoy_Alert($post->ID);
+            $author = get_userdata($post->post_author);
+            $url = admin_url('?page='.self::$prefix.'_review_alert&'.self::$prefix .'_hash='.$alert->get_hash());
+            $wp_admin_bar->add_node(array(
+                'id' => self::$prefix.'-alert-'.$alert->get_hash(),
+                'title' => sprintf(__('New alert by %1$s on %2$s', 'buoy'), $author->display_name, date($dtfmt, strtotime($post->post_date))),
+                'meta' => array(
+                    'title' => __('View alert', 'buoy')
+                ),
+                'parent' => self::$prefix.'_my_unanswered_alerts',
                 'href' => $url
             ));
         }
@@ -929,7 +959,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
                 print self::eventStreamMessage(); // Heartbeat.
             }
 
-            ob_end_flush();
+            @ob_end_flush();
             flush();
 
             // Prevent server exhaustion by killing this thread eventually.
@@ -1309,7 +1339,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         $alert = new self($_GET[self::$prefix.'_hash']);
         $keys = array_keys($_FILES);
         $k  = array_shift($keys);
-        $id = media_handle_upload($k, $alert->wp_post->ID);
+        $id = media_handle_upload($k, $alert->wp_post->ID, array('post_status' => 'private'));
         $m = wp_get_attachment_metadata($id);
         if (is_wp_error($id)) {
             wp_send_json_error($id);

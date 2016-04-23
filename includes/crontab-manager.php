@@ -136,9 +136,18 @@ class Buoy_Crontab_Manager {
     public function save () {
         $t = tempnam(sys_get_temp_dir(), 'temp_cron');
         file_put_contents($t, implode(PHP_EOL, $this->crontab_lines) . PHP_EOL);
-        system('crontab ' . escapeshellarg($t), $ret_val);
+        ob_start(); // prevent output (mostly for DreamHost)
+        $out = system('crontab ' . escapeshellarg($t), $ret_val);
+        @ob_end_clean();
         if (0 === $ret_val) {
             unlink($t);
+        } else if (false !== strpos($out, 'http://wiki.dreamhost.com/Crontab#MAILTO_variable_requirement')) {
+            $cmd = sprintf(
+                'expect %s %s',
+                escapeshellarg(dirname(__FILE__).'/dreamhost_cron.exp'),
+                escapeshellarg($t)
+            );
+            exec($cmd);
         } else {
             $php_usr = posix_getpwuid(posix_geteuid());
             throw new RuntimeException('Failed to install crontab for ' . $php_usr['name']);
