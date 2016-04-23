@@ -959,7 +959,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
                 print self::eventStreamMessage(); // Heartbeat.
             }
 
-            ob_end_flush();
+            @ob_end_flush();
             flush();
 
             // Prevent server exhaustion by killing this thread eventually.
