@@ -37,12 +37,13 @@
         integrity="sha256-nxdiQ4FdTm28eUNNQIJz5JodTMCF5/l32g5LwfUwZUo="
         crossorigin="anonymous"></script>
 
-    <meta name="og:site_name" content="{{ site.title }}" />
-    <meta name="og:description" content="{{ site.description | strip_newlines }}" />
-    <meta name="og:url" content="{{ page.url }}" />
-    <meta name="og:image" content="{{ "/public/img/buoy-demo-header-1600x900.png" | prepend: site.github.url }}" />
-    <meta name="og:image:width" content="1600" />
-    <meta name="og:image:height" content="900" />
+    <meta property="og:site_name" content="{{ site.title }}" />
+    <meta property="og:description" content="{{ site.description | strip_newlines }}" />
+    <meta property="og:url" content="{{ page.url | prepend: site.github.url }}" />
+    <meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}" />
+    <meta property="og:image" content="{{ "/public/img/buoy-demo-header-1600x900.png" | prepend: site.github.url }}" />
+    <meta property="og:image:width" content="1600" />
+    <meta property="og:image:height" content="900" />
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:site" content="@{{ site.data.team.organizations.betterangels.twitter }}">
