@@ -8,15 +8,19 @@ Stable tag: 0.2.0
 License: GPLv3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-A community-based crisis response system. Buoy is a private, enhanced 9-1-1 for your community.
+A community-based crisis response system. Buoy is a private, enhanced, cop-free alternative to 9-1-1.
 
 == Description ==
 
-Buoy is a private, enhanced [9-1-1](https://en.wikipedia.org/wiki/9-1-1) for your website designed to quickly connect people from your community who need help with trusted friends, family members, advocates, and other allies who can help them.
+Buoy is a decentralized 9-1-1 alternative built for and by people who are not well served by existing emergency response services. Buoy makes it easy to tell your friends where you are and what you need. Buoy's goal is a world where anyone in distress always has the option to turn to people they trust for support, rather than being forced to rely on people they don't.
+
+Buoy is not a traditional "app" that you can download in the app store, but rather a system for adding crisis response and emergency dispatch services to existing websites. With Buoy, community groups, activist organizations, and social support service providers can quickly connect people who need help with trusted friends, family members, advocates, and other allies who can help them. It is designed to be community owned and operated, so each instance of Buoy can be customized to the unique needs or the organization or community group that hosts it.
+
+Whether you are a group of street medics coordinating with each other during an action, citizen journalists or copwatchers watching each other's backs, domestic violence survivor support advocates, or even single parents picking each others’ kids up from school, Buoy helps you get and give peer-based mutual aid to your friends and comrades.
 
 *For service providers*
 
-Anyone with a WordPress-powered website or blog can add the Buoy software (a 1-click automatic install) to their website, instantly enabling the site's membership to provide peer-based mutual-aid to one another. Moreover, legal aid service providers, domestic, dating, and intimate partner violence prevention advocates, shelters, social groups, alternative medical and mental health collectives, and others can offer members of their community one-click emergency access to a network of trusted peers and/or on-call emergency responders.
+Anyone with a WordPress-powered website or blog can add the Buoy software (a 1-click automatic install) to their website, enabling the site's membership to provide peer-based mutual-aid to one another. Moreover, legal aid service providers, domestic, dating, and intimate partner violence prevention advocates, shelters, social groups, alternative medical and mental health collectives, and others can offer members of their community one-click emergency access to a network of trusted peers and/or on-call emergency responders.
 
 *For victims and survivors*
 
@@ -28,7 +32,7 @@ The people you select as your emergency contacts ("response team") will get a no
 
 **See the [screenshots](https://wordpress.org/plugins/buoy/screenshots/) for an example walkthrough of how Buoy works.**
 
-[Find a Buoy-enabled web site.](https://github.com/meitar/better-angels/wiki/List-of-Buoy-enabled-websites)
+[Find a Buoy-enabled web site.](https://github.com/betterangels/buoy/wiki/List-of-Buoy-enabled-websites)
 
 == Installation ==
 
@@ -42,7 +46,7 @@ Buoy can also be installed manually by following these instructions:
 
 Once activated, each user who wants to use Buoy must define their personal response team (list their chosen emergency contacts) in the "My Team" settings page before they can actually send an alert. See the [screenshots](https://wordpress.org/plugins/buoy/screenshots/) for a brief walkthrough of how to configure Buoy after it is installed.
 
-Read the [Buoy Administration Guide](https://github.com/meitar/better-angels/wiki/Buoy-Administration-Guide) for more information on how to administer a Buoy for your community.
+Read the [Buoy Administration Guide](https://github.com/betterangels/buoy/wiki/Administrator-documentation) for more information on how to administer a Buoy for your community.
 
 = Installation notes and troubleshooting =
 
@@ -53,15 +57,17 @@ If you are having trouble installing Buoy, make sure the computer hosting your w
 
 == Frequently Asked Questions ==
 
+Read [the full FAQ](https://github.com/betterangels/buoy/wiki/Frequently-Asked-Questions) on our wiki. Below is a subset of the most common questions we get about Buoy.
+
 = Where do I get Buoy? I don't see it in the app store. =
 
 Buoy is not an app, it is a tool that adds emergency dispatch services to websites. To use Buoy, you must have a user account on some community-run website, such as those provided by addiction recovery support groups, domestic violence shelters, local volunteer medical collectives, or similar.
 
-If you don't know of any such groups, take a look through our [List of Buoy-enabled websites](https://github.com/meitar/better-angels/wiki/List-of-Buoy-enabled-websites). Maybe there's a group near you!
+If you don't know of any such groups, take a look through our [List of Buoy-enabled websites](https://github.com/betterangels/buoy/wiki/List-of-Buoy-enabled-websites). Maybe there's a group near you!
 
 If not, consider starting such a group in your town. Reach out to collectives such as [Cop Watch](http://wecopwatch.org/), a local legal aid service provider, [Critical Resistance](http://criticalresistance.org/), [SMART Recovery](http://smartrecovery.org/), the [NCADV](http://www.ncadv.org/), the [Black Cross Health Collective](http://www.blackcrosscollective.org/), or other similar organizations and ask them how you can start a chapter in your neighborhood.
 
-Then get in touch with the [Better Angels](https://github.com/meitar/better-angels/wiki/About-Better-Angels) (that's us!) and we'll help you install and set up Buoy for your community.
+Then get in touch with the [Better Angels](https://betterangels.github.io/) (that's us!) and we'll help you install and set up Buoy for your community.
 
 = Does Buoy track my location? =
 
@@ -93,7 +99,7 @@ For instance:
 
 7. Regardless of which alert option you select, Buoy will gather some information from your device (including your location and your alert message) and either send your alert to your response team(s) immediately or schedule the alert with the Buoy server.
 
-8. If you pressed one of the immediate alert buttons, you will be shown [safety information written by your Buoy's administrator](https://github.com/meitar/better-angels/wiki/Buoy-Administration-Guide#providing-safety-information-to-your-community). If it is safe to do so, you can read through this information and/or take one of the suggested actions immediately. Otherwise, you can simply ignore this screen. As long as you keep your device with you, your response team will be able to find you thanks to its GPS or other location-aware beacon.
+8. If you pressed one of the immediate alert buttons, you will be shown [safety information written by your Buoy's administrator](https://github.com/betterangels/buoy/wiki/Configure). If it is safe to do so, you can read through this information and/or take one of the suggested actions immediately. Otherwise, you can simply ignore this screen. As long as you keep your device with you, your response team will be able to find you thanks to its GPS or other location-aware beacon.
 
 9. You can also close the safety information window at any time. When you do, you will see that behind the safety information window, a private, temporary chat room has been loaded in the background. When one of your team members responds to your alert, they will join you in this chat room. (Buoy ships with a built-in chat room and integrates with some third-party chat room providers.) This chat room also provides the ability for responders to upload media and record video or audio, and immediately share that media with other responders. Further, if your phone is destroyed or confiscated during an incident, a copy of the media you uploaded will still be saved on your Buoy's server, in a remote, safer location. (This is especially useful for CopWatch scenarios since police officers are notorious for illegally seizing cell phones and deleting footage.)
 
@@ -111,21 +117,14 @@ For instance:
 
 This is a feature, bugfix, and security release. Please update your Buoy as soon as you can.
 
-**Important update notice for WordPress version 4.4 admins:** If you are still using WordPress version 4.4 you must first activate the [REST API plugin](https://wordpress.org/plugins/rest-api/) *before* updating Buoy. If you have updated to WordPress 4.5 already you do not need the additional plugin, and if you update later you can delete the REST API plugin after updating to WordPress 4.5.
-
 In this release:
 
-* [Security](https://github.com/meitar/better-angels/issues/157): Built-in chat system no longer exposes chat messages to unauthenticated users.
 * Privacy: Replace Google Maps with OpenStreetMaps. With this change, Buoy no longer relies on any non-free (proprietary) code.
-* Usability: New users automatically have three (empty) teams created for them when they sign up.
-* Feature: New chat room option "Jitsi Meet" offers full-featured video conferencing for incident chat rooms via [Jitsi Meet web service](https://meet.jit.si/).
-    * Site admins who want Buoy incident chat rooms to support video conferencing need to change the [Buoy chat system setting](https://github.com/meitar/better-angels/wiki/Buoy-Administration-Guide#chat-system-options) in their Buoy's admin settings screen.
+* Feature: Chat rooms now support videoconferencing and live-streaming courtesy [Jitsi Meet](https://meet.jit.si/).
 * [Feature](https://github.com/meitar/better-angels/issues/115): Multiple default teams are now supported.
     * You can now set more than one team as your "default." These are teams whose members will be sent notifications when you press the big red Alert button. Setting a list of teams as your default instead of just one gives you more flexibility in what the Immediate Alert button does.
-* [Bugfix](https://github.com/meitar/better-angels/issues/126): Fixed screen flickering when using built-in chat system.
-* Bugfix: Sending a new message now correctly scrolls to the newest message in built-in chat system.
-* Bugfix: SMS notifications are no longer broken for security-enhanced Buoys running [WP PGP Encrypted Emails](https://wordpress.org/plugins/wp-pgp-encrypted-emails/). Learn more about [securing your Buoy](https://github.com/meitar/better-angels/wiki/Security-advice).
-* [Bugfix](https://github.com/meitar/better-angels/issues/163): Default settings are correctly set when network-activated on a Multisite install.
+* Usability: New users automatically have three (empty) teams created for them when they sign up.
+* Many bugfixes and additional performance improvements.
 
 = Version 0.1.2 =
 
