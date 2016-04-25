@@ -138,7 +138,6 @@ class Buoy_Crontab_Manager {
         file_put_contents($t, implode(PHP_EOL, $this->crontab_lines) . PHP_EOL);
         ob_start(); // prevent output (mostly for DreamHost)
         $out = system('crontab ' . escapeshellarg($t), $ret_val);
-        @ob_end_clean();
         if (0 === $ret_val) {
             unlink($t);
         } else if (false !== strpos($out, 'http://wiki.dreamhost.com/Crontab#MAILTO_variable_requirement')) {
@@ -147,11 +146,19 @@ class Buoy_Crontab_Manager {
                 escapeshellarg(dirname(__FILE__).'/dreamhost_cron.exp'),
                 escapeshellarg($t)
             );
-            exec($cmd);
+            system($cmd, $s);
+            if (0 === $s) {
+                unlink($t);
+            } else {
+                // TODO: Throw some kind of DreamHost specific error.
+                //       That way, we can show an admin notice to the
+                //       user back on the WordPress side. Phew!
+            }
         } else {
             $php_usr = posix_getpwuid(posix_geteuid());
             throw new RuntimeException('Failed to install crontab for ' . $php_usr['name']);
         }
+        @ob_end_clean();
         return $this;
     }
 }
