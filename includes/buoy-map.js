@@ -171,31 +171,37 @@ var BUOY_MAP = (function () {
     /**
      * Creates a Leaflet Map centered on the given coordinates.
      *
-     * @param {object} coords An object of geolocated data with properties named `lat` and `lng`.
-     * @param {boolean} mark_coords Whether or not to create a marker and infowindow for the coords location.
+     * @param {Position} position
+     * @param {boolean} mark_coords Whether to create a marker and infowindow for the `position` argument location.
      */
-    var initMap = function (coords, mark_coords) {
+    var initMap = function (position, mark_coords) {
         if ('undefined' === typeof L) { return; }
 
+        var latlng;
+        if (position && position.coords) {
+            latlng = {'lat': position.coords.latitude, 'lng': position.coords.longitude};
+        } else {
+            latlng = {'lat': 0, 'lng': 0};
+        }
         map = new L.Map(document.getElementById('buoy-map'))
-            .setView(coords, 10);
+            .setView(latlng, 10);
         map.attributionControl.setPrefix('');
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             'maxZoom': 19
         }).addTo(map);
-        marker_bounds = L.latLngBounds([0,0]);
+        marker_bounds = L.latLngBounds(latlng);
 
         if (mark_coords) {
             var infowindow = L.popup().setContent(
                 '<p>' + buoy_vars.i18n_crisis_location + '</p>'
                 + infoWindowContent({
-                    'directions': getDirectionsUrl([coords.lat, coords.lng])
+                    'directions': getDirectionsUrl([latlng.lat, latlng.lng])
                 })
             );
-            var marker = L.marker([coords.lat, coords.lng], {
+            var marker = L.marker([latlng.lat, latlng.lng], {
                 'title': buoy_vars.i18n_crisis_location
             }).addTo(map).bindPopup(infowindow);
-            marker_bounds.extend([coords.lat, coords.lng]);
+            marker_bounds.extend([latlng.lat, latlng.lng]);
             map_markers.incident = marker;
         }
 
@@ -226,7 +232,7 @@ var BUOY_MAP = (function () {
         }
 
         map.fitBounds(marker_bounds);
-        map.setView(coords, map.getZoom(), {'animation': true});
+        map.setView(latlng, map.getZoom(), {'animation': true});
 
         map.on('click', touchMap);
         map.on('drag', touchMap);
@@ -273,11 +279,15 @@ var BUOY_MAP = (function () {
             'lng': parseFloat(jQuery('#buoy-map-container').data('incident-longitude'))
         };
         if (isNaN(emergency_location.lat) || isNaN(emergency_location.lng)) {
-            navigator.geolocation.getCurrentPosition(function (pos) {
-                initMap({'lat': pos.coords.latitude, 'lng': pos.coords.longitude}, false);
-            });
+            navigator.geolocation.getCurrentPosition(initMap, initMap, {'timeout': 5000});
         } else {
-            initMap(emergency_location, true);
+            var loc = {
+                'coords': {
+                    'latitude': emergency_location.lat,
+                    'longitude': emergency_location.lng
+                }
+            };
+            initMap(loc, true);
         }
 
         if (jQuery('.dashboard_page_buoy_chat').length) {
@@ -300,8 +310,12 @@ var BUOY_MAP = (function () {
         } else {
             map_container.slideDown({
                 'complete': function () {
-                    map.invalidateSize(true);
-                    map.fitBounds(marker_bounds);
+                    if (map) {
+                        map.invalidateSize(true);
+                    }
+                    if (marker_bounds.lat && marker_bounds.lng) {
+                        map.fitBounds(marker_bounds);
+                    }
                 }
             });
         }
