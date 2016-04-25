@@ -1,36 +1,24 @@
-# Buoy: A community-driven emergency dispatch system powered by friendship.
+# Buoy: A community-based crisis response system
 
 [![Join the project chat room](https://badges.gitter.im/betterangels/buoy.svg)](https://gitter.im/betterangels/buoy) [![Build Status for develop branch](https://travis-ci.org/betterangels/buoy.svg?branch=develop)](https://travis-ci.org/betterangels/buoy) [![Download Buoy from WordPress.org](https://img.shields.io/wordpress/plugin/dt/buoy.svg)](https://wordpress.org/plugins/buoy/) [![Current release at WordPress.org](https://img.shields.io/wordpress/plugin/v/buoy.svg)](https://wordpress.org/plugins/buoy/) [![Required WordPress version](https://img.shields.io/wordpress/v/buoy.svg)](https://wordpress.org/plugins/buoy/developers/) [![Buoy is licensed GPL-3.0](https://img.shields.io/github/license/betterangels/buoy.svg)](https://www.gnu.org/licenses/quick-guide-gplv3.en.html)
 
-Buoy is a private, enhanced [9-1-1](https://en.wikipedia.org/wiki/9-1-1) for your website. It is free software created by the Better Angels collective as a [WordPress](https://wordpress.org/) plugin and is designed to quickly connect people in need with trusted friends, family members, advocates, and other allies in times of crisis.
+<img src="https://ps.w.org/buoy/assets/icon-256x256.png?rev=1397119" alt="" align="right" />
 
-> One can imagine the Internet as a vast ocean, its many users as people sailing to the many ports on the high seas. Buoy is software that equips your website with tools that your users can use to help one another in the real world. The more buoys are deployed on the ocean, the safer traveling becomes for everyone.
->
-> —The Better Angels
+Buoy is a decentralized 9-1-1 alternative built for and by people who are not well served by existing emergency response services. Buoy makes it easy to tell your friends where you are and what you need. Buoy's goal is a world where anyone in distress always has the option to turn to people they trust for support, rather than being forced to rely on people they don't.
 
-## For service providers
+Buoy is not a traditional "app" that you can download in the app store, but rather a system for adding crisis response and emergency dispatch services to existing websites. With Buoy, community groups, activist organizations, and social support service providers can quickly connect people who need help with trusted friends, family members, advocates, and other allies who can help them. It is designed to be community owned and operated, so each instance of Buoy can be customized to the unique needs or the organization or community group that hosts it.
 
-Anyone with a WordPress-powered website or blog can add the Buoy software (a 1-click automatic install) to their website, instantly enabling the site's membership to provide peer-based mutual-aid to one another. Moreover, legal aid service providers, domestic, dating, and intimate partner violence prevention advocates, shelters, social groups, alternative medical and mental health collectives, and others can offer members of their community one-click emergency access to a network of trusted peers and/or on-call emergency responders.
+Whether you are a group of street medics coordinating with each other during an action, citizen journalists or copwatchers watching each other's backs, domestic violence survivor support advocates, or even single parents picking each others’ kids up from school, Buoy helps you get and give peer-based mutual aid to your friends and comrades.
 
-## For victims and survivors
+* **See the [screenshots](https://wordpress.org/plugins/buoy/screenshots/) for an example walkthrough of how Buoy works.**
+* [Find a Buoy-enabled web site.](https://github.com/betterangels/buoy/wiki/List-of-Buoy-enabled-websites)
+* [Learn more about Buoy](https://github.com/betterangels/buoy/wiki).
 
-Buoy makes it easy to tell your friends where you are and what you need, even in the most dangerous or frightening scenarios. Tapping a single button will immediately notify the people you trust most that you need their help, give them a map showing your exact location, and even helps them coordinate with one another to quickly figure out how to help you best. With Buoy and a smartphone, you are never more than one button press away from the people you trust most. (We are even working to support old-school flipfones!)
+# [Installing Buoy for your community](https://github.com/betterangels/buoy/wiki/Install)
 
-You do not need to download or install special software to use Buoy. Simply bookmark a page with your smartphone's built-in Web browser to gain instant access to your personal emergency response team. Quickly send them your location with a pre-defined custom message, write a custom message, or schedule a timed alert (like a "safe call") for some time in the future.
+If you already have a WordPress website, Buoy can be installed automatically from the WordPress plugin directory by searching for "Buoy" in the "Add New Plugin" screen of your WordPres admin site and clicking the "Install now" button. ([Learn more about installing WordPress plugins from WPBeginner.com](http://www.wpbeginner.com/beginners-guide/step-by-step-guide-to-install-a-wordpress-plugin-for-beginners/).)
 
-The people you select as your emergency contacts ("response team") will get a notification showing them your location in the real world as well as the locations of any other responders to your call for help. If it's safe for you to do so, you can now coordinate with all responders in a live chat room, or responders can coordinate amongst themselves about how best to help you if you are unresponsive.
-
-**See the [screenshots](https://wordpress.org/plugins/buoy/screenshots/) for an example walkthrough of how Buoy works.**
-
-[Find a Buoy-enabled web site.](https://github.com/betterangels/better-angels/wiki/List-of-Buoy-enabled-websites)
-
-# Installing Buoy for your community
-
-Installation is as simple as pressing "Install now" from your admin WordPress Dashboard. ([Learn more about installing WordPress plugins from WPBeginner.com](http://www.wpbeginner.com/beginners-guide/step-by-step-guide-to-install-a-wordpress-plugin-for-beginners/).) You can also find [Buoy hosted on the WordPress plugin repository](https://wordpress.org/plugins/buoy/).
-
-Read the [Buoy Administration Guide](https://github.com/betterangels/better-angels/wiki/Buoy-Administration-Guide) for more details.
-
-# Contributing
+# [Contributing](https://github.com/betterangels/buoy/wiki/Contributor-guidelines)
 
 Buoy is [free software](https://www.gnu.org/philosophy/free-sw.en.html "What is free software?"). It was developed and is maintained primarily by a nomadic hacker named [maymay](https://maymay.net/) who has a lot of fucks to give about supporting survivors of any of capitalism's horrors, along with a growing group of volunteers who call themselves the [Better Angels](https://betterangels.github.io/).
 
@@ -44,14 +32,16 @@ You can support development and maintenance of Buoy by [donating to our crowdfun
 
 If you speak multiple languages, you can help [translate Buoy into more human languages](https://www.transifex.com/cyberbusking/better-angels/). This helps make Buoy available to people all over the world in their native languages.
 
+Learn more by reading our [Translator instructions](https://github.com/betterangels/buoy/wiki/Translator-instructions).
+
 ## Document
 
-If you use Buoy and are familiar with how it works, you can help others learn about the tool by writing about how you use it. We maintain [a wiki](https://github.com/betterangels/better-angels/wiki) that you can edit to add your own guides, walkthroughs, and suggestions.
+If you use Buoy and are familiar with how it works, you can help others learn about the tool by writing about how you use it. We maintain [a wiki](https://github.com/betterangels/buoy/wiki) that you can edit to add your own guides, walkthroughs, and suggestions.
 
-You can also write articles on your website or blog. If you do, please [connect with us](https://github.com/betterangels/buoy/wiki/Connect-with-Us) over social media or [email the Better Angels collective](mailto:BetterAngels@RiseUp.net) to let us know.
+You can also write articles on your website or blog. If you do, please [connect with us over social media or email](https://betterangels.github.io/) to let us know.
 
 ## Code
 
 The easiest way to get started contributing code is to use the [Varying Vagrant Vagrants](https://github.com/Varying-Vagrant-Vagrants/VVV) ("VVV") project to make a local WordPress development environment. Then [fork the Buoy project on GitHub](https://github.com/betterangels/buoy/fork) and `git clone` your fork into your VVV's `wordpress-default/wp-content/plugins/` directory. See our wiki for a step-by-step guide to [setting up a development environment](http://github.com/betterangels/better-angels/wiki/Setting-up-a-development-environment).
 
-Patches and pull requests are very welcome!
+Patches and pull requests are very welcome! More information at our [Developer documentation](https://github.com/betterangels/buoy/wiki/Developer-documentation).
