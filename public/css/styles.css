@@ -25,7 +25,7 @@ layout: null
  * @group Masthead/header/cover images.
  */
 .cover-image {
-    background: #A589D1;
+    background-color: #A589D1;
 }
 h1.header-image-title {
     position: relative;
