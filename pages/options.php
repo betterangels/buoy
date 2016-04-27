@@ -26,9 +26,12 @@
                 );?>
             </td>
         </tr>
+<?php if (function_exists('posix_getpwuid')) : ?>
         <tr>
             <th>
-                <label for="<?php esc_attr_e(WP_Buoy_Plugin::$prefix);?>_future_alerts"><?php esc_html_e('Enable timed alerts/safe calls', 'buoy');?></label>
+                <label for="<?php esc_attr_e(WP_Buoy_Plugin::$prefix);?>_future_alerts">
+                    <?php esc_html_e('Enable timed alerts/safe calls', 'buoy');?>
+                </label>
             </th>
             <td>
                 <input type="checkbox"
@@ -37,9 +40,10 @@
                     <?php checked($options->get('future_alerts'));?>
                     value="1"
                     />
-                <span class="description"><?php esc_html_e('When checked, users will be able to schedule alerts to be sent some time in the future. This is sometimes known as a "safe call," a way of alerting a response team to a potentially dangerous situation if the alerter is unreachable.', 'buoy');?></p>
+                <span class="description"><?php esc_html_e('When checked, users will be able to schedule alerts to be sent some time in the future. This is sometimes known as a "safe call," a way of alerting a response team to a potentially dangerous situation if the alerter is unreachable.', 'buoy');?></span>
             </td>
         </tr>
+<?php endif; ?>
         <tr>
             <th>
                 <label for="<?php esc_attr_e(WP_Buoy_Plugin::$prefix);?>_alert_ttl_num"><?php esc_html_e('Alert time to live', 'buoy');?></label>

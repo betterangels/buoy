@@ -62,7 +62,7 @@ class WP_Buoy_Settings {
             'alert_ttl_multiplier' => DAY_IN_SECONDS,
             'safety_info' => file_get_contents(plugin_dir_path(__FILE__) . 'default-safety-information.html'),
             'chat_system' => 'post_comments',
-            'future_alerts' => false,
+            'future_alerts' => (function_exists('posix_getpwuid')) ? true : false,
             'delete_old_incident_media' => false,
             'debug' => false
         );
@@ -407,6 +407,10 @@ class WP_Buoy_Settings {
      * @return void
      */
     public static function configureCron () {
+        // Don't do anything if we're not a POSIX system.
+        if (!function_exists('posix_getpwuid')) {
+            return;
+        }
         require_once plugin_dir_path(__FILE__) . 'crontab-manager.php';
 
         $C = new Buoy_Crontab_Manager();
@@ -469,8 +473,12 @@ class WP_Buoy_Settings {
                 case 'chat_system':
                     $safe_input[$k] = sanitize_text_field($v);
                     break;
-                case 'alert_ttl_multiplier':
                 case 'future_alerts':
+                    if (function_exists('posix_getpwuid')) {
+                        $safe_input[$k] = intval($v);
+                    }
+                    break;
+                case 'alert_ttl_multiplier':
                 case 'delete_old_incident_media':
                 case 'debug':
                     $safe_input[$k] = intval($v);
