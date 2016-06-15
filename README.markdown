@@ -42,6 +42,6 @@ You can also write articles on your website or blog. If you do, please [connect 
 
 ## Code
 
-The easiest way to get started contributing code is to use the [Varying Vagrant Vagrants](https://github.com/Varying-Vagrant-Vagrants/VVV) ("VVV") project to make a local WordPress development environment. Then [fork the Buoy project on GitHub](https://github.com/betterangels/buoy/fork) and `git clone` your fork into your VVV's `wordpress-default/wp-content/plugins/` directory. See our wiki for a step-by-step guide to [setting up a development environment](http://github.com/betterangels/better-angels/wiki/Setting-up-a-development-environment).
+The easiest way to get started contributing code is to use the [Varying Vagrant Vagrants](https://github.com/Varying-Vagrant-Vagrants/VVV) ("VVV") project to make a local WordPress development environment. Then [fork the Buoy project on GitHub](https://github.com/betterangels/buoy/fork) and `git clone` your fork into your VVV's `wordpress-default/wp-content/plugins/` directory. See our wiki for a step-by-step guide to [setting up a development environment](https://github.com/betterangels/buoy/wiki/Setting-up-a-development-environment).
 
 Patches and pull requests are very welcome! More information at our [Developer documentation](https://github.com/betterangels/buoy/wiki/Developer-documentation).
