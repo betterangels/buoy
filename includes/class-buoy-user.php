@@ -71,6 +71,7 @@ class WP_Buoy_User extends WP_Buoy_Plugin {
     public function get_teams () {
         $this->teams = get_posts(array(
             'post_type' => self::$prefix . '_team',
+            'post_status' => array('publish', 'private'),
             'author' => $this->wp_user->ID,
             'posts_per_page' => -1,
             'fields' => 'ids'

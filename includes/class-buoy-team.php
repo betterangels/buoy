@@ -201,6 +201,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
      */
     public function add_member ($user_id, $notify = true) {
         add_post_meta($this->wp_post->ID, '_team_members', $user_id, false);
+        $this->members[] = get_userdata($user_id);
 
         do_action(self::$prefix . '_team_member_added', $user_id, $this, $notify);
 
