@@ -78,6 +78,7 @@ class WP_Buoy_Plugin {
         }
 
         add_action('wp_ajax_nopriv_' . self::$prefix . '_webapp_manifest', array(__CLASS__, 'renderWebAppManifest'));
+        add_action('buoy_sms_email_bridge_run', array('WP_Buoy_SMS_Email_Bridge', 'run'));
 
         register_activation_hook(__FILE__, array(__CLASS__, 'activate'));
         register_deactivation_hook(__FILE__, array(__CLASS__, 'deactivate'));
@@ -117,6 +118,8 @@ class WP_Buoy_Plugin {
             }
         }
 
+        require_once 'vendor/autoload.php'; // Dependencies from Composer
+
         require_once 'includes/class-buoy-helper.php';
         require_once 'includes/class-buoy-settings.php';
         require_once 'includes/class-buoy-user-settings.php';
@@ -124,8 +127,7 @@ class WP_Buoy_Plugin {
         require_once 'includes/class-buoy-notification.php';
         require_once 'includes/class-buoy-user.php';
         require_once 'includes/class-buoy-alert.php';
-
-        require_once 'vendor/autoload.php'; // Dependencies from Composer
+        require_once 'includes/class-buoy-sms-email-bridge.php';
 
         if (!class_exists('WP_Screen_Help_Loader')) {
             require_once 'includes/vendor/wp-screen-help-loader/class-wp-screen-help-loader.php';
@@ -136,6 +138,7 @@ class WP_Buoy_Plugin {
         WP_Buoy_Notification::register();
         WP_Buoy_User::register();
         WP_Buoy_Alert::register();
+        WP_Buoy_SMS_Email_Bridge::register();
     }
 
     /**

@@ -752,8 +752,14 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         // If we're enabling the SMS/email bridge, save that data.
         if (!empty($_POST['sms_email_bridge_enabled'])) {
             update_post_meta($post_id, 'sms_email_bridge_enabled', true);
+            // and schedule a check
+            wp_schedule_single_event(time() + 10, "buoy_sms_email_bridge_run", array($post_id));
         } else {
             update_post_meta($post_id, 'sms_email_bridge_enabled', false);
+            // and unschedule the next check
+            if ($next_time = wp_next_scheduled("buoy_sms_email_bridge_run", array($post_id))) {
+                wp_unschedule_event($next_time, "buoy_sms_email_bridge_run", array($post_id));
+            }
         }
         update_post_meta($post_id, 'sms_email_bridge_address', sanitize_email($_POST['sms_email_bridge_address']));
         update_post_meta($post_id, 'sms_email_bridge_username', sanitize_text_field($_POST['sms_email_bridge_username']));
