@@ -125,6 +125,8 @@ class WP_Buoy_Plugin {
         require_once 'includes/class-buoy-user.php';
         require_once 'includes/class-buoy-alert.php';
 
+        require_once 'vendor/autoload.php'; // Dependencies from Composer
+
         if (!class_exists('WP_Screen_Help_Loader')) {
             require_once 'includes/vendor/wp-screen-help-loader/class-wp-screen-help-loader.php';
         }

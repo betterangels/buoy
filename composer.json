@@ -1,0 +1,42 @@
+{
+    "name": "betterangels/buoy",
+    "description": "A community-based crisis response system. Because friends don't let friends call the cops.",
+    "homepage": "https://betterangels.github.io/buoy/",
+    "keywords": ["wordpress", "plugin", "Better Angels", "community", "emergency response", "activism"],
+    "type": "wordpress-plugin",
+    "repositories": [
+        {
+            "type": "pear",
+            "url": "https://pear.horde.org"
+        }
+    ],
+    "require": {
+        "composer/installers": "^1.1",
+        "php": ">=5.3",
+        "pear-pear.horde.org/Horde_Imap_Client": "*"
+    },
+    "license": "GPL-3.0",
+    "authors": [
+        {
+            "name": "Meitar 'maymay' Moscovitz",
+            "email": "meitarm@gmail.com",
+            "homepage": "https://maymay.net/",
+            "role": "Developer"
+        }
+    ],
+    "support": {
+        "email": "betterangels@riseup.net",
+        "issues": "https://github.com/betterangels/buoy/issues",
+        "forum": "https://wordpress.org/support/plugin/buoy/",
+        "wiki": "https://github.com/betterangels/buoy/wiki",
+        "irc": "https://gitter.im/betterangels/buoy",
+        "source": "https://github.com/betterangels/buoy/",
+        "docs": "https://github.com/betterangels/buoy/wiki/Documentation",
+        "rss": "https://github.com/betterangels/buoy/commits/develop.atom"
+    },
+    "minimum-stability": "stable",
+    "suggest": {
+        "wpackagist-plugin/wp-pgp-encrypted-emails": "Offers additional security and privacy enhancements for email-based communication.",
+        "wpackagist-plugin/admin-language-per-user": "Enables end-user customization of the interface language."
+    }
+}

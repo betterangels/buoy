@@ -452,6 +452,12 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
             'side',
             'low'
         );
+
+        add_meta_box(
+            'sms-bridge',
+            esc_html__('SMS/txt Messages', 'buoy'),
+            array(__CLASS__, 'renderTxtMessagesMetaBox')
+        );
     }
 
     /**
@@ -502,6 +508,17 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         }
         $html .= '</p>';
         print "<label>$html</label>";
+    }
+
+    /**
+     * Displays the "SMS/txt Messages" meta box.
+     *
+     * @param WP_Post $post
+     *
+     * @return void
+     */
+    public static function renderTxtMessagesMetaBox ($post) {
+        require_once dirname(__FILE__).'/../pages/meta-box-sms-messages.php';
     }
 
     /**

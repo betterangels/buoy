@@ -1,11 +1,11 @@
 === Buoy ===
 Contributors: meitar
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TJLPJYXHSRBEE&lc=US&item_name=Better%20Angels%20Buoy&item_number=Better%20Angels%20Buoy&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted
-Tags: community, emergency response
+Tags: community, emergency response, activism
 Requires at least: 4.4
-Tested up to: 4.5
+Tested up to: 4.6
 Stable tag: 0.2.0
-License: GPLv3
+License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 A community-based crisis response system. Buoy is a private, enhanced, cop-free alternative to 9-1-1.
