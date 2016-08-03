@@ -67,7 +67,16 @@ class WP_Buoy_SMS_Email_Bridge {
             // TODO: Handle Horde IMAP client instantiation exception.
         }
 
-        error_log(print_r($imap_client, true));
+        $query = new Horde_Imap_Client_Search_Query();
+        $query->flag(Horde_Imap_Client::FLAG_SEEN, false);
+
+        try {
+            $results = $imap_client->search('INBOX', $query);
+            var_dump($results);
+        } catch (Horde_Imap_Client_Exception $e) {
+            var_dump($e);
+        }
+
     }
 
 }

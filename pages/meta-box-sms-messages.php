@@ -95,7 +95,7 @@
                         class="code small-text"
                         name="sms_email_bridge_port"
                         id="sms_email_bridge_port"
-                        placeholder="995"
+                        placeholder="993"
                         value="<?php esc_attr_e($post->sms_email_bridge_port);?>"
                     />
                     <span class="description">
