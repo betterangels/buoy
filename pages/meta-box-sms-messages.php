@@ -19,7 +19,7 @@
                 <th>
                     <label for="sms_email_bridge_address">
                         <?php esc_html_e('Email address', 'buoy');?><br />
-                        <?php esc_html_e('(DO NOT USE YOUR PERSONAL EMAIL ADDRESS)', 'buoy');?>
+                        (<?php esc_html_e('DO NOT USE YOUR PERSONAL ADDRESS', 'buoy');?>)
                     </label>
                 </th>
                 <td>
@@ -27,7 +27,7 @@
                         class="code large-text"
                         name="sms_email_bridge_address"
                         id="sms_email_bridge_address"
-                        placeholder="NOT_YOUR_PERSONAL_ADDRESS@gmail.com"
+                        placeholder="<?php esc_attr_e('DO NOT USE YOUR PERSONAL ADDRESS', 'buoy');?>@gmail.com"
                         value="<?php esc_attr_e($post->sms_email_bridge_address);?>"
                     />
                     <span class="description">
@@ -37,14 +37,16 @@
             </tr>
             <tr>
                 <th>
-                    <?php esc_html_e('Username', 'buoy');?>
+                    <label for="sms_email_bridge_username">
+                        <?php esc_html_e('Username', 'buoy');?>
+                    </label>
                 </th>
                 <td>
                     <input type="text"
                         class="code large-text"
                         name="sms_email_bridge_username"
                         id="sms_email_bridge_username"
-                        placeholder="username"
+                        placeholder="username@email-server.com"
                         value="<?php esc_attr_e($post->sms_email_bridge_username);?>"
                     />
                     <span class="description">
@@ -54,7 +56,9 @@
             </tr>
             <tr>
                 <th>
-                    <?php esc_html_e('Password', 'buoy');?>
+                    <label for="sms_email_bridge_password">
+                        <?php esc_html_e('Password', 'buoy');?>
+                    </label>
                 </th>
                 <td>
                     <input type="text"
@@ -71,7 +75,9 @@
             </tr>
             <tr>
                 <th>
-                    <?php esc_html_e('Incoming (IMAP) Mail Server', 'buoy');?>
+                    <label for="sms_email_bridge_server">
+                        <?php esc_html_e('Incoming (IMAP) Mail Server', 'buoy');?>
+                    </label>
                 </th>
                 <td>
                     <input type="text"
@@ -88,7 +94,9 @@
             </tr>
             <tr>
                 <th>
-                    <?php esc_html_e('IMAP Port Number', 'buoy');?>
+                    <label for="sms_email_bridge_port">
+                        <?php esc_html_e('IMAP Port Number', 'buoy');?>
+                    </label>
                 </th>
                 <td>
                     <input type="number" min="1" max="65535"
@@ -100,6 +108,30 @@
                     />
                     <span class="description">
                         <?php esc_html_e('Enter the port number on which the email server is listening for connections.', 'buoy');?>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <th>
+                    <label for="sms_email_bridge_connection_security">
+                        <?php esc_html_e('Connection Security (SSL/TLS)', 'buoy');?>
+                    </label>
+                </th>
+                <td>
+                    <select
+                        name="sms_email_bridge_connection_security"
+                        id="sms_email_bridge_connection_security"
+                    >
+                        <option value="tlsv1" <?php selected($post->sms_email_bridge_connection_security, 'tlsv1');?>><?php esc_html_e('Force TLSv1 (recommended)', 'buoy');?></option>
+                        <option value="tls" <?php selected($post->sms_email_bridge_connection_security, 'tls');?>><?php esc_html_e('Opportunistic TLS', 'buoy');?></option>
+                        <option value="ssl" <?php selected($post->sms_email_bridge_connection_security, 'ssl');?>><?php esc_html_e('Auto-detect SSL version (for old servers)', 'buoy');?></option>
+                        <option value="sslv3" <?php selected($post->sms_email_bridge_connection_security, 'sslv3');?>><?php esc_html_e('Force SSL version 3', 'buoy');?></option>
+                        <option value="sslv2" <?php selected($post->sms_email_bridge_connection_security, 'sslv2');?>><?php esc_html_e('Force SSL version 2', 'buoy');?></option>
+                        <option value="none" <?php selected($post->sms_email_bridge_connection_security, 'none');?>><?php esc_html_e('None (not recommended)', 'buoy');?></option>
+                    </select>
+                    <br />
+                    <span class="description">
+                        <?php esc_html_e('Choose the highest level of connection security your server supports.', 'buoy');?>
                     </span>
                 </td>
             </tr>

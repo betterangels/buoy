@@ -56,7 +56,7 @@ class WP_Buoy_SMS_Email_Bridge {
             'password' => $post->sms_email_bridge_password,
             'hostspec' => $post->sms_email_bridge_server,
             'port' => $post->sms_email_bridge_port,
-            'secure' => 'tls' // ALWAYS USE TLS!
+            'secure' => $post->sms_email_bridge_connection_security,
         );
         if ($settings->get('debug')) {
             $imap_args['debug'] = WP_CONTENT_DIR.'/debug.log';
