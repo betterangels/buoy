@@ -165,6 +165,10 @@ class WP_Buoy_Notification extends WP_Buoy_Plugin {
             "From: \"{$alerter->display_name}\" <wordpress@{$from_domain}>",
         );
 
+        $SMS = new WP_Buoy_SMS();
+        $SMS->setSender($alerter);
+        $SMS->setContent("$responder_short_link $subject");
+
         foreach ($alert->get_teams() as $team_id) {
             $team = new WP_Buoy_Team($team_id);
             foreach ($team->get_confirmed_members() as $user_id) {
@@ -175,43 +179,13 @@ class WP_Buoy_Notification extends WP_Buoy_Plugin {
 
                 $smsemail = $responder->get_sms_email();
                 if (!empty($smsemail)) {
-                    $sms_max_length = 160;
-                    // We need to ensure that SMS notifications fit within the 160 character
-                    // limit of SMS transmissions. Since we're using email-to-SMS gateways,
-                    // a subject will be wrapped inside of parentheses, making it two chars
-                    // longer than whatever its original contents are. Then a space is
-                    // inserted between the subject and the message body. The total length
-                    // of strlen($subject) + 2 + 1 + strlen($message) must be less than 160.
-                    $extra_length = 3; // two parenthesis and a space
-                    // but in practice, there seems to be another 7 chars eaten up somewhere?
-                    $extra_length += 7;
-                    $url_length = strlen($responder_short_link);
-                    $full_length = strlen($subject) + $extra_length + $url_length;
-                    if ($full_length > $sms_max_length) {
-                        // truncate the $subject since the link must be fully included
-                        $subject = substr($subject, 0, $sms_max_length - $url_length - $extra_length);
-                    }
-                    // SMS emails must be extremely short and thus do
-                    // not support the addition of a PGP signature so
-                    // we must remove it. :(
-                    // The signature would be added by another plugin
-                    // so we check for its existence, and disable its
-                    // filter temporarily if it exists.
-                    $filter_callback = array('WP_PGP_Encrypted_Emails', 'wp_mail');
-                    $filter_function = implode('::', $filter_callback);
-                    $filter_priority = has_filter('wp_mail', $filter_callback);
-                    if ($filter_priority) {
-                        $filter_num_args = $GLOBALS['wp_filter']['wp_mail'][$filter_priority][$filter_function]['accepted_args'];
-                        remove_filter('wp_mail', $filter_callback);
-                    }
-                    wp_mail($smsemail, $subject, $responder_short_link, $headers);
-                    if ($filter_priority) {
-                        // Re-add filter with same arguments.
-                        add_filter('wp_mail', $filter_callback, $filter_priority, $filter_num_args);
-                    }
+                    $SMS->addAddressee($responder);
                 }
             }
         }
+
+        $SMS->addStrippedFilter(array('WP_PGP_Encrypted_Emails', 'wp_mail'));
+        $SMS->send();
     }
 
     /**

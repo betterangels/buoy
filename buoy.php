@@ -127,6 +127,7 @@ class WP_Buoy_Plugin {
         require_once 'includes/class-buoy-notification.php';
         require_once 'includes/class-buoy-user.php';
         require_once 'includes/class-buoy-alert.php';
+        require_once 'includes/class-buoy-sms.php';
         require_once 'includes/class-buoy-sms-email-bridge.php';
 
         if (!class_exists('WP_Screen_Help_Loader')) {
