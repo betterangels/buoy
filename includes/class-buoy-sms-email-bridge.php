@@ -51,6 +51,17 @@ class WP_Buoy_SMS_Email_Bridge {
             return; // no post? bridge disabled? nothing to do!
         }
 
+        // Get a list of confirmed team members with phone numbers.
+        $team = new WP_Buoy_Team($post);
+        $recipients = array();
+        foreach ($team->get_confirmed_members() as $member) {
+            $m = new WP_Buoy_User($member);
+            if ($m->get_phone_number()) {
+                $recipients[] = $m;
+            }
+        }
+
+        // Connect to IMAP server.
         $imap_args = array(
             'username' => $post->sms_email_bridge_username,
             'password' => $post->sms_email_bridge_password,
@@ -67,12 +78,60 @@ class WP_Buoy_SMS_Email_Bridge {
             // TODO: Handle Horde IMAP client instantiation exception.
         }
 
-        $query = new Horde_Imap_Client_Search_Query();
-        $query->flag(Horde_Imap_Client::FLAG_SEEN, false);
+        // Search IMAP server for any new new messages
+        // that are `From` any of the team member's numbers
+        $imap_query = new Horde_Imap_Client_Search_Query();
+        $queries = array();
+
+        foreach ($recipients as $rcpt) {
+            $q = new Horde_Imap_Client_Search_Query();
+            $q->headerText('From', $rcpt->get_phone_number());
+            // and that we haven't yet "read"
+            $q1 = new Horde_Imap_Client_Search_Query();
+            $q1->flag(Horde_Imap_Client::FLAG_SEEN, false);
+            $q->andSearch($q1);
+
+            $queries[] = $q;
+        }
+
+        $imap_query->orSearch($queries);
 
         try {
-            $results = $imap_client->search('INBOX', $query);
-            var_dump($results);
+            $results = $imap_client->search('INBOX', $imap_query);
+            if ($results['count']) {
+                // Fetch the content of each message we found
+                $f = new Horde_Imap_Client_Fetch_Query();
+                $f->fullText();
+                $fetched = $imap_client->fetch('INBOX', $f, array(
+                    'ids' => $results['match']
+                ));
+                // For each message,
+                foreach ($fetched as $data) {
+                    // get the body's plain text content
+                    $message = Horde_Mime_Part::parseMessage($data->getFullMsg());
+                    $body_id = $message->findBody();
+                    $part = $message->getPart($body_id);
+                    $txt = $part->getContents();
+
+                    // and get the sender's number
+                    $h = Horde_Mime_Headers::parseHeaders($data->getFullMsg());
+                    $from_phone = $h->getHeader('From')->getAddressList(true)->first()->mailbox;
+
+                    // forward the body text to each member of the team,
+                    $to = array();
+                    foreach ($recipients as $rcpt) {
+                        // except the person who it was sent by.
+                        if ($from_phone === $rcpt->get_phone_number()) {
+                            continue;
+                        }
+                        $to[] = $rcpt->get_sms_email();
+                    }
+                    // TODO: Ensure it isn't PGP-signed.
+                    wp_mail($to, '', $txt);
+                }
+            } else {
+                var_dump("No results");
+            }
         } catch (Horde_Imap_Client_Exception $e) {
             var_dump($e);
         }

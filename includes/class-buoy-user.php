@@ -214,7 +214,7 @@ class WP_Buoy_User extends WP_Buoy_Plugin {
      *
      * @return string
      */
-    private function get_phone_number () {
+    public function get_phone_number () {
         return sanitize_text_field(preg_replace('/[^0-9]/', '', $this->get_option('phone_number', '')));
     }
 
