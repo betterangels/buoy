@@ -184,7 +184,6 @@ class WP_Buoy_Notification extends WP_Buoy_Plugin {
             }
         }
 
-        $SMS->addStrippedFilter(array('WP_PGP_Encrypted_Emails', 'wp_mail'));
         $SMS->send();
     }
 

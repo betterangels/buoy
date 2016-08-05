@@ -118,16 +118,18 @@ class WP_Buoy_SMS_Email_Bridge {
                     $from_phone = $h->getHeader('From')->getAddressList(true)->first()->mailbox;
 
                     // forward the body text to each member of the team,
-                    $to = array();
+                    $SMS = new WP_Buoy_SMS();
+                    $tmp_user = new WP_User;
+                    $tmp_user->display_name = $from_phone;
+                    $SMS->setSender($tmp_user);
+                    $SMS->setContent($txt);
                     foreach ($recipients as $rcpt) {
                         // except the person who it was sent by.
-                        if ($from_phone === $rcpt->get_phone_number()) {
-                            continue;
+                        if ($from_phone !== $rcpt->get_phone_number()) {
+                            $SMS->addAddressee($rcpt);
                         }
-                        $to[] = $rcpt->get_sms_email();
                     }
-                    // TODO: Ensure it isn't PGP-signed.
-                    wp_mail($to, '', $txt);
+                    $SMS->send();
                 }
             } else {
                 var_dump("No results");

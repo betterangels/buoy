@@ -211,6 +211,9 @@ class WP_Buoy_SMS {
      * Sends the SMS message.
      */
     public function send () {
+        // Never sign SMS messages with PGP.
+        $this->addStrippedFilter(array('WP_PGP_Encrypted_Emails', 'wp_mail'));
+
         $this->prepare();
         do {
             $this->transmit();
