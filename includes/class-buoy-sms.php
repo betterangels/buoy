@@ -27,6 +27,8 @@ class WP_Buoy_SMS {
     const MAX_LENGTH = 160;
 
     /**
+     * The users to whom the SMS should be sent.
+     *
      * @var WP_Buoy_User[]
      */
     private $addressees = array();
@@ -100,16 +102,30 @@ class WP_Buoy_SMS {
     }
 
     /**
+     * Sets the sender of the SMS.
+     *
      * @param WP_User $user
      */
     public function setSender ($user) {
         $this->sender = $user;
     }
 
+    /**
+     * Gets the contents of the SMS.
+     *
+     * @return string
+     */
     public function getContent () {
         return $this->content;
     }
 
+    /**
+     * Sets the SMS message content.
+     *
+     * This can be longer than the maximum SMS length. If it is, the
+     * message will get truncated and subsequent SMS messages will be
+     * automatically sent, too.
+     */
     public function setContent ($string) {
         $this->content = $string;
     }
@@ -117,7 +133,8 @@ class WP_Buoy_SMS {
     /**
      * Register a WordPress filter to be stripped before sending.
      *
-     * @param string|array $wp_hook
+     * @param callable The callable hooked function or method to strip.
+     * @param string $wp_hook The hook from which to strip the callable.
      */
     public function addStrippedFilter ($filter_callback, $wp_hook = 'wp_mail') {
         $priority = has_filter($wp_hook, $filter_callback);
@@ -138,7 +155,16 @@ class WP_Buoy_SMS {
         );
     }
 
-    private function truncate ($content) {
+    /**
+     * Gets the message content that fits inside a single SMS/txt.
+     *
+     * Truncates the current SMS message if necessary and then sets
+     * the contents to the remainder of the message.
+     *
+     * @return string
+     */
+    private function getMessage () {
+        $content = $this->getContent();
         $msg = '';
         $len = strlen($content);
 
@@ -195,7 +221,7 @@ class WP_Buoy_SMS {
         $headers = array(
             "From: \"{$this->sender->display_name}\" <wordpress@{$from_domain}>"
         );
-        wp_mail($this->to, '', $this->truncate($this->getContent()), $headers);
+        wp_mail($this->to, '', $this->getMessage(), $headers);
     }
 
     /**
