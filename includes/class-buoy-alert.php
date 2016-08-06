@@ -1412,13 +1412,19 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
     public static function handleLocationUpdate () {
         check_ajax_referer(self::$prefix.'_incident_nonce', self::$prefix.'_nonce');
 
-        if (isset($_POST['incident_hash'])) {
-            $alert = new WP_Buoy_Alert($_POST['incident_hash']);
-            if (isset($_POST['pos'])) {
-                $alert->set_responder_geo(get_current_user_id(), $_POST['pos']);
-                wp_send_json_success($alert->get_incident_state());
+        try {
+            if (isset($_POST['incident_hash'])) {
+                $alert = new WP_Buoy_Alert($_POST['incident_hash']);
+                if (isset($_POST['pos'])) {
+                    $alert->set_responder_geo(get_current_user_id(), $_POST['pos']);
+                    wp_send_json_success($alert->get_incident_state());
+                }
             }
+        } catch (Exception $e) {
+            // TODO: Handle exception more gracefully?
+            wp_send_json_error();
         }
+
         wp_send_json_error();
     }
 
