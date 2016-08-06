@@ -5,6 +5,7 @@ $posts = get_posts(array(
     'meta_key' => 'sms_email_bridge_enabled',
     'meta_value' => true
 ));
+$selected_team = (empty($_POST['team'])) ? false : $_POST['team'];
 ?>
 <h1><?php esc_html_e('Check Team SMS/txt email', 'buoy');?></h1>
 <form
@@ -22,7 +23,7 @@ $posts = get_posts(array(
             </th>
             <td>
                 <select id="team" name="team"><?php foreach ($posts as $post) {
-                    print '<option value="'.esc_attr($post->ID).'" '.selected($post->ID, $_POST['team'], false).'>' . esc_html($post->post_title) . '</option>';
+                    print '<option value="'.esc_attr($post->ID).'" '.selected($post->ID, $selected_team, false).'>' . esc_html($post->post_title) . '</option>';
                 } ?></select>
             </td>
         </tr>
@@ -36,7 +37,7 @@ $posts = get_posts(array(
 <pre>
 <?php
 if (isset($_POST['buoy_nonce']) && wp_verify_nonce($_POST['buoy_nonce'], 'sms_email_bridge_check')) {
-    WP_Buoy_SMS_Email_Bridge::run(absint($_POST['team']));
+    WP_Buoy_SMS_Email_Bridge::run(absint($selected_team));
 }
 ?>
 </pre>
