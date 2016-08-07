@@ -99,9 +99,9 @@ class WP_Buoy_SMS_Email_Bridge {
             $q = new Horde_Imap_Client_Search_Query();
             $q->headerText('From', $rcpt->get_phone_number());
             // and that we haven't yet "read"
-            $q1 = new Horde_Imap_Client_Search_Query();
-            $q1->flag(Horde_Imap_Client::FLAG_SEEN, false);
-            $q->andSearch($q1);
+//            $q1 = new Horde_Imap_Client_Search_Query();
+//            $q1->flag(Horde_Imap_Client::FLAG_SEEN, false);
+//            $q->andSearch($q1);
 
             $queries[] = $q;
         }
@@ -138,20 +138,29 @@ class WP_Buoy_SMS_Email_Bridge {
                 $from_phone = $h->getHeader('From')->getAddressList(true)->first()->mailbox;
 
                 // forward the body text to each member of the team,
-                $SMS = new WP_Buoy_SMS();
-                $tmp_user = new WP_User;
-                $tmp_user->display_name = $from_phone;
-                $SMS->setSender($tmp_user);
-                $SMS->setContent($txt);
-                foreach ($recipients as $rcpt) {
-                    // except the person who it was sent by.
-                    if ($from_phone !== $rcpt->get_phone_number()) {
-                        $SMS->addAddressee($rcpt);
-                    }
-                }
-                $SMS->send();
+                self::forward($txt, $recipients, WP_Buoy_User::getByPhoneNumber($from_phone));
             }
         }
+    }
+
+    /**
+     * Forwards a text message to a set of recipients.
+     *
+     * @param string $text
+     * @param WP_Buoy_User[] $recipients
+     * @param WP_Buoy_User $sender
+     */
+    private static function forward ($text, $recipients, $sender) {
+        $SMS = new WP_Buoy_SMS();
+        $SMS->setSender($sender);
+        $SMS->setContent($text);
+        foreach ($recipients as $rcpt) {
+            // don't address to the sender
+            if ($sender->get_phone_number() !== $rcpt->get_phone_number()) {
+                $SMS->addAddressee($rcpt);
+            }
+        }
+        $SMS->send();
     }
 
 }

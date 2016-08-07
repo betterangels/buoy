@@ -219,7 +219,7 @@ class WP_Buoy_SMS {
             $from_domain = substr( $from_domain, 4 );
         }
         $headers = array(
-            "From: \"{$this->sender->display_name}\" <wordpress@{$from_domain}>"
+            "From: \"{$this->sender->wp_user->display_name}\" <wordpress@{$from_domain}>"
         );
         wp_mail($this->to, '', $this->getMessage(), $headers);
     }
