@@ -44,7 +44,7 @@ class WP_Buoy_SMS_Email_Bridge {
      *
      * @var int
      */
-    const backoff_max_seconds = 10 * MINUTE_IN_SECONDS;
+    const backoff_max_seconds = 600; // 10 minutes
 
     /**
      * Connects to an IMAP server with the settings from a given post.
