@@ -753,13 +753,11 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         if (!empty($_POST['sms_email_bridge_enabled'])) {
             update_post_meta($post_id, 'sms_email_bridge_enabled', true);
             // and schedule a check
-            wp_schedule_single_event(time() + 10, "buoy_sms_email_bridge_run", array($post_id));
+            WP_Buoy_SMS_Email_Bridge::scheduleNext($post_id, 0);
         } else {
             update_post_meta($post_id, 'sms_email_bridge_enabled', false);
             // and unschedule the next check
-            if ($next_time = wp_next_scheduled("buoy_sms_email_bridge_run", array($post_id))) {
-                wp_unschedule_event($next_time, "buoy_sms_email_bridge_run", array($post_id));
-            }
+            WP_Buoy_SMS_Email_bridge::unscheduleNext($post_id);
         }
         if (!empty($_POST['sms_email_bridge_address'])) {
             update_post_meta($post_id, 'sms_email_bridge_address', sanitize_email($_POST['sms_email_bridge_address']));

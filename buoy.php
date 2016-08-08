@@ -78,7 +78,6 @@ class WP_Buoy_Plugin {
         }
 
         add_action('wp_ajax_nopriv_' . self::$prefix . '_webapp_manifest', array(__CLASS__, 'renderWebAppManifest'));
-        add_action('buoy_sms_email_bridge_run', array('WP_Buoy_SMS_Email_Bridge', 'run'));
 
         register_activation_hook(__FILE__, array(__CLASS__, 'activate'));
         register_deactivation_hook(__FILE__, array(__CLASS__, 'deactivate'));
