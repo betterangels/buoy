@@ -7,7 +7,7 @@
  * * Plugin Name: Buoy (a Better Angels crisis response system)
  * * Plugin URI: https://betterangels.github.io/buoy/
  * * Description: A community-based crisis response system. <strong>Like this plugin? Please <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=TJLPJYXHSRBEE&amp;lc=US&amp;item_name=Better%20Angels&amp;item_number=better-angels&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted" title="Send a donation to the developer of Better Angels Buoy">donate</a>. &hearts; Thank you!</strong>
- * * Version: 0.2.0
+ * * Version: 0.3.0-beta
  * * Author: Better Angels <BetterAngels@RiseUp.net>
  * * Author URI: https://betterangels.github.io/
  * * License: GPL-3
@@ -117,6 +117,8 @@ class WP_Buoy_Plugin {
             }
         }
 
+        require_once 'vendor/autoload.php'; // Dependencies from Composer
+
         require_once 'includes/class-buoy-helper.php';
         require_once 'includes/class-buoy-settings.php';
         require_once 'includes/class-buoy-user-settings.php';
@@ -124,6 +126,8 @@ class WP_Buoy_Plugin {
         require_once 'includes/class-buoy-notification.php';
         require_once 'includes/class-buoy-user.php';
         require_once 'includes/class-buoy-alert.php';
+        require_once 'includes/class-buoy-sms.php';
+        require_once 'includes/class-buoy-sms-email-bridge.php';
 
         if (!class_exists('WP_Screen_Help_Loader')) {
             require_once 'includes/vendor/wp-screen-help-loader/class-wp-screen-help-loader.php';
@@ -134,6 +138,7 @@ class WP_Buoy_Plugin {
         WP_Buoy_Notification::register();
         WP_Buoy_User::register();
         WP_Buoy_Alert::register();
+        WP_Buoy_SMS_Email_Bridge::register();
     }
 
     /**

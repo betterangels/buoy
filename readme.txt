@@ -1,11 +1,11 @@
 === Buoy ===
 Contributors: meitar
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TJLPJYXHSRBEE&lc=US&item_name=Better%20Angels%20Buoy&item_number=Better%20Angels%20Buoy&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted
-Tags: community, emergency response
+Tags: community, emergency response, activism
 Requires at least: 4.4
-Tested up to: 4.5
+Tested up to: 4.6
 Stable tag: 0.2.0
-License: GPLv3
+License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
 A community-based crisis response system. Buoy is a private, enhanced, cop-free alternative to 9-1-1.
@@ -113,7 +113,12 @@ For instance:
 
 == Change log ==
 
-= Version 0.2.0 =
+= 0.3.0 =
+
+* [Feature](https://github.com/betterangels/buoy/wiki/Team-SMS-txt-broadcast-channel): Always-on SMS/txt broadcast channel for confirmed Team members.
+* Numerous minor bug fixes.
+
+= 0.2.0 =
 
 This is a feature, bugfix, and security release. Please update your Buoy as soon as you can.
 
@@ -126,14 +131,14 @@ In this release:
 * Usability: New users automatically have three (empty) teams created for them when they sign up.
 * Many bugfixes and additional performance improvements.
 
-= Version 0.1.2 =
+= 0.1.2 =
 
 This is a bugfix and maintenance release.
 
 * New translations for Spanish, partial translations for German. To help translate Buoy into your language, [join our translation teams](https://www.transifex.com/cyberbusking/better-angels/).
 * [Bugfix](https://github.com/meitar/better-angels/issues/131): Tlk.io chat room is no longer vertically scrunched.
 
-= Version 0.1.1 =
+= 0.1.1 =
 
 This is a bugfix and maintenance release.
 
@@ -143,9 +148,15 @@ This is a bugfix and maintenance release.
 * [Bugfix](https://github.com/meitar/better-angels/issues/129): Automatically show map if it is hidden when activating a mapping sub-menu item.
 * [Bugfix](https://github.com/meitar/better-angels/issues/135): "Go to my location" button pans to correct user when viewing incident map.
 
-= Version 0.1 =
+= 0.1 =
 
 * Initial prototype.
+
+== Upgrade Notice ==
+
+= 0.3.0 =
+
+This is a major feature release. It adds an always-on SMS chat room for each Team and fixes many minor bugs.
 
 == Other notes ==
 

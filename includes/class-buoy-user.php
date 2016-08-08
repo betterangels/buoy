@@ -64,6 +64,23 @@ class WP_Buoy_User extends WP_Buoy_Plugin {
     }
 
     /**
+     * Gets a Buoy User object from a given phone number.
+     *
+     * @param string $phone_number
+     *
+     * @return WP_Buoy_User
+     */
+    public static function getByPhoneNumber ($phone_number) {
+        $phone = implode('.?', str_split(self::sanitize_phone_number($phone_number)));
+        $users = get_users(array(
+            'meta_key' => 'buoy_phone_number',
+            'meta_value' => $phone,
+            'meta_compare' => 'REGEXP',
+        ));
+        return (empty($users)) ? false : new self($users[0]->ID);
+    }
+
+    /**
      * Gets the user's (published) teams.
      *
      * @return int[]
@@ -214,8 +231,19 @@ class WP_Buoy_User extends WP_Buoy_Plugin {
      *
      * @return string
      */
-    private function get_phone_number () {
-        return sanitize_text_field(preg_replace('/[^0-9]/', '', $this->get_option('phone_number', '')));
+    public function get_phone_number () {
+        return self::sanitize_phone_number($this->get_option('phone_number', ''));
+    }
+
+    /**
+     * Returns a sanitized phone number (no dashes or symbols).
+     *
+     * @param string $phone_number
+     *
+     * @return string
+     */
+    private static function sanitize_phone_number ($phone_number) {
+        return sanitize_text_field(preg_replace('/[^0-9]/', '', $phone_number));
     }
 
     /**

@@ -48,7 +48,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
      *
      * @var string[]
      */
-    private $_invitees;
+    private $invitees;
 
     /**
      * Constructor.
@@ -60,7 +60,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
     public function __construct ($team_id) {
         $this->wp_post = get_post($team_id);
         $this->members = array_map('get_userdata', array_unique(get_post_meta($this->wp_post->ID, '_team_members')));
-        $this->_invitees = array_unique(get_post_meta($this->wp_post->ID, '_invitees'));
+        $this->invitees = array_unique(get_post_meta($this->wp_post->ID, '_invitees'));
         $this->author = get_userdata($this->wp_post->post_author);
     }
 
@@ -452,6 +452,12 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
             'side',
             'low'
         );
+
+        add_meta_box(
+            'sms-bridge',
+            esc_html__('SMS/txt Messages', 'buoy'),
+            array(__CLASS__, 'renderTxtMessagesMetaBox')
+        );
     }
 
     /**
@@ -502,6 +508,17 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         }
         $html .= '</p>';
         print "<label>$html</label>";
+    }
+
+    /**
+     * Displays the "SMS/txt Messages" meta box.
+     *
+     * @param WP_Post $post
+     *
+     * @return void
+     */
+    public static function renderTxtMessagesMetaBox ($post) {
+        require_once dirname(__FILE__).'/../pages/meta-box-sms-messages.php';
     }
 
     /**
@@ -663,7 +680,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
     }
 
     /**
-     * Updates the team metadata (membership list).
+     * Updates the team metadata (mostly membership list).
      *
      * This is called by WordPress's `save_post_{$post->post_type}` hook.
      *
@@ -730,6 +747,55 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         )));
         if (0 === $cnt) {
             $team->set_default();
+        }
+
+        // If we're enabling the SMS/email bridge, save that data.
+        if (!empty($_POST['sms_email_bridge_enabled'])) {
+            update_post_meta($post_id, 'sms_email_bridge_enabled', true);
+            // and schedule a check
+            WP_Buoy_SMS_Email_Bridge::scheduleNext($post_id, 0);
+        } else {
+            update_post_meta($post_id, 'sms_email_bridge_enabled', false);
+            // and unschedule the next check
+            WP_Buoy_SMS_Email_bridge::unscheduleNext($post_id);
+        }
+        if (!empty($_POST['sms_email_bridge_address'])) {
+            update_post_meta($post_id, 'sms_email_bridge_address', sanitize_email($_POST['sms_email_bridge_address']));
+        }
+        if (!empty($_POST['sms_email_bridge_username'])) {
+            update_post_meta($post_id, 'sms_email_bridge_username', sanitize_text_field($_POST['sms_email_bridge_username']));
+        }
+        if (!empty($_POST['sms_email_bridge_password'])) {
+            update_post_meta($post_id, 'sms_email_bridge_password', $_POST['sms_email_bridge_password']);
+        }
+        if (!empty($_POST['sms_email_bridge_server'])) {
+            update_post_meta($post_id, 'sms_email_bridge_server', sanitize_text_field($_POST['sms_email_bridge_server']));
+        }
+        if (empty($_POST['sms_email_bridge_port']) || 0 === absint($_POST['sms_email_bridge_port'])) {
+            delete_post_meta($post_id, 'sms_email_bridge_port');
+        } else {
+            update_post_meta($post_id, 'sms_email_bridge_port', absint($_POST['sms_email_bridge_port']));
+        }
+        if (empty($_POST['sms_email_bridge_connection_security'])) {
+            delete_post_meta($post_id, 'sms_email_bridge_connection_security');
+        } else {
+            switch ($_POST['sms_email_bridge_connection_security']) {
+                case 'tlsv1':
+                case 'tls':
+                case 'ssl':
+                case 'sslv3':
+                case 'sslv2':
+                case 'none':
+                    update_post_meta(
+                        $post_id,
+                        'sms_email_bridge_connection_security',
+                        $_POST['sms_email_bridge_connection_security']
+                    );
+                    break;
+                default:
+                    update_post_meta($post_id, 'sms_email_bridge_connection_security', 'tlsv1');
+                    break;
+            }
         }
     }
 
