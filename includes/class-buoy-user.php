@@ -68,7 +68,7 @@ class WP_Buoy_User extends WP_Buoy_Plugin {
      *
      * @param string $phone_number
      *
-     * @return WP_Buoy_User
+     * @return false|WP_Buoy_User
      */
     public static function getByPhoneNumber ($phone_number) {
         $phone = implode('.?', str_split(self::sanitize_phone_number($phone_number)));

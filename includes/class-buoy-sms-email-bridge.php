@@ -115,6 +115,7 @@ class WP_Buoy_SMS_Email_Bridge {
         // Get a list of confirmed team members with phone numbers.
         $team = new WP_Buoy_Team($post);
         $recipients = array();
+        $recipients[] = $team->get_team_owner(); // and the Team owner
         foreach ($team->get_confirmed_members() as $member) {
             $m = new WP_Buoy_User($member);
             if ($m->get_phone_number()) {
@@ -170,7 +171,18 @@ class WP_Buoy_SMS_Email_Bridge {
                     $from_phone = $h->getHeader('From')->getAddressList(true)->first()->mailbox;
 
                     // forward the body text to each member of the team,
-                    self::forward($txt, $recipients, WP_Buoy_User::getByPhoneNumber($from_phone));
+                    self::forward(
+                        $txt,
+                        $recipients,
+                        // TODO: If this returns `false` then we must deal
+                        //       with the resulting Fatal Error in self::forward()
+                        WP_Buoy_User::getByPhoneNumber($from_phone),
+                        array(
+                            // This breaks Verizon's Email->SMS gateway. :(
+                            // TODO: How do we get threading to work?
+                            //'Reply-To: '.$post->sms_email_bridge_address
+                        )
+                    );
                 }
                 // since there was a new message to forward,
                 // schedule another run with reset back-off counter.
@@ -278,11 +290,15 @@ class WP_Buoy_SMS_Email_Bridge {
      * @param string $text
      * @param WP_Buoy_User[] $recipients
      * @param WP_Buoy_User $sender
+     * @param string[] $headers Extra headers to set.
      */
-    private static function forward ($text, $recipients, $sender) {
+    private static function forward ($text, $recipients, $sender, $headers = array()) {
         $SMS = new WP_Buoy_SMS();
         $SMS->setSender($sender);
         $SMS->setContent($text);
+        foreach ($headers as $header) {
+            $SMS->addHeader($header);
+        }
         foreach ($recipients as $rcpt) {
             // don't address to the sender
             if ($sender->get_phone_number() !== $rcpt->get_phone_number()) {

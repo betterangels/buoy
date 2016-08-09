@@ -48,6 +48,13 @@ class WP_Buoy_SMS {
     private $to = array();
 
     /**
+     * Extra headers to send.
+     *
+     * @var string[]
+     */
+    private $headers = array();
+
+    /**
      * Contents of the SMS message.
      *
      * @var string
@@ -108,6 +115,15 @@ class WP_Buoy_SMS {
      */
     public function setSender ($user) {
         $this->sender = $user;
+    }
+
+    /**
+     * Adds a header to the sent message.
+     *
+     * @var string
+     */
+    public function addHeader ($header) {
+        $this->headers[] = $header;
     }
 
     /**
@@ -218,10 +234,8 @@ class WP_Buoy_SMS {
         if ( substr( $from_domain, 0, 4 ) == 'www.' ) {
             $from_domain = substr( $from_domain, 4 );
         }
-        $headers = array(
-            "From: \"{$this->sender->wp_user->display_name}\" <wordpress@{$from_domain}>"
-        );
-        wp_mail($this->to, '', $this->getMessage(), $headers);
+        $this->addHeader("From: \"{$this->sender->wp_user->display_name}\" <wordpress@{$from_domain}>");
+        wp_mail($this->to, '', $this->getMessage(), $this->headers);
     }
 
     /**
