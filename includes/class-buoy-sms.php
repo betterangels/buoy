@@ -82,6 +82,15 @@ class WP_Buoy_SMS {
     }
 
     /**
+     * Clears all stored SMS preparation so the object can be reused.
+     */
+    public function reset () {
+        $this->addressees = $this->to = $this->headers = $this->wp_filters = array();
+        $this->sender = false;
+        $this->content = $this->excess = '';
+    }
+
+    /**
      * Gets an addressee.
      *
      * @param string|int $index An addressee index to get, if only one is wanted.
@@ -220,12 +229,6 @@ class WP_Buoy_SMS {
         foreach ($this->wp_filters as $f) {
             $this->stripFilter($f);
         }
-    }
-
-    /**
-     * Sends the SMS message using WordPress built-in email functions.
-     */
-    private function transmit () {
         // Get the site domain and get rid of "www." We deliberately
         // replace the user's own email address with the address of
         // the WP server, because many shared hosting environments on
@@ -235,7 +238,6 @@ class WP_Buoy_SMS {
             $from_domain = substr( $from_domain, 4 );
         }
         $this->addHeader("From: \"{$this->sender->wp_user->display_name}\" <wordpress@{$from_domain}>");
-        wp_mail($this->to, '', $this->getMessage(), $this->headers);
     }
 
     /**
@@ -245,10 +247,11 @@ class WP_Buoy_SMS {
         foreach ($this->wp_filters as $f) {
             call_user_func_array('add_filter', $f);
         }
+        $this->reset();
     }
 
     /**
-     * Sends the SMS message.
+     * Sends the SMS message and resets the object when done.
      */
     public function send () {
         // Never sign SMS messages with PGP.
@@ -256,7 +259,7 @@ class WP_Buoy_SMS {
 
         $this->prepare();
         do {
-            $this->transmit();
+            wp_mail($this->to, '', $this->getMessage(), $this->headers);
         } while (!empty($this->excess));
         $this->finish();
     }

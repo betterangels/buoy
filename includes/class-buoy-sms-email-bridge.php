@@ -159,6 +159,7 @@ class WP_Buoy_SMS_Email_Bridge {
                 $fetched = $imap_client->fetch('INBOX', $f, array(
                     'ids' => $results['match']
                 ));
+                $SMS = new WP_Buoy_SMS();
                 foreach ($fetched as $data) {
                     // get the body's plain text content
                     $message = Horde_Mime_Part::parseMessage($data->getFullMsg());
@@ -171,9 +172,7 @@ class WP_Buoy_SMS_Email_Bridge {
                     $from_phone = $h->getHeader('From')->getAddressList(true)->first()->mailbox;
 
                     // forward the body text to each member of the team,
-                    self::forward(
-                        $txt,
-                        $recipients,
+                    self::forward($SMS, $txt, $recipients,
                         // TODO: If this returns `false` then we must deal
                         //       with the resulting Fatal Error in self::forward()
                         WP_Buoy_User::getByPhoneNumber($from_phone),
@@ -287,14 +286,13 @@ class WP_Buoy_SMS_Email_Bridge {
     /**
      * Forwards a text message to a set of recipients.
      *
+     * @param WP_Buoy_SMS $SMS The `WP_Bouy_SMS` object to use.
      * @param string $text
      * @param WP_Buoy_User[] $recipients
      * @param WP_Buoy_User $sender
      * @param string[] $headers Extra headers to set.
      */
-    private static function forward ($text, $recipients, $sender, $headers = array()) {
-        $SMS = new WP_Buoy_SMS();
-        $SMS->setSender($sender);
+    private static function forward ($SMS, $text, $recipients, $sender, $headers = array()) {
         $SMS->setContent($text);
         foreach ($headers as $header) {
             $SMS->addHeader($header);
@@ -305,6 +303,7 @@ class WP_Buoy_SMS_Email_Bridge {
                 $SMS->addAddressee($rcpt);
             }
         }
+        $SMS->setSender($sender);
         $SMS->send();
     }
 
