@@ -134,6 +134,15 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
     }
 
     /**
+     * Gets the Team's owner.
+     *
+     * @return WP_Buoy_User
+     */
+    public function get_team_owner () {
+        return new WP_Buoy_User($this->author->ID);
+    }
+
+    /**
      * Gets a list of all the user IDs associated with this team.
      *
      * This does not do any checking about whether the given user ID
@@ -518,7 +527,12 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
      * @return void
      */
     public static function renderTxtMessagesMetaBox ($post) {
-        require_once dirname(__FILE__).'/../pages/meta-box-sms-messages.php';
+        $user = new WP_Buoy_User($post->post_author);
+        if ($user->get_phone_number()) {
+            require_once dirname(__FILE__).'/../pages/meta-box-sms-messages.php';
+        } else {
+            esc_html_e('You must set a phone number in your profile to use txt messages.', 'buoy');
+        }
     }
 
     /**
@@ -757,7 +771,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         } else {
             update_post_meta($post_id, 'sms_email_bridge_enabled', false);
             // and unschedule the next check
-            WP_Buoy_SMS_Email_bridge::unscheduleNext($post_id);
+            WP_Buoy_SMS_Email_Bridge::unscheduleNext($post_id);
         }
         if (!empty($_POST['sms_email_bridge_address'])) {
             update_post_meta($post_id, 'sms_email_bridge_address', sanitize_email($_POST['sms_email_bridge_address']));
