@@ -15,7 +15,7 @@
 if (!defined('ABSPATH')) { exit; } // Disallow direct HTTP access.
 
 /**
- * Concrete SMS class for use in the Buoy WordPress plugin.
+ * Class to make and send SMS messages via WordPress.
  */
 class WP_Buoy_SMS {
 
@@ -129,7 +129,7 @@ class WP_Buoy_SMS {
     /**
      * Adds a header to the sent message.
      *
-     * @var string
+     * @param string $header
      */
     public function addHeader ($header) {
         $this->headers[] = $header;
@@ -150,6 +150,8 @@ class WP_Buoy_SMS {
      * This can be longer than the maximum SMS length. If it is, the
      * message will get truncated and subsequent SMS messages will be
      * automatically sent, too.
+     *
+     * @param string $string
      */
     public function setContent ($string) {
         $this->content = $string;
@@ -158,7 +160,7 @@ class WP_Buoy_SMS {
     /**
      * Register a WordPress filter to be stripped before sending.
      *
-     * @param callable The callable hooked function or method to strip.
+     * @param callable $filter_callback The callable hooked function or method to strip.
      * @param string $wp_hook The hook from which to strip the callable.
      */
     public function addStrippedFilter ($filter_callback, $wp_hook = 'wp_mail') {
