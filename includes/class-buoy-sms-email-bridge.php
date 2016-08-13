@@ -14,7 +14,7 @@
 if (!defined('ABSPATH')) { exit; } // Disallow direct HTTP access.
 
 /**
- * Class for the bridge's interaction with WordPress.
+ * Class to schedule, poll, and forward messages over IMAP to an SMS.
  */
 class WP_Buoy_SMS_Email_Bridge {
 
@@ -55,7 +55,6 @@ class WP_Buoy_SMS_Email_Bridge {
      */
     private static function connectImap ($wp_post) {
         $settings = WP_Buoy_Settings::get_instance();
-        // Connect to IMAP server.
         $imap_args = array(
             'username' => $wp_post->sms_email_bridge_username,
             'password' => $wp_post->sms_email_bridge_password,
@@ -73,7 +72,6 @@ class WP_Buoy_SMS_Email_Bridge {
                 error_log(__CLASS__ . ' failed to instantiate IMAP client.');
             }
         }
-
         return $imap_client;
     }
 
@@ -82,18 +80,6 @@ class WP_Buoy_SMS_Email_Bridge {
      */
     public static function register () {
         add_action(self::hook, array(__CLASS__, 'run'), 10, 2);
-
-        add_management_page(
-            esc_html__('Buoy SMS-Email Bridge', 'buoy'),
-            esc_html__('Buoy Team sms/txts', 'buoy'),
-            'manage_options',
-            'buoy_sms_email_bridge_tool',
-            array(__CLASS__, 'renderSmsEmailBridgeToolPage')
-        );
-    }
-
-    public static function renderSmsEmailBridgeToolPage () {
-        include dirname(__FILE__).'/../pages/tool-page-sms-email-bridge.php';
     }
 
     /**
