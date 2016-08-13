@@ -6,13 +6,13 @@
         value="<?php print esc_attr(self::$prefix);?>_new_alert"
     />
 
-    <div id="modal-features" class="hidden">
+    <div id="modal-features" class="hide-if-no-js">
         <?php if ($options->get('future_alerts')) : ?>
         <button id="schedule-future-alert-btn" class="btn" type="button">
             <img src="<?php print esc_attr(plugins_url('../img/stock_alarm.svg', __FILE__));?>" alt="<?php esc_attr_e('Schedule timed alert', 'buoy');?>" />
         </button>
         <?php endif; ?>
-        <button id="activate-msg-btn-submit" class="btn" type="button">
+        <button id="custom-message-alert-btn" class="btn" type="button">
             <img src="<?php print esc_attr(plugins_url('../img/chat-bubble-1.svg', __FILE__));?>" alt="<?php esc_attr_e('Send emergency message', 'buoy')?>" />
         </button>
     </div>
@@ -32,7 +32,9 @@
                 <h4 class="modal-title" id="emergency-message-modal-label"><?php esc_html_e('Message to my team', 'buoy');?></h4>
             </div>
             <div class="modal-body">
-                <textarea id="crisis-message"></textarea>
+                <div class="form-group">
+                    <textarea id="crisis-message" class="form-control"></textarea>
+                </div>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-success" data-dismiss="modal"><?php esc_html_e('Send', 'buoy');?></button>

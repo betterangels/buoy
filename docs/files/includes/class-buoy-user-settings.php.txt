@@ -34,10 +34,11 @@ class WP_Buoy_User_Settings {
      * List of default values for user profile settings.
      *
      * @todo Possible values should not be part of default values.
+     * @todo Remove the `default_team` value after next version migration.
      *
      * @var array
      */
-    private $_defaults = array(
+    private $defaults = array(
         // option name              => default/possible values
         'crisis_message'            => '',
         'default_team'              => false,
@@ -88,7 +89,7 @@ class WP_Buoy_User_Settings {
      * @return mixed
      */
     public function get_defaults ($key = null) {
-        return (null === $key) ? $this->_defaults : $this->_defaults[$key];
+        return (null === $key) ? $this->defaults : $this->defaults[$key];
     }
 
     /**
@@ -98,7 +99,7 @@ class WP_Buoy_User_Settings {
      */
     private function get_options () {
         $opts = array();
-        foreach ($this->_defaults as $k => $v) {
+        foreach ($this->defaults as $k => $v) {
             $opts[$k] = get_user_meta($this->user->ID, WP_Buoy_Plugin::$prefix . '_' . $k, true);
         }
         return $opts;
@@ -158,7 +159,7 @@ class WP_Buoy_User_Settings {
      * @return WP_Buoy_User_Settings
      */
     public function save () {
-        foreach ($this->_defaults as $k => $v) {
+        foreach ($this->defaults as $k => $v) {
             if ($this->has($k)) {
                 update_user_meta($this->user->ID, WP_Buoy_Plugin::$prefix . '_' . $k, $this->get($k));
             } else {
