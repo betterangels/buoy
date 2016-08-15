@@ -34,14 +34,14 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      *
      * @var WP_User
      */
-    private $_user;
+    private $user;
 
     /**
      * The teams to which this alert was sent.
      *
      * @var int[]
      */
-    private $_teams;
+    private $teams;
 
     /**
      * The alert's WP_Post data.
@@ -53,12 +53,12 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      *
      * @var array
      */
-    private $_postarr;
+    private $postarr;
 
     /**
      * The alert's public identifier.
      *
-     * The `$_hash` is a randomly generated lookup value that is used
+     * The `$hash` is a randomly generated lookup value that is used
      * instead of a WordPress post ID. This is because a post ID is a
      * sequential number, and would expose the Buoy to attack if a bad
      * (malicious) actor. Using a hash value instead of an integer in
@@ -69,14 +69,14 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      *
      * @var string
      */
-    private $_hash;
+    private $hash;
 
     /**
      * The chat room associated with this alert.
      *
      * @var string
      */
-    private $_chat_room_name;
+    private $chat_room_name;
 
     /**
      * Constructor.
@@ -109,11 +109,11 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
     public function load ($lookup) {
         if (strlen($lookup) > 7) {
             $posts = get_posts(array(
-                'post_type' => self::$prefix . '_alert',
+                'post_type' => self::$prefix.'_alert',
                 'post_status' => array('publish', 'future'),
                 'meta_query' => array(
                     array(
-                        'key' => self::$prefix . '_hash',
+                        'key' => self::$prefix.'_hash',
                         'value' => "^$lookup",
                         'compare' => 'REGEXP'
                     )
@@ -127,12 +127,12 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             $this->wp_post = get_post($lookup);
         }
 
-        if ($this->wp_post && self::$prefix . '_alert' === $this->wp_post->post_type) {
+        if ($this->wp_post && self::$prefix.'_alert' === $this->wp_post->post_type) {
             $this->set_hash();
             $this->set_chat_room_name();
-            $this->_user = get_userdata($this->wp_post->post_author);
-            $this->_teams = array_map(
-                'absint', get_post_meta($this->wp_post->ID, self::$prefix . '_teams', true)
+            $this->user = get_userdata($this->wp_post->post_author);
+            $this->teams = array_map(
+                'absint', get_post_meta($this->wp_post->ID, self::$prefix.'_teams', true)
             );
         } else {
             throw new Exception(sprintf(__('No alert with lookup "%s" found.', 'buoy'), $lookup));
@@ -152,7 +152,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return int|WP_Error Result of `wp_insert_post()`.
      */
     public function save () {
-        $result = wp_insert_post($this->_postarr, true);
+        $result = wp_insert_post($this->postarr, true);
         if (is_int($result)) {
             $this->wp_post = get_post($result);
             $this->set_hash();
@@ -174,7 +174,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      */
     public function set ($postarr = array()) {
         // These args are always hardcoded.
-        $postarr['post_type']      = self::$prefix . '_alert';
+        $postarr['post_type']      = self::$prefix.'_alert';
         $postarr['post_content']   = ''; // empty content
         $postarr['ping_status']    = 'closed';
         $postarr['comment_status'] = 'closed'; // always closed, but dynamically opened by filter
@@ -188,10 +188,10 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
 
         $alerter = new WP_Buoy_User($postarr['post_author']);
         $default_meta = array(
-            self::$prefix . '_hash' => $this->make_hash(),
-            self::$prefix . '_chat_room_name' => $this->make_chat_room_name(),
-            self::$prefix . '_teams' => array($alerter->get_default_team()),
-            self::$prefix . '_chat_system' => WP_Buoy_Settings::get_instance()->get('chat_system', 'post_comments')
+            self::$prefix.'_hash' => $this->make_hash(),
+            self::$prefix.'_chat_room_name' => $this->make_chat_room_name(),
+            self::$prefix.'_teams' => $alerter->get_default_teams(),
+            self::$prefix.'_chat_system' => WP_Buoy_Settings::get_instance()->get('chat_system', 'post_comments')
         );
 
         if (!isset($postarr['meta_input'])) {
@@ -199,7 +199,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         }
         $postarr['meta_input'] = wp_parse_args($postarr['meta_input'], $default_meta);
 
-        $this->_postarr = $postarr;
+        $this->postarr = $postarr;
 
         return $this;
     }
@@ -210,7 +210,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return string
      */
     public function get_hash () {
-        return $this->_hash;
+        return $this->hash;
     }
 
     /**
@@ -219,7 +219,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return int[]
      */
     public function get_teams () {
-        return $this->_teams;
+        return $this->teams;
     }
 
     /**
@@ -259,9 +259,9 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     private function set_hash () {
-        $prev_hash = sanitize_text_field(get_post_meta($this->wp_post->ID, self::$prefix . '_hash', true));
+        $prev_hash = sanitize_text_field(get_post_meta($this->wp_post->ID, self::$prefix.'_hash', true));
         if ($prev_hash) {
-            $this->_hash = $prev_hash;
+            $this->hash = $prev_hash;
         }
     }
 
@@ -271,7 +271,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     private function set_chat_room_name () {
-        $this->_chat_room_name = sanitize_text_field(get_post_meta($this->wp_post->ID, self::$prefix . '_chat_room_name', true));
+        $this->chat_room_name = sanitize_text_field(get_post_meta($this->wp_post->ID, self::$prefix.'_chat_room_name', true));
     }
 
     /**
@@ -280,7 +280,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return string
      */
     public function get_chat_room_name () {
-        return $this->_chat_room_name;
+        return $this->chat_room_name;
     }
 
     /**
@@ -289,7 +289,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return string
      */
     public function get_chat_system () {
-        $meta_key = self::$prefix . '_chat_system';
+        $meta_key = self::$prefix.'_chat_system';
         return $this->wp_post->$meta_key;
     }
 
@@ -299,7 +299,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return int[]
      */
     public function get_responders () {
-        return get_post_meta($this->wp_post->ID, self::$prefix . '_responders');
+        return get_post_meta($this->wp_post->ID, self::$prefix.'_responders');
     }
 
     /**
@@ -325,7 +325,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      */
     public function add_responder ($user_id) {
         if (!$this->is_responder($user_id)) {
-            add_post_meta($this->wp_post->ID, self::$prefix . '_responders', $user_id, false);
+            add_post_meta($this->wp_post->ID, self::$prefix.'_responders', $user_id, false);
         }
         return $this;
     }
@@ -341,7 +341,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return WP_Buoy_Alert
      */
     public function set_responder_geo ($user_id, $geo) {
-        update_post_meta($this->wp_post->ID, self::$prefix . "_responder_{$user_id}_location", $geo);
+        update_post_meta($this->wp_post->ID, self::$prefix."_responder_{$user_id}_location", $geo);
         return $this;
     }
 
@@ -355,7 +355,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return float[]
      */
     public function get_responder_geo ($user_id) {
-        return get_post_meta($this->wp_post->ID, self::$prefix . "_responder_{$user_id}_location", true);
+        return get_post_meta($this->wp_post->ID, self::$prefix."_responder_{$user_id}_location", true);
     }
 
     /**
@@ -403,7 +403,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      */
     private function make_chat_room_name () {
         // need to limit the length of this string due to Tlk.io integration for now
-        return self::$prefix . '_' . substr(hash('sha1', $this->get_random_seed()), 0, 20);
+        return self::$prefix.'_'.substr(hash('sha1', $this->get_random_seed()), 0, 20);
     }
 
     /**
@@ -432,11 +432,11 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             } else {
                 static::debug_log(sprintf(
                     __('WARNING! Your system does not have %s available to generate alert hashes.', 'buoy'),
-                    $func . '()'
+                    $func.'()'
                 ));
             }
         }
-        return (isset($seed)) ? $seed : mt_rand() . microtime() . getmypid() . uniqid('', true);
+        return (isset($seed)) ? $seed : mt_rand().microtime().getmypid().uniqid('', true);
     }
 
     /**
@@ -445,14 +445,15 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function register () {
-        register_post_type(self::$prefix . '_alert', array(
+        register_post_type(self::$prefix.'_alert', array(
             'label' => __('Incidents', 'buoy'),
             'description' => __('A call for help.', 'buoy'),
-            'supports' => array('title', 'comments'),
+            'supports' => array('title'),
             'has_archive' => false,
             'rewrite' => false,
             'can_export' => false,
-            'delete_with_user' => true
+            'delete_with_user' => true,
+            'show_in_rest' => true
         ));
 
         add_action('send_headers', array(__CLASS__, 'redirectShortUrl'));
@@ -460,15 +461,106 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         add_action('wp_before_admin_bar_render', array(__CLASS__, 'addAlertsMenu'));
         add_action('admin_menu', array(__CLASS__, 'registerAdminMenu'));
 
-        add_action('wp_ajax_' . self::$prefix . '_new_alert', array(__CLASS__, 'handleNewAlert'));
-        add_action('wp_ajax_' . self::$prefix . '_upload_media', array(__CLASS__, 'handleMediaUpload'));
-        add_action('wp_ajax_' . self::$prefix . '_unschedule_alert', array(__CLASS__, 'handleUnscheduleAlert'));
-        add_action('wp_ajax_' . self::$prefix . '_update_location', array(__CLASS__, 'handleLocationUpdate'));
-        add_action('wp_ajax_' . self::$prefix . '_dismiss_installer', array(__CLASS__, 'handleDismissInstaller'));
+        add_action('wp_ajax_'.self::$prefix.'_new_alert', array(__CLASS__, 'handleNewAlert'));
+        add_action('wp_ajax_'.self::$prefix.'_upload_media', array(__CLASS__, 'handleMediaUpload'));
+        add_action('wp_ajax_'.self::$prefix.'_unschedule_alert', array(__CLASS__, 'handleUnscheduleAlert'));
+        add_action('wp_ajax_'.self::$prefix.'_update_location', array(__CLASS__, 'handleLocationUpdate'));
+        add_action('wp_ajax_'.self::$prefix.'_dismiss_installer', array(__CLASS__, 'handleDismissInstaller'));
+        add_action('wp_ajax_'.self::$prefix.'_chat_event_stream', array(__CLASS__, 'chatEventStream'));
+        add_action('wp_ajax_'.self::$prefix.'_post_comments_chat', array(__CLASS__, 'renderPostCommentsChatRoom'));
 
-        add_action('publish_' . self::$prefix . '_alert', array('WP_Buoy_Notification', 'publishAlert'), 10, 2);
+        add_action('publish_'.self::$prefix.'_alert', array('WP_Buoy_Notification', 'publishAlert'), 10, 2);
 
-        add_filter('comments_open', array(__CLASS__, 'handleNewPostCommentChat'), 1, 2); // high priority
+        /**
+         * Fired when the Buoy chat room is printed.
+         *
+         * Remove the default function and hook your own callback to
+         * this hook create custom chat room output.
+         *
+         * @param WP_Buoy_Alert $alert
+         * @param WP_User $curr_user
+         */
+        add_action(self::$prefix.'_chat_room', array(__CLASS__, 'renderChatRoom'), 10, 2);
+
+        add_filter('comments_open', array(__CLASS__, 'handleNewPostCommentChat'), 1, 2);    // run early
+        add_filter('comments_clauses', array(__CLASS__, 'filterCommentsClauses'), 900, 2); // run late
+    }
+
+    /**
+     * Omit comments used in Buoy Alert chats from comment queries.
+     *
+     * Comments on Buoy Alerts (posts with the type `buoy_alert`) are
+     * actually "chat room" messages. These should not show elsewhere
+     * in the WordPress blog, such as in the "Recent comments" widget
+     * or other areas where a "show all comments" kind of request is
+     * asked for.
+     *
+     * See also {@link https://github.com/meitar/better-angels/issues/157 issue #157}.
+     *
+     * @link https://developer.wordpress.org/reference/hooks/comments_clauses/
+     *
+     * @global wpdb $wpdb
+     *
+     * @param string[] $clauses
+     * @param WP_Comment_Query $wp_comment_query
+     *
+     * @uses get_current_user_id()
+     *
+     * @return string[]
+     */
+    public static function filterCommentsClauses ($clauses, $wp_comment_query) {
+        global $wpdb;
+        // When querying for "comments on posts" there will be a JOIN clause,
+        // but when querying for comments only, there won't be. We only want
+        // to modify the WHERE clause when asking for comments associated with
+        // some post or another, to remove the Buoy Alert post type from that
+        // query. In cases where the comments are queried directly, we don't
+        // need to make any change because such cases are, for instance, the
+        // comments admin screen or the Buoy Alert chat room itself.
+        $w = $wpdb->prepare(" AND {$wpdb->posts}.post_type != %s", self::$prefix.'_alert');
+        if ($clauses['join']) {
+            $clauses['where'] .= $w;
+        } else if (0 === get_current_user_id()) {
+            // If there isn't a JOIN clause then the comment query is
+            // only quering the comments table itself but the request
+            // might still be from an anonymous visitor. If it is, we
+            // still need to exlude any comments associated with each
+            // Buoy Alet, so we add the JOIN ourselves
+            $clauses['join'] = "JOIN {$wpdb->posts} ON {$wpdb->posts}.ID = {$wpdb->comments}.comment_post_ID";
+            // and make the same modification to the WHERE clause.
+            $clauses['where'] .= $w;
+        } else {
+            // Finally, if there is no JOIN clause but the request is
+            // coming from a logged-in user we need to check that the
+            // user has permission to view the given comments. That
+            // will be the case if the given user is a "responder" of
+            // the Buoy Alert to which the comments are attached.
+            $post_ids = array();
+            if ($wp_comment_query->query_vars['post_id']) {
+                $post_ids[] = $wp_comment_query->query_vars['post_id'];
+            }
+            if ($wp_comment_query->query_vars['post__in']) {
+                $post_ids = array_merge($post_ids, $wp_comment_query->query_vars['post__in']);
+            }
+            if ($post_ids) {
+                foreach ($post_ids as $id) {
+                    $post = get_post($id);
+                    if (self::$prefix . '_alert' === $post->post_type) {
+                        $alert = new self($id);
+                        // If they're not a responder for the given post ID,
+                        // and are also not the alerter themselves (author),
+                        if (!$alert->is_responder(get_current_user_id()) && get_current_user_id() != $post->post_author) {
+                            // then we remove that post's ID from the SQL query.
+                            $clauses['where'] = preg_replace("/$id,?/", '', $clauses['where']);
+                        }
+                    }
+                }
+                // If we removed all post IDs, then we need to fix the SQL statement
+                // by adding an empty string inside the parenthesis.
+                $clauses['where'] = preg_replace('/AND comment_post_ID IN \(  \)/', "AND comment_post_ID IN ('')", $clauses['where']);
+            }
+        }
+        return $clauses;
     }
 
     /**
@@ -492,13 +584,13 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function redirectShortUrl ($wp) {
-        $get_param = self::$prefix . '_alert';
+        $get_param = self::$prefix.'_alert';
         if (isset($_GET[$get_param]) && 8 === strlen($_GET[$get_param])) {
             $alert = new self(sanitize_text_field(urldecode($_GET[$get_param])));
             if ($alert->get_hash()) {
                 wp_safe_redirect(admin_url(
-                    '?page=' . self::$prefix . '_review_alert'
-                    . '&' . self::$prefix . '_hash=' . urlencode($alert->get_hash())
+                    '?page='.self::$prefix.'_review_alert'
+                   .'&'.self::$prefix.'_hash='.urlencode($alert->get_hash())
                 ));
                 exit();
             }
@@ -516,7 +608,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
     public static function redirectChatComment ($location, $comment) {
         $fragment = parse_url($location, PHP_URL_FRAGMENT);
         $alert = new WP_Buoy_Alert($comment->comment_post_ID);
-        $new_location = plugins_url('pages/post-comments-chat.php', __FILE__) . '?hash=' . $alert->get_hash() . '&reset';
+        $new_location = admin_url('admin-ajax.php').'?action='.self::$prefix.'_post_comments_chat&hash='.$alert->get_hash().'&reset';
         if ($fragment) {
             $new_location .= "#$fragment";
         }
@@ -534,35 +626,50 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         global $wp_admin_bar;
 
         $wp_admin_bar->add_node(array(
-            'id' => 'new-' . self::$prefix . '-alert',
+            'id' => 'new-'.self::$prefix.'-alert',
             'title' => __('Alert', 'buoy'),
             'parent' => 'new-content',
-            'href' => admin_url('index.php?page=' . self::$prefix . '_activate_alert')
+            'href' => admin_url('index.php?page='.self::$prefix.'_activate_alert')
         ));
 
         $alerts = array(
             'my_alerts' => array(),
             'my_responses' => array(),
-            'my_scheduled_alerts' => array()
+            'my_scheduled_alerts' => array(),
+            'my_unanswered_alerts' => array(),
         );
+
         foreach (self::getActiveAlerts() as $post) {
             $alert = new WP_Buoy_Alert($post->ID);
             if (get_current_user_id() == $post->post_author) {
                 $alerts['my_alerts'][] = $post;
             } else if (in_array(get_current_user_id(), $alert->get_responders())) {
                 $alerts['my_responses'][] = $post;
+            } else {
+                $members = array();
+                foreach ($alert->teams as $team_id) {
+                    $team = new WP_Buoy_Team($team_id);
+                    $members = array_merge($members, $team->get_confirmed_members());
+                }
+                if (in_array(get_current_user_id(), $members)) {
+                    $alerts['my_unanswered_alerts'][] = $post;
+                }
             }
         }
+
         foreach (self::getScheduledAlerts(get_current_user_id()) as $post) {
             if (get_current_user_id() == $post->post_author) {
                 $alerts['my_scheduled_alerts'][] = $post;
             }
         }
 
-        if (!empty($alerts['my_alerts']) || !empty($alerts['my_responses']) || !empty($alerts['my_scheduled_alerts'])) {
+        if (!empty($alerts['my_alerts'])
+            || !empty($alerts['my_responses'])
+            || !empty($alerts['my_scheduled_alerts'])
+            || !empty($alerts['my_unanswered_alerts'])) {
             $wp_admin_bar->add_menu(array(
-                'id' => self::$prefix . '-alerts-menu',
-                'title' => __('Active alerts', 'buoy')
+                'id' => self::$prefix.'-alerts-menu',
+                'title' => '<span class="ab-icon"></span><span class="ab-label">'.__('Active alerts', 'buoy').'</span></a>',
             ));
         }
 
@@ -570,23 +677,23 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         // Add group nodes to WP Toolbar
         foreach ($alerts as $group_name => $posts) {
             $wp_admin_bar->add_group(array(
-                'id' => self::$prefix . '_' . $group_name,
-                'parent' => self::$prefix . '-alerts-menu'
+                'id' => self::$prefix.'_'.$group_name,
+                'parent' => self::$prefix.'-alerts-menu'
             ));
         }
 
-        $dtfmt = get_option('date_format') . ' ' . get_option('time_format');
+        $dtfmt = get_option('date_format').' '.get_option('time_format');
         foreach ($alerts['my_alerts'] as $post) {
             $alert = new WP_Buoy_Alert($post->ID);
             $author = get_userdata($post->post_author);
             $url = wp_nonce_url(
-                admin_url('?page=' . self::$prefix . '_chat&' . self::$prefix . '_hash=' . $alert->get_hash()),
-                self::$prefix . '_chat', self::$prefix . '_nonce'
+                admin_url('?page='.self::$prefix.'_chat&'.self::$prefix.'_hash='.$alert->get_hash()),
+                self::$prefix.'_chat', self::$prefix.'_nonce'
             );
             $wp_admin_bar->add_node(array(
-                'id' => self::$prefix . '-alert-' . $alert->get_hash(),
+                'id' => self::$prefix.'-alert-'.$alert->get_hash(),
                 'title' => sprintf(__('My alert on %2$s', 'buoy'), $author->display_name, date($dtfmt, strtotime($post->post_date))),
-                'parent' => self::$prefix . '_my_alerts',
+                'parent' => self::$prefix.'_my_alerts',
                 'href' => $url
             ));
         }
@@ -595,13 +702,13 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             $alert = new WP_Buoy_Alert($post->ID);
             $author = get_userdata($post->post_author);
             $url = wp_nonce_url(
-                admin_url('?page=' . self::$prefix . '_chat&' . self::$prefix . '_hash=' . $alert->get_hash()),
-                self::$prefix . '_chat', self::$prefix . '_nonce'
+                admin_url('?page='.self::$prefix.'_chat&'.self::$prefix.'_hash='.$alert->get_hash()),
+                self::$prefix.'_chat', self::$prefix.'_nonce'
             );
             $wp_admin_bar->add_node(array(
-                'id' => self::$prefix . '-alert-' . $alert->get_hash(),
+                'id' => self::$prefix.'-alert-'.$alert->get_hash(),
                 'title' => sprintf(__('Alert issued by %1$s on %2$s', 'buoy'), $author->display_name, date($dtfmt, strtotime($post->post_date))),
-                'parent' => self::$prefix . '_my_responses',
+                'parent' => self::$prefix.'_my_responses',
                 'href' => $url
             ));
         }
@@ -609,16 +716,31 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         foreach ($alerts['my_scheduled_alerts'] as $post) {
             $alert = new WP_Buoy_Alert($post->ID);
             $url = wp_nonce_url(
-                admin_url('admin-ajax.php?action=' . self::$prefix . '_unschedule_alert&' . self::$prefix .'_hash=' . $alert->get_hash() . '&r=' . esc_url($_SERVER['REQUEST_URI'])),
-                self::$prefix . '_unschedule_alert', self::$prefix . '_nonce'
+                admin_url('admin-ajax.php?action='.self::$prefix.'_unschedule_alert&'.self::$prefix .'_hash='.$alert->get_hash().'&r='.esc_url($_SERVER['REQUEST_URI'])),
+                self::$prefix.'_unschedule_alert', self::$prefix.'_nonce'
             );
             $wp_admin_bar->add_node(array(
-                'id' => self::$prefix . '-alert-' . $alert->get_hash(),
-                'title' => sprintf(__('Cancel scheduled alert for %1$s','buoy'), date($dtfmt, strtotime($post->post_date))),
+                'id' => self::$prefix.'-alert-'.$alert->get_hash(),
+                'title' => sprintf(__('Cancel scheduled alert for %1$s', 'buoy'), date($dtfmt, strtotime($post->post_date))),
                 'meta' => array(
                     'title' => __('Cancel this alert', 'buoy')
                 ),
-                'parent' => self::$prefix . '_my_scheduled_alerts',
+                'parent' => self::$prefix.'_my_scheduled_alerts',
+                'href' => $url
+            ));
+        }
+
+        foreach ($alerts['my_unanswered_alerts'] as $post) {
+            $alert = new WP_Buoy_Alert($post->ID);
+            $author = get_userdata($post->post_author);
+            $url = admin_url('?page='.self::$prefix.'_review_alert&'.self::$prefix .'_hash='.$alert->get_hash());
+            $wp_admin_bar->add_node(array(
+                'id' => self::$prefix.'-alert-'.$alert->get_hash(),
+                'title' => sprintf(__('New alert by %1$s on %2$s', 'buoy'), $author->display_name, date($dtfmt, strtotime($post->post_date))),
+                'meta' => array(
+                    'title' => __('View alert', 'buoy')
+                ),
+                'parent' => self::$prefix.'_my_unanswered_alerts',
                 'href' => $url
             ));
         }
@@ -642,18 +764,18 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             __('Activate Alert', 'buoy'),
             __('Activate Alert', 'buoy'),
             'read', // give access to all users including Subscribers role
-            self::$prefix . '_activate_alert',
+            self::$prefix.'_activate_alert',
             array(__CLASS__, 'renderActivateAlertPage')
         );
-        add_action('load-' . $hook, array(__CLASS__, 'removeScreenOptions'));
-        add_action('load-' . $hook, array(__CLASS__, 'addInstallerScripts'));
+        add_action('load-'.$hook, array(__CLASS__, 'removeScreenOptions'));
+        add_action('load-'.$hook, array(__CLASS__, 'addInstallerScripts'));
 
         $hooks[] = add_submenu_page(
             null,
             __('Respond to Alert', 'buoy'),
             __('Respond to Alert', 'buoy'),
             'read',
-            self::$prefix . '_review_alert',
+            self::$prefix.'_review_alert',
             array(__CLASS__, 'renderReviewAlertPage')
         );
 
@@ -662,13 +784,13 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             __('Incident Chat', 'buoy'),
             __('Incident Chat', 'buoy'),
             'read',
-            self::$prefix . '_chat',
+            self::$prefix.'_chat',
             array(__CLASS__, 'renderIncidentChatPage')
         );
 
         foreach ($hooks as $hook) {
-            add_action('load-' . $hook, array(__CLASS__, 'enqueueFrontEndScripts'));
-            add_action('load-' . $hook, array(__CLASS__, 'enqueueFrameworkScripts'));
+            add_action('load-'.$hook, array(__CLASS__, 'enqueueFrontEndScripts'));
+            add_action('load-'.$hook, array(__CLASS__, 'enqueueFrameworkScripts'));
         }
     }
 
@@ -683,9 +805,9 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
     public static function renderActivateAlertPage () {
         $buoy_user = new WP_Buoy_User(get_current_user_id());
         if (!$buoy_user->has_responder()) {
-            require_once 'pages/no-responders-available.php';
+            require_once plugin_dir_path(dirname(__FILE__)).'pages/no-responders-available.php';
         } else {
-            require_once 'pages/activate-alert.php';
+            require_once plugin_dir_path(dirname(__FILE__)).'pages/activate-alert.php';
         }
     }
 
@@ -701,15 +823,20 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function renderReviewAlertPage () {
-        if (empty($_GET[self::$prefix . '_hash'])) {
+        if (empty($_GET[self::$prefix.'_hash'])) {
             return;
         }
-        $alert = new WP_Buoy_Alert($_GET[self::$prefix . '_hash']);
+        try {
+            $alert = new WP_Buoy_Alert($_GET[self::$prefix.'_hash']);
+        } catch (Exception $e) {
+            esc_html_e('You do not have sufficient permissions to access this page.', 'buoy');
+            return;
+        }
         if (!current_user_can('read') || !$alert->can_respond(get_current_user_id())) {
             esc_html_e('You do not have sufficient permissions to access this page.', 'buoy');
             return;
         }
-        require_once 'pages/review-alert.php';
+        require_once plugin_dir_path(dirname(__FILE__)).'pages/review-alert.php';
     }
 
     /**
@@ -727,13 +854,13 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      */
     public static function renderIncidentChatPage () {
         try {
-            $alert = new WP_Buoy_Alert(urldecode($_GET[self::$prefix . '_hash']));
+            $alert = new WP_Buoy_Alert(urldecode($_GET[self::$prefix.'_hash']));
         } catch (Exception $e) {
             esc_html_e('You do not have sufficient permissions to access this page.', 'buoy');
             return;
         }
 
-        if (!$alert->wp_post || !current_user_can('read') || !isset($_GET[self::$prefix . '_nonce']) || !wp_verify_nonce($_GET[self::$prefix . '_nonce'], self::$prefix . '_chat')) {
+        if (!$alert->wp_post || !current_user_can('read') || !isset($_GET[self::$prefix.'_nonce']) || !wp_verify_nonce($_GET[self::$prefix.'_nonce'], self::$prefix.'_chat')) {
             esc_html_e('You do not have sufficient permissions to access this page.', 'buoy');
             return;
         }
@@ -741,8 +868,8 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         if (get_current_user_id() != $alert->wp_post->post_author) {
             $alert->add_responder(get_current_user_id());
             // TODO: Clean this up a bit, maybe the JavaScript should send JSON data?
-            if (!empty($_POST[self::$prefix . '_location'])) {
-                $p = explode(',', $_POST[self::$prefix . '_location']);
+            if (!empty($_POST[self::$prefix.'_location'])) {
+                $p = explode(',', $_POST[self::$prefix.'_location']);
                 $geo = array(
                     'latitude' => $p[0],
                     'longitude' => $p[1]
@@ -751,7 +878,122 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             }
         }
 
-        require_once 'pages/incident-chat.php';
+        require_once plugin_dir_path(dirname(__FILE__)).'pages/incident-chat.php';
+    }
+
+    /**
+     * Hookable action to print out the HTML for the given chat room system.
+     *
+     * This function is called by the custom `buoy_chat_room` action hook.
+     * Plugin developers can replace the Buoy chat room by hooking their
+     * own code to the action after removing the default action. This allows
+     * plugin developers to develop their own plugins that use custom chat
+     * room code for their own Buoys.
+     *
+     * @param WP_Buoy_Alert $alert
+     */
+    public static function renderChatRoom ($alert, $curr_user) {
+        switch ($alert->get_chat_system()) {
+            case 'tlk.io':
+                include plugin_dir_path(dirname(__FILE__)).'pages/chat-room-tlk-io.php';
+                break;
+            default:
+                include plugin_dir_path(dirname(__FILE__)).'/pages/chat-room-wordpress-comments.php';
+                break;
+        }
+    }
+
+    /**
+     * Shows the built-in post comments chat room.
+     *
+     * @return void
+     */
+    public static function renderPostCommentsChatRoom () {
+        require_once plugin_dir_path(dirname(__FILE__)).'pages/post-comments-chat.php';
+        exit();
+    }
+
+    /**
+     * A super-simple HTML5 Server-Side Events streaming server.
+     *
+     * @link https://developer.mozilla.org/en-US/docs/Web/API/Server-sent_events/Using_server-sent_events#Sending_events_from_the_server
+     */
+    public static function chatEventStream () {
+        $post_id = absint($_GET['post_id']);
+        $offset  = absint($_GET['offset']);
+        // How many comments to return in a single batch.
+        $limit   = 5; // arbitrary
+
+        header('Content-Type: text/event-stream');
+        header('Cache-Control: no-cache, must-revalidate, max-age=0');
+        // Tell nginx not to buffer us!
+        // See http://nginx.org/en/docs/http/ngx_http_fastcgi_module.html#fastcgi_buffering
+        header('X-Accel-Buffering: no');
+
+        $start_time = time();
+        while (true) {
+            $comments = get_comments(array(
+                'post_id' => $post_id,
+                'number'  => $limit,
+                'offset'  => $offset,
+                'order'   => 'ASC'
+            ));
+            wp_cache_flush();
+
+            if ($comments) {
+                $offset += count($comments);
+                // Translate a WP_Comment into a WP REST API version of the same.
+                // TODO: This should be a helper function. :P
+                foreach ($comments as $comment) {
+                    $comment->id = $comment->comment_ID;
+                    $comment->author_name = $comment->comment_author;
+                    $comment->date = $comment->comment_date;
+                    $comment->author_avatar_urls = array(
+                        '48' => get_avatar_url($comment->comment_author_email, '48')
+                    );
+                    $comment->content = new stdClass();
+                    $comment->content->rendered = $comment->comment_content;
+                }
+                print self::eventStreamMessage(json_encode($comments), 'updated');
+            } else {
+                print self::eventStreamMessage(); // Heartbeat.
+            }
+
+            @ob_end_flush();
+            flush();
+
+            // Prevent server exhaustion by killing this thread eventually.
+            if ((time() - $start_time) > (1 * MINUTE_IN_SECONDS)) {
+                print self::eventStreamMessage('', 'RESTART');
+                break;
+            }
+            sleep(1);
+        }
+
+        exit(0);
+    }
+
+    /**
+     * Utility function to create an HTML5 SSE message.
+     *
+     * Call without arguments to send a heartbeat.
+     *
+     * @param string $data
+     * @param string $type
+     *
+     * @return string
+     */
+    public static function eventStreamMessage ($data = '', $type = '') {
+        $msg = '';
+        if ($type) {
+            $msg .= "event: $type\n";
+        }
+        if ($data) {
+            $msg .= "data: $data\n";
+        } else {
+            $msg .= ":\n"; // Heartbeat.
+        }
+        return "$msg\n";
     }
 
     /**
@@ -779,31 +1021,42 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function enqueueFrontEndScripts () {
-        $plugin_data = get_plugin_data(plugin_dir_path(__FILE__) . self::$prefix . '.php');
+        $plugin_data = get_plugin_data(plugin_dir_path(dirname(__FILE__)).self::$prefix.'.php');
         wp_enqueue_style(
-            self::$prefix . '-alert-style',
-            plugins_url('css/alerts.css', __FILE__),
-            false,
+            self::$prefix.'-alert-style',
+            plugins_url('../css/alerts.css', __FILE__),
+            array('bootstrap-css'),
             $plugin_data['Version']
         );
-          
-        
+        wp_enqueue_style(
+            self::$prefix.'-css-hacks',
+            plugins_url('../css/hacks.css', __FILE__),
+            array(self::$prefix.'-alert-style'),
+            $plugin_data['Version']
+        );
+
+        // Enqueue main "buoy.js" file
         wp_register_script(
-            self::$prefix . '-script',
-            plugins_url(self::$prefix . '.js', __FILE__),
+            self::$prefix.'-script',
+            plugins_url(self::$prefix.'.js', dirname(__FILE__)),
             array('jquery'),
             $plugin_data['Version']
         );
-        wp_register_script(
-            self::$prefix . '-setup',
-            plugins_url('includes/buoy-setup.js', __FILE__),
-            array('jquery'),
+        wp_localize_script(self::$prefix.'-script', self::$prefix.'_vars', self::localizeScript());
+        wp_enqueue_script(self::$prefix.'-script');
+
+        wp_enqueue_script(
+            self::$prefix.'-alert',
+            plugins_url(self::$prefix.'-alert.js', __FILE__),
+            array(self::$prefix.'-script'),
             $plugin_data['Version']
         );
-        wp_localize_script(self::$prefix . '-script', self::$prefix . '_vars', self::localizeScript());
-        wp_localize_script(self::$prefix . '-setup', self::$prefix . '_vars', self::localizeScript());
-        wp_enqueue_script(self::$prefix . '-script');
-        wp_enqueue_script(self::$prefix . '-setup');
+        wp_enqueue_script(
+            self::$prefix.'-map',
+            plugins_url(self::$prefix.'-map.js', __FILE__),
+            array(self::$prefix.'-script', 'leaflet'),
+            $plugin_data['Version']
+        );
     }
 
     /**
@@ -821,20 +1074,20 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         $usropt = new WP_Buoy_User_Settings(get_current_user_id());
         if (!$usropt->get('installer_dismissed')) {
             wp_enqueue_script(
-                self::$prefix . '-install-webapp',
-                plugins_url('includes/install-webapp.js', __FILE__),
+                self::$prefix.'-install-webapp',
+                plugins_url('install-webapp.js', __FILE__),
                 array('jquery')
             );
             wp_enqueue_style(
-                self::$prefix . '-install-webapp',
-                plugins_url('includes/install-webapp.css', __FILE__)
+                self::$prefix.'-install-webapp',
+                plugins_url('install-webapp.css', __FILE__)
             );
         }
     }
 
     /**
      * Enqueues the Bootstrap CSS and JavaScript framework resources,
-     * along with jQuery and Google library plugins used for Alert UI.
+     * along with jQuery and Leaflet library plugins used for Alert UI.
      *
      * @todo Should this kind of utility loader be moved into its own class?
      *
@@ -844,11 +1097,11 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         // Enqueue jQuery plugins.
         wp_enqueue_style(
             'jquery-datetime-picker',
-            plugins_url('includes/jquery.datetimepicker.css', __FILE__)
+            plugins_url('jquery.datetimepicker.css', __FILE__)
         );
         wp_enqueue_script(
             'jquery-datetime-picker',
-            plugins_url('includes/jquery.datetimepicker.full.min.js', __FILE__),
+            plugins_url('jquery.datetimepicker.full.min.js', __FILE__),
             array('jquery'),
             null,
             true
@@ -856,9 +1109,13 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
 
         self::enqueueBootstrapFramework();
 
+        wp_enqueue_style(
+            'leaflet',
+            plugins_url('vendor/leaflet/dist/leaflet.css', dirname(__FILE__))
+        );
         wp_enqueue_script(
-            'google-maps-api',
-            'https://maps.googleapis.com/maps/api/js?language=' . get_locale(),
+            'leaflet',
+            plugins_url('vendor/leaflet/dist/leaflet.js', dirname(__FILE__)),
             array(),
             null,
             true
@@ -866,8 +1123,8 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
 
         // Enqueue a custom pulse loader CSS animation.
         wp_enqueue_style(
-            self::$prefix . '-pulse-loader',
-            plugins_url('includes/pulse-loader.css', __FILE__)
+            self::$prefix.'-pulse-loader',
+            plugins_url('pulse-loader.css', __FILE__)
         );
     }
 
@@ -915,17 +1172,16 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             // sha*-$hash => handle
             'sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7' => 'bootstrap-css',
             'sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS' => 'bootstrap-js'
-            // TODO: Figure out if the Google Maps API can also be SRI-enabled
         );
         if ($integrity = array_search($handle, $integrities)) {
-            $sri_att = ' crossorigin="anonymous" integrity="' . $integrity . '"';
+            $sri_att = ' crossorigin="anonymous" integrity="'.$integrity.'"';
             $insertion_pos = strpos($html, '>');
             // account for self-closing tags
             if (0 === strpos($html, '<link ')) {
                 $insertion_pos--;
                 $sri_att .= ' ';
             }
-            return substr($html, 0, $insertion_pos) . $sri_att . substr($html, $insertion_pos);
+            return substr($html, 0, $insertion_pos).$sri_att.substr($html, $insertion_pos);
         }
         return $html;
     }
@@ -943,17 +1199,14 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             'i18n_install_btn_content' => __('Install Buoy by tapping this button, then choosing "Add to home screen" from the menu.', 'buoy'),
             'i18n_dismiss' => __('Dismiss', 'buoy'),
             'i18n_map_title' => __('Incident Map', 'buoy'),
-            'i18n_hide_map' => __('Hide Map', 'buoy'),
-            'i18n_show_map' => __('Show Map', 'buoy'),
             'i18n_crisis_location' => __('Location of emergency alert signal', 'buoy'),
-            'i18n_missing_crisis_location' => __('Emergency alert signal could not be pinpointed on a map.', 'buoy'),
             'i18n_my_location' => __('My location', 'buoy'),
             'i18n_directions' => __('Directions to here', 'buoy'),
             'i18n_call' => __('Call', 'buoy'),
             'i18n_responding_to_alert' => __('Responding to alert', 'buoy'),
             'i18n_schedule_alert' => __('Schedule alert', 'buoy'),
             'i18n_scheduling_alert' => __('Scheduling alert', 'buoy'),
-            'incident_nonce' => wp_create_nonce(self::$prefix . '_incident_nonce')
+            'incident_nonce' => wp_create_nonce(self::$prefix.'_incident_nonce')
         );
     }
 
@@ -980,7 +1233,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function handleNewAlert () {
-        check_ajax_referer(self::$prefix . '_new_alert', self::$prefix . '_nonce');
+        check_ajax_referer(self::$prefix.'_new_alert', self::$prefix.'_nonce');
 
         $postarr    = array();
         $meta_input = array();
@@ -991,8 +1244,8 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             $meta_input['geo_latitude'] = $alert_position['latitude'];
             $meta_input['geo_longitude'] = $alert_position['longitude'];
         }
-        if (isset($_POST[self::$prefix . '_teams']) && is_array($_POST[self::$prefix . '_teams'])) {
-            $my_teams = array_map('absint', $_POST[self::$prefix . '_teams']);
+        if (isset($_POST[self::$prefix.'_teams']) && is_array($_POST[self::$prefix.'_teams'])) {
+            $my_teams = array_map('absint', $_POST[self::$prefix.'_teams']);
             $valid_teams = array();
             foreach ($my_teams as $team_id) {
                 $team = new WP_Buoy_Team($team_id);
@@ -1000,7 +1253,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
                     $valid_teams[] = $team_id;
                 }
             }
-            $meta_input[self::$prefix . '_teams'] = $valid_teams;
+            $meta_input[self::$prefix.'_teams'] = $valid_teams;
         }
         // Create and publish the new alert.
         $buoy_user = new WP_Buoy_User(get_current_user_id());
@@ -1052,10 +1305,10 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             // Construct the redirect URL to the alerter's chat room
             $next_url = wp_nonce_url(
                 admin_url(
-                    '?page=' . self::$prefix . '_chat'
-                    . '&' . self::$prefix . '_hash=' . $buoy_alert->get_hash()
+                    '?page='.self::$prefix.'_chat'
+                   .'&'.self::$prefix.'_hash='.$buoy_alert->get_hash()
                 ),
-                self::$prefix . '_chat', self::$prefix . '_nonce'
+                self::$prefix.'_chat', self::$prefix.'_nonce'
             );
 
             if (isset($_SERVER['HTTP_ACCEPT'])) {
@@ -1081,12 +1334,12 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function handleMediaUpload () {
-        check_ajax_referer(self::$prefix . '_incident_nonce', self::$prefix . '_nonce');
+        check_ajax_referer(self::$prefix.'_incident_nonce', self::$prefix.'_nonce');
 
-        $alert = new self($_GET[self::$prefix . '_hash']);
+        $alert = new self($_GET[self::$prefix.'_hash']);
         $keys = array_keys($_FILES);
         $k  = array_shift($keys);
-        $id = media_handle_upload($k, $alert->wp_post->ID);
+        $id = media_handle_upload($k, $alert->wp_post->ID, array('post_status' => 'private'));
         $m = wp_get_attachment_metadata($id);
         if (is_wp_error($id)) {
             wp_send_json_error($id);
@@ -1126,8 +1379,8 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function handleUnscheduleAlert () {
-        if (isset($_GET[self::$prefix . '_nonce']) && wp_verify_nonce($_GET[self::$prefix . '_nonce'], self::$prefix . '_unschedule_alert')) {
-            $alert = new WP_Buoy_Alert($_GET[self::$prefix . '_hash']);
+        if (isset($_GET[self::$prefix.'_nonce']) && wp_verify_nonce($_GET[self::$prefix.'_nonce'], self::$prefix.'_unschedule_alert')) {
+            $alert = new WP_Buoy_Alert($_GET[self::$prefix.'_hash']);
             if ($alert && get_current_user_id() == $alert->wp_post->post_author) {
                 wp_delete_post($alert->wp_post->ID, true);
                 if (isset($_SERVER['HTTP_ACCEPT']) && false === strpos($_SERVER['HTTP_ACCEPT'], 'application/json')) {
@@ -1157,15 +1410,21 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function handleLocationUpdate () {
-        check_ajax_referer(self::$prefix . '_incident_nonce', self::$prefix . '_nonce');
+        check_ajax_referer(self::$prefix.'_incident_nonce', self::$prefix.'_nonce');
 
-        if (isset($_POST['incident_hash'])) {
-            $alert = new WP_Buoy_Alert($_POST['incident_hash']);
-            if (isset($_POST['pos'])) {
-                $alert->set_responder_geo(get_current_user_id(), $_POST['pos']);
-                wp_send_json_success($alert->get_incident_state());
+        try {
+            if (isset($_POST['incident_hash'])) {
+                $alert = new WP_Buoy_Alert($_POST['incident_hash']);
+                if (isset($_POST['pos'])) {
+                    $alert->set_responder_geo(get_current_user_id(), $_POST['pos']);
+                    wp_send_json_success($alert->get_incident_state());
+                }
             }
+        } catch (Exception $e) {
+            // TODO: Handle exception more gracefully?
+            wp_send_json_error();
         }
+
         wp_send_json_error();
     }
 
@@ -1190,16 +1449,18 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      */
     public static function handleNewPostCommentChat ($open, $post_id) {
         $post = get_post($post_id);
-        if (self::$prefix . '_alert' !== $post->post_type
+        if (self::$prefix.'_alert' !== $post->post_type
             || 'post_comments' !== $post->buoy_chat_system
-            || !isset($_POST[self::$prefix . '_chat_comment_nonce'])
+            || !isset($_POST[self::$prefix.'_chat_comment_nonce'])
         ) { return $open; }
 
-        if (1 === wp_verify_nonce($_POST[self::$prefix . '_chat_comment_nonce'], self::$prefix . '_chat_comment')) {
+        if (1 === wp_verify_nonce($_POST[self::$prefix.'_chat_comment_nonce'], self::$prefix.'_chat_comment')) {
             add_filter('duplicate_comment_id', '__return_false'); // allow dupes
             add_filter('comment_flood_filter', '__return_false'); // allow floods
             add_filter('pre_comment_approved', '__return_true');  // always approve
-            add_filter('comment_notification_recipients', '__return_false'); // don't email
+            add_filter('comment_notification_recipients', function ($emails) {
+                return array(); // don't send chat room email notifications to anyone
+            });
             add_filter('comment_post_redirect', array(__CLASS__, 'redirectChatComment'), 10, 2);
             return true;
         } else {
@@ -1220,7 +1481,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return void
      */
     public static function handleDismissInstaller () {
-        check_ajax_referer(self::$prefix . '_incident_nonce', self::$prefix . '_nonce');
+        check_ajax_referer(self::$prefix.'_incident_nonce', self::$prefix.'_nonce');
 
         $usropt = new WP_Buoy_User_Settings(get_current_user_id());
         $usropt->set('installer_dismissed', true)->save();
@@ -1234,8 +1495,8 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      */
     public static function getActiveAlerts () {
         return get_posts(array(
-            'post_type' => self::$prefix . '_alert',
-            'meta_key' => self::$prefix . '_hash',
+            'post_type' => self::$prefix.'_alert',
+            'meta_key' => self::$prefix.'_hash',
             'posts_per_page' => -1
         ));
     }
@@ -1249,7 +1510,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      */
     public static function getScheduledAlerts ($uid = false) {
         $args = array(
-            'post_type' => self::$prefix . '_alert',
+            'post_type' => self::$prefix.'_alert',
             'post_status' => 'future',
             'posts_per_page' => -1
         );
@@ -1279,7 +1540,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         );
 
         foreach ($posts as $type => $set) {
-            $html .= '<li class="' . esc_attr($type) . ' list-group">';
+            $html .= '<li class="'.esc_attr($type).' list-group">';
             $html .= '<div class="list-group-item">';
             $html .= '<h4 class="list-group-item-heading">';
             switch ($type) {
@@ -1293,13 +1554,13 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
                     $html .= esc_html('Audio attachments', 'buoy');
                     break;
             }
-            $html .= ' <span class="badge">' . count($set) . '</span>';
+            $html .= ' <span class="badge">'.count($set).'</span>';
             $html .= '</h4>';
             $html .= '<ul>';
 
             foreach ($set as $post) {
                 $html .= '<li id="incident-media-'. $post->ID .'" class="list-group-item">';
-                $html .= '<h5 class="list-group-item-header">' . esc_html($post->post_title) . '</h5>';
+                $html .= '<h5 class="list-group-item-header">'.esc_html($post->post_title).'</h5>';
                 $html .= self::getIncidentMediaHtml($type, $post->ID);
                 $html .= '<p class="list-group-item-text">';
                 $html .= sprintf(
@@ -1307,7 +1568,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
                     human_time_diff(strtotime($post->post_date_gmt))
                 );
                 $u = get_userdata($post->post_author);
-                $html .= ' ' . sprintf(
+                $html .= ' '.sprintf(
                     esc_html_x('by %1$s', 'a byline, like "written by Bob"', 'buoy'),
                     $u->display_name
                 );
@@ -1340,7 +1601,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
                 ));;
                 break;
             case 'image':
-                $html .= '<a href="' . wp_get_attachment_url($post_id) . '" target="_blank">';
+                $html .= '<a href="'.wp_get_attachment_url($post_id).'" target="_blank">';
                 $html .= wp_get_attachment_image($post_id);
                 $html .= '</a>';
                 break;

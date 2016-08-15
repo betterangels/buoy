@@ -106,12 +106,12 @@
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="../reports/errors.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">56</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Errors <span class="label label-info pull-right">61</span>
                                 </a>
                             </li>
                             <li>
                                 <a href="../reports/markers.html">
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">30</span>
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        <i class="icon-list-alt"></i>&#160;Markers <span class="label label-info pull-right">36</span>
                                 </a>
                             </li>
                             <li>
@@ -136,10 +136,10 @@
                                 <div class="accordion" style="margin-bottom: 0">
         <div class="accordion-group">
             <div class="accordion-heading">
-                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1791764683"></a>
+                                    <a class="accordion-toggle " data-toggle="collapse" data-target="#namespace-1049290936"></a>
                                 <a href="../namespaces/default.html" style="margin-left: 30px; padding-left: 0">\</a>
             </div>
-            <div id="namespace-1791764683" class="accordion-body collapse in">
+            <div id="namespace-1049290936" class="accordion-body collapse in">
                 <div class="accordion-inner">
 
                     
@@ -154,9 +154,12 @@
                                                     <li class="class"><a href="../classes/BuoyUsersTest.html">BuoyUsersTest</a></li>
                                                     <li class="class"><a href="../classes/WP_Buoy_Alert.html">WP_Buoy_Alert</a></li>
                                                     <li class="class"><a href="../classes/WP_Buoy_Chat_Room.html">WP_Buoy_Chat_Room</a></li>
+                                                    <li class="class"><a href="../classes/WP_Buoy_Helper.html">WP_Buoy_Helper</a></li>
                                                     <li class="class"><a href="../classes/WP_Buoy_Notification.html">WP_Buoy_Notification</a></li>
                                                     <li class="class"><a href="../classes/WP_Buoy_Plugin.html">WP_Buoy_Plugin</a></li>
                                                     <li class="class"><a href="../classes/WP_Buoy_Settings.html">WP_Buoy_Settings</a></li>
+                                                    <li class="class"><a href="../classes/WP_Buoy_SMS.html">WP_Buoy_SMS</a></li>
+                                                    <li class="class"><a href="../classes/WP_Buoy_SMS_Email_Bridge.html">WP_Buoy_SMS_Email_Bridge</a></li>
                                                     <li class="class"><a href="../classes/WP_Buoy_Team.html">WP_Buoy_Team</a></li>
                                                     <li class="class"><a href="../classes/WP_Buoy_User.html">WP_Buoy_User</a></li>
                                                     <li class="class"><a href="../classes/WP_Buoy_User_Settings.html">WP_Buoy_User_Settings</a></li>
@@ -202,6 +205,7 @@ methods, so we subclass it and stub out the Trac-checking part. :)</p>
                                                                     <a href="../classes/BuoyTeamsTest.html#method_setUp" class="">setUp()</a><br />
                                                                     <a href="../classes/BuoyTeamsTest.html#method_test_team_post_type_exists" class="">test_team_post_type_exists()</a><br />
                                                                     <a href="../classes/BuoyTeamsTest.html#method_test_add_team_member_meta_box_datalist_option_value_matches_user_login" class="">test_add_team_member_meta_box_datalist_option_value_matches_user_login()</a><br />
+                                                                    <a href="../classes/BuoyTeamsTest.html#method_test_confirmed_members_of_private_teams_are_counted_as_responders" class="">test_confirmed_members_of_private_teams_are_counted_as_responders()</a><br />
                                                             </section>
                             <section class="span4">
                                                                     <em>No public properties found</em>
@@ -360,6 +364,32 @@ methods, so we subclass it and stub out the Trac-checking part. :)</p>
         </aside>
     </div>
 
+                                    <div class="row-fluid">
+        <div class="span8 content class">
+            <a id="method_test_confirmed_members_of_private_teams_are_counted_as_responders" name="method_test_confirmed_members_of_private_teams_are_counted_as_responders" class="anchor"></a>
+            <article class="method">
+                <h3 class="public ">test_confirmed_members_of_private_teams_are_counted_as_responders()</h3>
+                <a href="#source-view" role="button" class="pull-right btn" data-toggle="modal" style="font-size: 1.1em; padding: 9px 14px"><i class="icon-code"></i></a>
+                <pre class="signature" style="margin-right: 54px;">test_confirmed_members_of_private_teams_are_counted_as_responders() </pre>
+                <p><em>Ensures responders are found even in private teams.</em></p>
+                
+
+                
+                
+                				
+                            </article>
+        </div>
+        <aside class="span4 detailsbar">
+            <h1><i class="icon-arrow-down"></i></h1>
+                                                            <dl>
+                                                                            </dl>
+            <h2>Tags</h2>
+            <table class="table table-condensed">
+                                    <tr><td colspan="2"><em>None found</em></td></tr>
+                            </table>
+        </aside>
+    </div>
+
                                                     <div class="row-fluid">
         <div class="span8 content class">
             <a id="method_checkRequirements" name="method_checkRequirements" class="anchor"></a>
@@ -441,7 +471,7 @@ with the <code>@ticket</code> annotation in our own test cases to fail.</p>
                 <section class="span10 offset1">
                     <hr />
                     Documentation is powered by <a href="http://www.phpdoc.org/">phpDocumentor </a> and authored
-                    on March 19th, 2016 at 02:20.
+                    on August 15th, 2016 at 02:19.
                 </section>
             </section>
         </section>

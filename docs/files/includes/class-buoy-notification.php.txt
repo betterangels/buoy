@@ -29,6 +29,7 @@ class WP_Buoy_Notification extends WP_Buoy_Plugin {
      */
     public static function register () {
         add_action('publish_' . self::$prefix . '_team', array(__CLASS__, 'inviteUsers'), 10, 2);
+        add_action('private_' . self::$prefix . '_team', array(__CLASS__, 'inviteUsers'), 10, 2);
         add_action(self::$prefix . '_team_member_added', array(__CLASS__, 'addedToTeam'), 10, 3);
         add_action(self::$prefix . '_team_member_removed', array(__CLASS__, 'removedFromTeam'), 10, 2);
 
@@ -131,6 +132,8 @@ class WP_Buoy_Notification extends WP_Buoy_Plugin {
      * Runs whenever an alert is published. Sends notifications to an
      * alerter's response team informing them of the alert.
      *
+     * @global array $wp_filter
+     *
      * @param int $post_id
      * @param WP_Post $post
      *
@@ -149,10 +152,22 @@ class WP_Buoy_Notification extends WP_Buoy_Plugin {
         );
         $subject = $post->post_title;
 
+        // Get the site domain and get rid of "www." We deliberately
+        // replace the user's own email address with the address of
+        // the WP server, because many shared hosting environments on
+        // cheap systems filter outgoing mail configured differnetly.
+        $from_domain = strtolower( $_SERVER['SERVER_NAME'] );
+        if ( substr( $from_domain, 0, 4 ) == 'www.' ) {
+            $from_domain = substr( $from_domain, 4 );
+        }
         $alerter = get_userdata($post->post_author);
         $headers = array(
-            "From: \"{$alerter->display_name}\" <{$alerter->user_email}>"
+            "From: \"{$alerter->display_name}\" <wordpress@{$from_domain}>",
         );
+
+        $SMS = new WP_Buoy_SMS();
+        $SMS->setSender($alerter);
+        $SMS->setContent("$responder_short_link $subject");
 
         foreach ($alert->get_teams() as $team_id) {
             $team = new WP_Buoy_Team($team_id);
@@ -164,26 +179,12 @@ class WP_Buoy_Notification extends WP_Buoy_Plugin {
 
                 $smsemail = $responder->get_sms_email();
                 if (!empty($smsemail)) {
-                    $sms_max_length = 160;
-                    // We need to ensure that SMS notifications fit within the 160 character
-                    // limit of SMS transmissions. Since we're using email-to-SMS gateways,
-                    // a subject will be wrapped inside of parentheses, making it two chars
-                    // longer than whatever its original contents are. Then a space is
-                    // inserted between the subject and the message body. The total length
-                    // of strlen($subject) + 2 + 1 + strlen($message) must be less than 160.
-                    $extra_length = 3; // two parenthesis and a space
-                    // but in practice, there seems to be another 7 chars eaten up somewhere?
-                    $extra_length += 7;
-                    $url_length = strlen($responder_short_link);
-                    $full_length = strlen($subject) + $extra_length + $url_length;
-                    if ($full_length > $sms_max_length) {
-                        // truncate the $subject since the link must be fully included
-                        $subject = substr($subject, 0, $sms_max_length - $url_length - $extra_length);
-                    }
-                    wp_mail($smsemail, $subject, $responder_short_link, $headers);
+                    $SMS->addAddressee($responder);
                 }
             }
         }
+
+        $SMS->send();
     }
 
     /**

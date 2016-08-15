@@ -48,7 +48,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
      *
      * @var string[]
      */
-    private $_invitees;
+    private $invitees;
 
     /**
      * Constructor.
@@ -60,7 +60,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
     public function __construct ($team_id) {
         $this->wp_post = get_post($team_id);
         $this->members = array_map('get_userdata', array_unique(get_post_meta($this->wp_post->ID, '_team_members')));
-        $this->_invitees = array_unique(get_post_meta($this->wp_post->ID, '_invitees'));
+        $this->invitees = array_unique(get_post_meta($this->wp_post->ID, '_invitees'));
         $this->author = get_userdata($this->wp_post->post_author);
     }
 
@@ -98,29 +98,48 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
     }
 
     /**
-     * Checks whether or not this team is the user's default team.
-     *
-     * @uses WP_Buoy_User_Settings::get()
+     * Checks whether or not this team is one of user's default teams.
      *
      * @return bool
      */
     public function is_default () {
-        $usropt = new WP_Buoy_User_Settings($this->author->ID);
-        return $this->wp_post->ID == $usropt->get('default_team');
+        return (bool) get_post_meta($this->wp_post->ID, self::$prefix.'_default_team', true);
     }
 
     /**
-     * Makes this team the default team of the author.
-     *
-     * @uses WP_Buoy_User_Settings::set()
-     * @uses WP_Buoy_User_Settings::save()
+     * Makes this team part a default team of the author.
      *
      * @return WP_Buoy_Team
      */
-    public function make_default () {
-        $usropt = new WP_Buoy_User_Settings($this->author->ID);
-        $usropt->set('default_team', $this->wp_post->ID)->save();
+    public function set_default () {
+        update_post_meta($this->wp_post->ID, self::$prefix.'_default_team', true);
         return $this;
+    }
+
+    /**
+     * Removes this team from the list of default teams.
+     *
+     * Refuses to remove the team from the list of default teams if
+     * the team's author does not have any other default teams. This
+     * ensures that a user always has at least one default team.
+     *
+     * @return WP_Buoy_Team
+     */
+    public function unset_default () {
+        $user = new WP_Buoy_User($this->author->ID);
+        if (1 < count($user->get_default_teams())) {
+            delete_post_meta($this->wp_post->ID, self::$prefix.'_default_team');
+        }
+        return $this;
+    }
+
+    /**
+     * Gets the Team's owner.
+     *
+     * @return WP_Buoy_User
+     */
+    public function get_team_owner () {
+        return new WP_Buoy_User($this->author->ID);
     }
 
     /**
@@ -191,6 +210,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
      */
     public function add_member ($user_id, $notify = true) {
         add_post_meta($this->wp_post->ID, '_team_members', $user_id, false);
+        $this->members[] = get_userdata($user_id);
 
         do_action(self::$prefix . '_team_member_added', $user_id, $this, $notify);
 
@@ -360,7 +380,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
             'has_archive' => false,
             'rewrite' => false,
             'can_export' => false,
-            'menu_icon' => plugins_url('img/icon-bw-life-preserver.svg', __FILE__)
+            'menu_icon' => 'dashicons-sos',
         ));
         add_action('load-post.php', array('WP_Buoy_Plugin', 'addHelpTab'));
         add_action('load-post-new.php', array('WP_Buoy_Plugin', 'addHelpTab'));
@@ -372,7 +392,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         if (is_admin()) {
             wp_enqueue_style(
                 __CLASS__ . '-style',
-                plugins_url('css/admin-teams.css', __FILE__)
+                plugins_url('../css/admin-teams.css', __FILE__)
             );
         }
 
@@ -399,6 +419,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         add_action("manage_{$post_type}_posts_custom_column", array(__CLASS__, 'renderTeamPostsColumn'), 10, 2);
 
         add_action('user_register', array(__CLASS__, 'checkInvitations'));
+        add_action('user_register', array(__CLASS__, 'createTeamTemplates'));
     }
 
     /**
@@ -410,7 +431,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         $team = new self($post->ID);
         add_meta_box(
             'add-team-member',
-            esc_html__('Add a team member', 'buoy'),
+            esc_html__('Add new member', 'buoy'),
             array(__CLASS__, 'renderAddTeamMemberMetaBox'),
             null,
             'normal',
@@ -431,11 +452,20 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
 
         add_meta_box(
             'default-team',
-            esc_html__('Default Team?', 'buoy'),
+            sprintf(
+                esc_html__('Default Team? (%s)', 'buoy'),
+                ($team->is_default()) ? esc_html__('Yes', 'buoy') : esc_html__('No', 'buoy')
+            ),
             array(__CLASS__, 'renderDefaultTeamMetaBox'),
             null,
             'side',
             'low'
+        );
+
+        add_meta_box(
+            'sms-bridge',
+            esc_html__('SMS/txt Messages', 'buoy'),
+            array(__CLASS__, 'renderTxtMessagesMetaBox')
         );
     }
 
@@ -446,7 +476,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
      */
     public static function renderAddTeamMemberMetaBox ($post) {
         wp_nonce_field(self::$prefix . '_add_team_member', self::$prefix . '_add_team_member_nonce');
-        require 'pages/add-team-member-meta-box.php';
+        require plugin_dir_path(dirname(__FILE__)).'pages/add-team-member-meta-box.php';
     }
 
     /**
@@ -456,23 +486,52 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
      */
     public static function renderCurrentTeamMetaBox ($post) {
         wp_nonce_field(self::$prefix . '_choose_team', self::$prefix . '_choose_team_nonce');
-        require 'pages/current-team-meta-box.php';
+        require plugin_dir_path(dirname(__FILE__)).'pages/current-team-meta-box.php';
     }
 
     /**
+     * Displays the "default team" meta box.
+     *
      * @param WP_Post $post
      *
      * @return void
      */
     public static function renderDefaultTeamMetaBox ($post) {
         $team = new WP_Buoy_Team($post->ID);
+        $html = '<input type="checkbox"';
+        $html .= ' id="'.self::$prefix.'_default_team"';
+        $html .= ' name="'.self::$prefix.'_default_team"';
+        $html .= ' value="1"';
+        $html .= ' '.checked($team->is_default(), true, false);
+        $html .= ' />';
+        $html .= esc_html__('Include as default team?', 'buoy');
+        $html .= '<p class="description">';
         if ($team->is_default()) {
-            esc_html_e('This team is your default team.', 'buoy');
+            $html .= esc_html__('This team is one of your default teams.', 'buoy')
+                .' '
+                .esc_html__('Uncheck the box to remove this team from your list of default teams.', 'buoy');
         } else {
-            print sprintf(
-                esc_html__('No. You can make this team your default team from your %1$sTeams%2$s page.', 'buoy'),
-                '<a href="' . admin_url('edit.php?post_type=' . $post->post_type) . '">', '</a>'
-            );
+            $html .= esc_html__('This team is not one of your default teams.', 'buoy')
+                .' '
+                .esc_html__('Check the box to add this team to your list of default teams.', 'buoy');
+        }
+        $html .= '</p>';
+        print "<label>$html</label>";
+    }
+
+    /**
+     * Displays the "SMS/txt Messages" meta box.
+     *
+     * @param WP_Post $post
+     *
+     * @return void
+     */
+    public static function renderTxtMessagesMetaBox ($post) {
+        $user = new WP_Buoy_User($post->post_author);
+        if ($user->get_phone_number()) {
+            require_once dirname(__FILE__).'/../pages/meta-box-sms-messages.php';
+        } else {
+            esc_html_e('You must set a phone number in your profile to use txt messages.', 'buoy');
         }
     }
 
@@ -523,9 +582,10 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         if ('post' === $current_screen->base) {
             // The "My Teams" page.
             $table = new WP_Posts_List_Table();
-            if ('make_default' === $table->current_action()) {
+            $action = $table->current_action();
+            if ('set_default' === $action || 'unset_default' === $action) {
                 $team = new WP_Buoy_Team(absint($_GET['post']));
-                $team->make_default();
+                $team->$action();
                 $msg = self::$prefix . '-default-team-updated';
                 wp_safe_redirect(admin_url(
                     "edit.php?post_type={$current_screen->post_type}&msg=$msg"
@@ -599,7 +659,7 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
      *
      * @uses WP_Buoy_User::has_responder()
      * @uses WP_Buoy_Team::is_default()
-     * @uses WP_Buoy_Team::make_default()
+     * @uses WP_Buoy_Team::set_default()
      *
      * @param int $post_id
      * @param WP_Post $post_after
@@ -629,12 +689,12 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
         if ('trash' === $post_after->post_status && $team->is_default()) {
             $teams = $buoy_user->get_teams();
             $next_team = new WP_Buoy_Team(array_pop($teams));
-            $next_team->make_default();
+            $next_team->set_default();
         }
     }
 
     /**
-     * Updates the team metadata (membership list).
+     * Updates the team metadata (mostly membership list).
      *
      * This is called by WordPress's `save_post_{$post->post_type}` hook.
      *
@@ -646,6 +706,8 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
      * @uses WP_Buoy_Team::remove_member()
      * @uses WP_Buoy_Team::get_member_ids()
      * @uses WP_Buoy_Team::add_member()
+     * @uses WP_Buoy_Team::set_default()
+     * @uses WP_Buoy_Team::unset_default()
      *
      * @param int $post_id
      * @param WP_Post $post
@@ -684,6 +746,13 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
             }
         }
 
+        // Set default status
+        if (!empty($_POST[self::$prefix.'_default_team'])) {
+            $team->set_default();
+        } else {
+            $team->unset_default();
+        }
+
         // If this is the user's only team, make this the default one.
         $cnt = count(get_posts(array(
             'post_type' => $post->post_type,
@@ -691,7 +760,56 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
             'fields' => 'ids'
         )));
         if (0 === $cnt) {
-            $team->make_default();
+            $team->set_default();
+        }
+
+        // If we're enabling the SMS/email bridge, save that data.
+        if (!empty($_POST['sms_email_bridge_enabled'])) {
+            update_post_meta($post_id, 'sms_email_bridge_enabled', true);
+            // and schedule a check
+            WP_Buoy_SMS_Email_Bridge::scheduleNext($post_id, 0);
+        } else {
+            update_post_meta($post_id, 'sms_email_bridge_enabled', false);
+            // and unschedule the next check
+            WP_Buoy_SMS_Email_Bridge::unscheduleNext($post_id);
+        }
+        if (!empty($_POST['sms_email_bridge_address'])) {
+            update_post_meta($post_id, 'sms_email_bridge_address', sanitize_email($_POST['sms_email_bridge_address']));
+        }
+        if (!empty($_POST['sms_email_bridge_username'])) {
+            update_post_meta($post_id, 'sms_email_bridge_username', sanitize_text_field($_POST['sms_email_bridge_username']));
+        }
+        if (!empty($_POST['sms_email_bridge_password'])) {
+            update_post_meta($post_id, 'sms_email_bridge_password', $_POST['sms_email_bridge_password']);
+        }
+        if (!empty($_POST['sms_email_bridge_server'])) {
+            update_post_meta($post_id, 'sms_email_bridge_server', sanitize_text_field($_POST['sms_email_bridge_server']));
+        }
+        if (empty($_POST['sms_email_bridge_port']) || 0 === absint($_POST['sms_email_bridge_port'])) {
+            delete_post_meta($post_id, 'sms_email_bridge_port');
+        } else {
+            update_post_meta($post_id, 'sms_email_bridge_port', absint($_POST['sms_email_bridge_port']));
+        }
+        if (empty($_POST['sms_email_bridge_connection_security'])) {
+            delete_post_meta($post_id, 'sms_email_bridge_connection_security');
+        } else {
+            switch ($_POST['sms_email_bridge_connection_security']) {
+                case 'tlsv1':
+                case 'tls':
+                case 'ssl':
+                case 'sslv3':
+                case 'sslv2':
+                case 'none':
+                    update_post_meta(
+                        $post_id,
+                        'sms_email_bridge_connection_security',
+                        $_POST['sms_email_bridge_connection_security']
+                    );
+                    break;
+                default:
+                    update_post_meta($post_id, 'sms_email_bridge_connection_security', 'tlsv1');
+                    break;
+            }
         }
     }
 
@@ -963,8 +1081,11 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
     public static function postRowActions ($items, $post) {
         $team = new WP_Buoy_Team($post->ID);
         if (!$team->is_default() && $team->has_responder() && 'publish' === $post->post_status) {
-            $url = admin_url('post.php?post=' . $post->ID . '&action=make_default');
-            $items['default'] = '<a href="' . esc_attr($url) . '">' . __('Make default', 'buoy') . '</a>';
+            $url = admin_url('post.php?post=' . $post->ID . '&action=set_default');
+            $items['default'] = '<a href="' . esc_attr($url) . '">' . __('Add to defaults', 'buoy') . '</a>';
+        } else if ($team->is_default() && $team->has_responder() && 'publish' === $post->post_status) {
+            $url = admin_url('post.php?post=' . $post->ID . '&action=unset_default');
+            $items['default'] = '<a href="' . esc_attr($url) . '">' . __('Remove from defaults', 'buoy') . '</a>';
         }
 
         unset($items['inline hide-if-no-js']); // the "Quick Edit" link
@@ -988,6 +1109,37 @@ class WP_Buoy_Team extends WP_Buoy_Plugin {
                 $team->remove_member($user->user_email); // removes the invitation
                 $team->add_member($user_id, false);      // then adds the user
             }
+        }
+    }
+
+    /**
+     * Creates teams for newly-registered users.
+     *
+     * @link https://developer.wordpress.org/reference/hooks/user_register/
+     *
+     * @param int $user_id
+     *
+     * @return void
+     */
+    public static function createTeamTemplates ($user_id) {
+        // Create three new "teams" for the new user so that they can
+        // begin editing the members lists and can invite folks ASAP.
+        $new_teams = array(
+            array(
+                'post_title' => __('Friends', 'buoy')
+            ),
+            array(
+                'post_title' => __('Family', 'buoy')
+            ),
+            array(
+                'post_title' => __('Neighbours', 'buoy')
+            )
+        );
+        foreach ($new_teams as $new_team) {
+            $new_team['post_author'] = $user_id;
+            $new_team['post_type'] = self::$prefix.'_team';
+            $new_team['post_status'] = 'private';
+            wp_insert_post($new_team);
         }
     }
 

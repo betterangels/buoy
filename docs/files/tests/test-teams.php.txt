@@ -48,5 +48,25 @@ class BuoyTeamsTest extends Buoy_UnitTestCase {
         $this->expectOutputRegex('/<option value="' . $user->user_login . '"\s*\/>/');
     }
 
+    /**
+     * Ensures responders are found even in private teams.
+     */
+    public function test_confirmed_members_of_private_teams_are_counted_as_responders () {
+        $alerter   = $this->factory->user->create_and_get(array('role' => 'subscriber'));
+        $responder = $this->factory->user->create_and_get(array('role' => 'subscriber'));
+
+        wp_set_current_user($alerter->ID);
+
+        $post = $this->factory->post->create_and_get(array(
+            'post_type' => 'buoy_team',
+            'post_status' => 'private'
+        ));
+        $team = new WP_Buoy_Team($post->ID);
+        $team
+            ->add_member($responder->ID)
+            ->confirm_member($responder->ID);
+        $this->assertTrue($team->has_responder());
+    }
+
 }
 
