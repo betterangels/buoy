@@ -214,6 +214,8 @@ class WP_Buoy_Notification extends WP_Buoy_Plugin {
                 '@pm.sprint.com'
             ),
             'Suncom' => '@tms.suncom.com',
+            "The People's Operator (CDMA)" => '@messaging.sprintpcs.com',
+            "The People's Operator (GSM)" => '@mailmymobile.net',
             'T-Mobile' => '@tmomail.net',
             'Tracfone' => '@mmst5.tracfone.com',
             'U.S. Cellular' => '@email.uscc.net',

@@ -120,11 +120,20 @@ class WP_Buoy_SMS_Email_Bridge {
             $q = new Horde_Imap_Client_Search_Query();
             $q->headerText('From', $rcpt->get_phone_number());
             // and that we haven't yet "read"
+            $q_unseen = new Horde_Imap_Client_Search_Query();
+            $q_unseen->flag(Horde_Imap_Client::FLAG_SEEN, false);
+            $q->andSearch($q_unseen);
+
+            // Also search for this number with a "+1" prefix
             $q1 = new Horde_Imap_Client_Search_Query();
-            $q1->flag(Horde_Imap_Client::FLAG_SEEN, false);
-            $q->andSearch($q1);
+            $q1->headerText('From', '+1'.$rcpt->get_phone_number());
+            // and that we haven't yet "read"
+            $q_unseen = new Horde_Imap_Client_Search_Query();
+            $q_unseen->flag(Horde_Imap_Client::FLAG_SEEN, false);
+            $q1->andSearch($q_unseen);
 
             $queries[] = $q;
+            $queries[] = $q1;
         }
 
         $imap_query->orSearch($queries);
@@ -156,6 +165,9 @@ class WP_Buoy_SMS_Email_Bridge {
                     // and get the sender's number
                     $h = Horde_Mime_Headers::parseHeaders($data->getFullMsg());
                     $from_phone = $h->getHeader('From')->getAddressList(true)->first()->mailbox;
+
+                    // strip any "+1" prefix
+                    $from_phone = preg_replace('/^\+1/', '', $from_phone);
 
                     // forward the body text to each member of the team,
                     self::forward($SMS, $txt, $recipients,

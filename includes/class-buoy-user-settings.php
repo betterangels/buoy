@@ -58,6 +58,8 @@ class WP_Buoy_User_Settings {
             'Qwest',
             'Sprint',
             'Suncom',
+            "The People's Operator (CDMA)",
+            "The People's Operator (GSM)",
             'T-Mobile',
             'Tracfone',
             'U.S. Cellular',
