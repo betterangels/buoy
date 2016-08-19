@@ -194,7 +194,7 @@ class WP_Buoy_User extends WP_Buoy_Plugin {
         $provider = $this->get_option('sms_provider');
 
         if (!empty($sms) && !empty($provider)) {
-            $sms_email = $sms . WP_Buoy_Notification::getEmailToSmsGatewayDomain($provider);
+            $sms_email = $sms . WP_Buoy_SMS_Email_Bridge::getEmailToSmsGatewayDomain($provider);
         }
 
 

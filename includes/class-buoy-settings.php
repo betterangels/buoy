@@ -104,7 +104,7 @@ class WP_Buoy_Settings {
      * is activated by a user without overwriting existing values.
      * 
      * @uses is_multisite()
-     * @uses wp_get_site()
+     * @uses get_sites()
      * @uses get_current_blog_id()
      * @uses switch_to_blog()
      * @uses WP_Buoy_Settings::activateSite()
@@ -115,12 +115,12 @@ class WP_Buoy_Settings {
      * @return void
      */
     public function activate ($network_wide) {
-        $sites = (is_multisite() && $network_wide) ? wp_get_sites() : array(array('blog_id' => get_current_blog_id()));
+        $sites = (is_multisite() && $network_wide) ? get_sites() : array((object) array('blog_id' => get_current_blog_id()));
         foreach ($sites as $site) {
             $restore = false;
-            if (get_current_blog_id() != $site['blog_id']) {
+            if (get_current_blog_id() != $site->blog_id) {
                 $restore = true;
-                switch_to_blog($site['blog_id']);
+                switch_to_blog($site->blog_id);
             }
             $this->activateSite();
             if ($restore) {
