@@ -187,47 +187,4 @@ class WP_Buoy_Notification extends WP_Buoy_Plugin {
         $SMS->send();
     }
 
-    /**
-     * Utility function to return the domain name portion of a given
-     * telco's email-to-SMS gateway address.
-     *
-     * The returned string includes the prefixed `@` sign.
-     *
-     * @param string $provider A recognized `sms_provider` key.
-     *
-     * @see WP_Buoy_User_Settings::$default['sms_provider']
-     *
-     * @return string
-     */
-    public static function getEmailToSmsGatewayDomain ($provider) {
-        $provider_domains = array(
-            'AT&T' => '@txt.att.net',
-            'Alltel' => '@message.alltel.com',
-            'Boost Mobile' => '@myboostmobile.com',
-            'Cricket' => '@sms.mycricket.com',
-            'Metro PCS' => '@mymetropcs.com',
-            'Nextel' => '@messaging.nextel.com',
-            'Ptel' => '@ptel.com',
-            'Qwest' => '@qwestmp.com',
-            'Sprint' => array(
-                '@messaging.sprintpcs.com',
-                '@pm.sprint.com'
-            ),
-            'Suncom' => '@tms.suncom.com',
-            "The People's Operator (CDMA)" => '@messaging.sprintpcs.com',
-            "The People's Operator (GSM)" => '@mailmymobile.net',
-            'T-Mobile' => '@tmomail.net',
-            'Tracfone' => '@mmst5.tracfone.com',
-            'U.S. Cellular' => '@email.uscc.net',
-            'Verizon' => '@vtext.com',
-            'Virgin Mobile' => '@vmobl.com'
-        );
-        if (is_array($provider_domains[$provider])) {
-            $at_domain = array_rand($provider_domains[$provider]);
-        } else {
-            $at_domain = $provider_domains[$provider];
-        }
-        return $at_domain;
-    }
-
 }
