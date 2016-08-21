@@ -152,22 +152,17 @@ class WP_Buoy_Notification extends WP_Buoy_Plugin {
         );
         $subject = $post->post_title;
 
-        // Get the site domain and get rid of "www." We deliberately
-        // replace the user's own email address with the address of
-        // the WP server, because many shared hosting environments on
-        // cheap systems filter outgoing mail configured differnetly.
-        $from_domain = strtolower( $_SERVER['SERVER_NAME'] );
-        if ( substr( $from_domain, 0, 4 ) == 'www.' ) {
-            $from_domain = substr( $from_domain, 4 );
-        }
         $alerter = get_userdata($post->post_author);
         $headers = array(
-            "From: \"{$alerter->display_name}\" <wordpress@{$from_domain}>",
+            "From: \"{$alerter->display_name}\" <{$alerter->user_nicename}@".WP_Buoy_SMS_Email_Bridge::getThisServerDomain().'>',
         );
 
         $SMS = new WP_Buoy_SMS();
         $SMS->setSender($alerter);
         $SMS->setContent("$responder_short_link $subject");
+        foreach ($headers as $header) {
+            $SMS->addHeader($header);
+        }
 
         foreach ($alert->get_teams() as $team_id) {
             $team = new WP_Buoy_Team($team_id);

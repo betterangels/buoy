@@ -231,15 +231,27 @@ class WP_Buoy_SMS {
         foreach ($this->wp_filters as $f) {
             $this->stripFilter($f);
         }
-        // Get the site domain and get rid of "www." We deliberately
-        // replace the user's own email address with the address of
-        // the WP server, because many shared hosting environments on
-        // cheap systems filter outgoing mail configured differnetly.
-        $from_domain = strtolower( $_SERVER['SERVER_NAME'] );
-        if ( substr( $from_domain, 0, 4 ) == 'www.' ) {
-            $from_domain = substr( $from_domain, 4 );
+
+        // Ensure the "From" header uses an email address whose domain
+        // part is this server. We deliberately replace the caller's
+        // own email domain with the address of the WP server, because
+        // many shared hosting environments on cheap systems filter
+        // outgoing mail configured differnetly.
+        for ($i = 0; $i < count($this->headers); $i++) {
+            if (0 === stripos($this->headers[$i], 'From:')) {
+                $p = explode('@', $this->headers[$i]);
+                $last = array_pop($p);
+                $is_bracketed = strpos('>', $last);
+                $domain_part = trim(str_replace('>', '', $last));
+                $from_domain = WP_Buoy_SMS_Email_Bridge::getThisServerDomain();
+                if ($from_domain !== $domain_part) {
+                    if ($is_bracketed) {
+                        $from_domain .= '>';
+                    }
+                    $this->headers[$i] = implode('@', array_merge($p, array($from_domain)));
+                }
+            }
         }
-        $this->addHeader("From: \"{$this->sender->wp_user->display_name}\" <wordpress@{$from_domain}>");
     }
 
     /**

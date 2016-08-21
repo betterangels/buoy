@@ -283,15 +283,19 @@ class WP_Buoy_SMS_Email_Bridge {
                     $txt = self::getMessagePlainText($data);
                     // strip any "+1" prefix
                     $from_phone = preg_replace('/^\+1/', '', self::getSenderNumber($data));
+                    $sender = WP_Buoy_User::getByPhoneNumber($from_phone);
 
                     // forward the body text to each member of the team,
-                    self::forward($SMS, $txt, $recipients,
+                    self::forward($SMS, "{$sender->wp_user->display_name}: $txt", $recipients,
                         // TODO: If this returns `false` then we must deal
                         //       with the resulting Fatal Error in self::forward()
-                        WP_Buoy_User::getByPhoneNumber($from_phone),
+                        $sender,
                         array(
+                            // Set the From header so as to create a thread for each Team
+                            //"From: \"{$sender->wp_user->display_name}\" <{$post->post_name}@".self::getThisServerDomain().'>',
+                            "From: \"{$sender->wp_user->display_name}\" <{$post->post_name}@somewhereelse.com>",
                             // This breaks Verizon's Email->SMS gateway. :(
-                            // TODO: How do we get threading to work?
+                            // TODO: How do we get auto-reply addressing to work?
                             //'Reply-To: '.$post->sms_email_bridge_address
                         )
                     );
@@ -446,6 +450,23 @@ class WP_Buoy_SMS_Email_Bridge {
      */
     public static function getSmsProviders () {
         return array_keys(self::$sms_provider_to_email_map);
+    }
+
+    /**
+     * Get the site domain and get rid of "www."
+     *
+     * We deliberately replace the user's own email address with the
+     * address of the WP server, because many shared hosting environments
+     * on cheap systems filter outgoing mail configured differnetly.
+     *
+     * @return string
+     */
+    public static function getThisServerDomain () {
+        $d = strtolower( $_SERVER['SERVER_NAME'] );
+        if ( substr( $d, 0, 4 ) == 'www.' ) {
+            $d = substr( $d, 4 );
+        }
+        return $d;
     }
 
 }
