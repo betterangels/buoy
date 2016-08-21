@@ -292,8 +292,7 @@ class WP_Buoy_SMS_Email_Bridge {
                         $sender,
                         array(
                             // Set the From header so as to create a thread for each Team
-                            //"From: \"{$sender->wp_user->display_name}\" <{$post->post_name}@".self::getThisServerDomain().'>',
-                            "From: \"{$sender->wp_user->display_name}\" <{$post->post_name}@somewhereelse.com>",
+                            "From: \"{$sender->wp_user->display_name}\" <{$post->post_name}@".self::getThisServerDomain().'>',
                             // This breaks Verizon's Email->SMS gateway. :(
                             // TODO: How do we get auto-reply addressing to work?
                             //'Reply-To: '.$post->sms_email_bridge_address
