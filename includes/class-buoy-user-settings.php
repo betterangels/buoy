@@ -46,24 +46,7 @@ class WP_Buoy_User_Settings {
         'installer_dismissed'       => false,
         'phone_number'              => '',
         'public_responder'          => false,
-        'sms_provider'              => array(
-            '',
-            'AT&T',
-            'Alltel',
-            'Boost Mobile',
-            'Cricket',
-            'Metro PCS',
-            'Nextel',
-            'Ptel',
-            'Qwest',
-            'Sprint',
-            'Suncom',
-            'T-Mobile',
-            'Tracfone',
-            'U.S. Cellular',
-            'Verizon',
-            'Virgin Mobile'
-        )
+        'sms_provider'              => array(),
     );
 
     /**
@@ -78,6 +61,7 @@ class WP_Buoy_User_Settings {
             $user = get_userdata($user);
         }
         $this->user = $user;
+        $this->defaults['sms_provider'] = array_merge(array(''), WP_Buoy_SMS_Email_Bridge::getSmsProviders());
         $this->options = $this->get_options();
     }
 

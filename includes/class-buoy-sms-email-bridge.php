@@ -47,6 +47,35 @@ class WP_Buoy_SMS_Email_Bridge {
     const backoff_max_seconds = 600; // 10 minutes
 
     /**
+     * The mapping of known SMS provider services and their public
+     * SMS-to-Email gateway domains.
+     *
+     * @var string[]
+     */
+    private static $sms_provider_to_email_map = array(
+        'AT&T' => 'txt.att.net',
+        'Alltel' => 'message.alltel.com',
+        'Boost Mobile' => 'myboostmobile.com',
+        'Cricket' => 'sms.mycricket.com',
+        'Metro PCS' => 'mymetropcs.com',
+        'Nextel' => 'messaging.nextel.com',
+        'Ptel' => 'ptel.com',
+        'Qwest' => 'qwestmp.com',
+        'Sprint' => array(
+            'messaging.sprintpcs.com',
+            'pm.sprint.com'
+        ),
+        'Suncom' => 'tms.suncom.com',
+        "The People's Operator (CDMA)" => 'messaging.sprintpcs.com',
+        "The People's Operator (GSM)" => 'mailmymobile.net',
+        'T-Mobile' => 'tmomail.net',
+        'Tracfone' => 'mmst5.tracfone.com',
+        'U.S. Cellular' => 'email.uscc.net',
+        'Verizon' => 'vtext.com',
+        'Virgin Mobile' => 'vmobl.com',
+    );
+
+    /**
      * Connects to an IMAP server with the settings from a given post.
      *
      * @param WP_Post $wp_post
@@ -80,6 +109,101 @@ class WP_Buoy_SMS_Email_Bridge {
      */
     public static function register () {
         add_action(self::hook, array(__CLASS__, 'run'), 10, 2);
+    }
+
+    /**
+     * Retrieves plain message text from MIME-encoded emails.
+     *
+     * @param Horde_Imap_Client_Data_Fetch $horde_fetched_data
+     *
+     * @return string
+     */
+    public static function getMessagePlainText ($horde_fetched_data) {
+        $plain_text_content = '';
+
+        $email_text = $horde_fetched_data->getFullMsg();
+        $mime_hdrs = Horde_Mime_Headers::parseHeaders($email_text);
+        $mime_part = Horde_Mime_Part::parseMessage($email_text);
+        $type_hdr = $mime_hdrs->getHeader('Content-Type');
+
+        // Horde_Mime_Part doesn't seem to deal well with MIME mail
+        // that is "multipart/related" so parse that ourselves.
+        if ($type_hdr && 'multipart/related' === $type_hdr->value_single) {
+            $boundary = $type_hdr->params['boundary'];
+            $lines = preg_split('/\R/', $mime_part->getContents());
+            $split_parts = array();
+            $i = -1;
+
+            // parse raw email source into MIME parts by boundary
+            foreach ($lines as $line) {
+                if (!empty($line) && false !== strpos($line, $boundary)) {
+                    $i = $i + 1;
+                    $line_type = 'header_lines';
+                    $split_parts[$i] = array(
+                        'header_lines' => array(),
+                        'body_lines'   => array(),
+                    );
+                    continue;
+                } else if ('header_lines' === $line_type && empty($line)) {
+                    $line_type = 'body_lines';
+                    continue;
+                }
+                $split_parts[$i][$line_type][] = $line;
+            }
+
+            // find the MIME part that has text/plain encoding
+            $part_key = false;
+            foreach ($split_parts as $i => $part) {
+                if(count(preg_grep('/Content-Type:\s*text\/plain/i', $part['header_lines']))) {
+                    $part_key = $i;
+                    break;
+                }
+            }
+
+            $text_part = $split_parts[$part_key];
+
+            // find if the body part is encoded
+            $encoding = array();
+            foreach ($text_part['header_lines'] as $line) {
+                preg_match('/Content-Transfer-Encoding:\s*(.*)$/i', $line, $encoding);
+                if (isset($encoding[1])) {
+                    $encoding = $encoding[1];
+                    break;
+                }
+            }
+
+            // decode if necessary
+            $lines = array();
+            foreach ($text_part['body_lines'] as $line) {
+                switch ($encoding) {
+                    case 'base64':
+                        $lines[] = base64_decode($line);
+                        break;
+                    default:
+                        $lines[] = $line;
+                            break;
+                }
+            }
+            $plain_text_content = implode('', $lines);
+        } else {
+            $body_id = $mime_part->findBody();
+            $body_part = $mime_part->getPart($body_id);
+            $plain_text_content = $body_part->getContents();
+        }
+
+        return $plain_text_content;
+    }
+
+    /**
+     * Parses email headers to retrieve the `From` mailbox address.
+     *
+     * @param Horde_Imap_Client_Data_Fetch $horde_fetched_data
+     *
+     * @return string
+     */
+    public static function getSenderNumber ($horde_fetched_data) {
+        $h = Horde_Mime_Headers::parseHeaders($horde_fetched_data->getFullMsg());
+        return $h->getHeader('From')->getAddressList(true)->first()->mailbox;
     }
 
     /**
@@ -120,11 +244,20 @@ class WP_Buoy_SMS_Email_Bridge {
             $q = new Horde_Imap_Client_Search_Query();
             $q->headerText('From', $rcpt->get_phone_number());
             // and that we haven't yet "read"
+            $q_unseen = new Horde_Imap_Client_Search_Query();
+            $q_unseen->flag(Horde_Imap_Client::FLAG_SEEN, false);
+            $q->andSearch($q_unseen);
+
+            // Also search for this number with a "+1" prefix
             $q1 = new Horde_Imap_Client_Search_Query();
-            $q1->flag(Horde_Imap_Client::FLAG_SEEN, false);
-            $q->andSearch($q1);
+            $q1->headerText('From', '+1'.$rcpt->get_phone_number());
+            // and that we haven't yet "read"
+            $q_unseen = new Horde_Imap_Client_Search_Query();
+            $q_unseen->flag(Horde_Imap_Client::FLAG_SEEN, false);
+            $q1->andSearch($q_unseen);
 
             $queries[] = $q;
+            $queries[] = $q1;
         }
 
         $imap_query->orSearch($queries);
@@ -147,24 +280,21 @@ class WP_Buoy_SMS_Email_Bridge {
                 ));
                 $SMS = new WP_Buoy_SMS();
                 foreach ($fetched as $data) {
-                    // get the body's plain text content
-                    $message = Horde_Mime_Part::parseMessage($data->getFullMsg());
-                    $body_id = $message->findBody();
-                    $part = $message->getPart($body_id);
-                    $txt = $part->getContents();
-
-                    // and get the sender's number
-                    $h = Horde_Mime_Headers::parseHeaders($data->getFullMsg());
-                    $from_phone = $h->getHeader('From')->getAddressList(true)->first()->mailbox;
+                    $txt = self::getMessagePlainText($data);
+                    // strip any "+1" prefix
+                    $from_phone = preg_replace('/^\+1/', '', self::getSenderNumber($data));
+                    $sender = WP_Buoy_User::getByPhoneNumber($from_phone);
 
                     // forward the body text to each member of the team,
-                    self::forward($SMS, $txt, $recipients,
+                    self::forward($SMS, "{$sender->wp_user->display_name}: $txt", $recipients,
                         // TODO: If this returns `false` then we must deal
                         //       with the resulting Fatal Error in self::forward()
-                        WP_Buoy_User::getByPhoneNumber($from_phone),
+                        $sender,
                         array(
+                            // Set the From header so as to create a thread for each Team
+                            "From: \"{$sender->wp_user->display_name}\" <{$post->post_name}@".self::getThisServerDomain().'>',
                             // This breaks Verizon's Email->SMS gateway. :(
-                            // TODO: How do we get threading to work?
+                            // TODO: How do we get auto-reply addressing to work?
                             //'Reply-To: '.$post->sms_email_bridge_address
                         )
                     );
@@ -291,6 +421,51 @@ class WP_Buoy_SMS_Email_Bridge {
         }
         $SMS->setSender($sender);
         $SMS->send();
+    }
+
+    /**
+     * Utility function to return the domain name portion of a given
+     * telco's email-to-SMS gateway address.
+     *
+     * The returned string includes the prefixed `@` sign.
+     *
+     * @param string $provider A recognized `sms_provider` key.
+     *
+     * @return string
+     */
+    public static function getEmailToSmsGatewayDomain ($provider) {
+        if (is_array(self::$sms_provider_to_email_map[$provider])) {
+            $domain = array_rand(self::$sms_provider_to_email_map[$provider]);
+        } else {
+            $domain = self::$sms_provider_to_email_map[$provider];
+        }
+        return '@'.$domain;
+    }
+
+    /**
+     * Gets the list of known SMS providers we can send email through.
+     *
+     * @return string[]
+     */
+    public static function getSmsProviders () {
+        return array_keys(self::$sms_provider_to_email_map);
+    }
+
+    /**
+     * Get the site domain and get rid of "www."
+     *
+     * We deliberately replace the user's own email address with the
+     * address of the WP server, because many shared hosting environments
+     * on cheap systems filter outgoing mail configured differnetly.
+     *
+     * @return string
+     */
+    public static function getThisServerDomain () {
+        $d = strtolower( $_SERVER['SERVER_NAME'] );
+        if ( substr( $d, 0, 4 ) == 'www.' ) {
+            $d = substr( $d, 4 );
+        }
+        return $d;
     }
 
 }
