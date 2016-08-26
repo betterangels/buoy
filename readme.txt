@@ -2,9 +2,9 @@
 Contributors: meitar
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TJLPJYXHSRBEE&lc=US&item_name=Better%20Angels%20Buoy&item_number=Better%20Angels%20Buoy&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted
 Tags: community, emergency response, activism
-Requires at least: 4.4
+Requires at least: 4.6
 Tested up to: 4.6
-Stable tag: 0.3.0
+Stable tag: 0.3.1
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -113,6 +113,12 @@ For instance:
 
 == Change log ==
 
+= 0.3.1 =
+
+* Add SMS support for The People's Operator mobile phone SMS provider.
+* Threading improvements when receiving SMS/txt messages.
+* Minor bug fixes.
+
 = 0.3.0 =
 
 * [Feature](https://github.com/betterangels/buoy/wiki/Team-SMS-txt-broadcast-channel): Always-on SMS/txt broadcast channel for confirmed Team members.
@@ -153,6 +159,10 @@ This is a bugfix and maintenance release.
 * Initial prototype.
 
 == Upgrade Notice ==
+
+= 0.3.1 =
+
+This is a maintenance and bugfix release, adding SMS support for another mobile carrier and improving txt message usability.
 
 = 0.3.0 =
 
