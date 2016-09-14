@@ -4,7 +4,7 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TJLPJ
 Tags: community, emergency response, activism
 Requires at least: 4.6
 Tested up to: 4.6
-Stable tag: 0.3.1
+Stable tag: 0.3.2
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
@@ -112,6 +112,10 @@ For instance:
 13. The alerter and all current responders become aware of new responders as they are added to the chat room and the map. As people involved in the incident move in the physical world, the map shown to each of the other people also updates in near real time. Clicking on any of the user icons on the map reveals one-click access to both turn-by-turn directions to their location and one-click access to call them from your phone, Facetime, Skype, or other default calling app.
 
 == Change log ==
+
+= 0.3.2 =
+
+* [Bugfix](https://wordpress.org/support/topic/fatal-error-on-install-19/): Hot fix for fatal error on some install attempts.
 
 = 0.3.1 =
 
