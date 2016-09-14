@@ -1,5 +1,6 @@
 A brief summary of the issue.
 
+* Buoy version: x.x.x
 * Platform: Mac / Windows / Linux
 * Browser: Google Chrome / Mozilla Firefox / Internet Explorer
 * URL: http://example.com/the_issue_appears_here
@@ -26,4 +27,4 @@ Brief description of how to avoid the issue or otherwise make due despite it.
 
 # Other Information
 
-Add any other information you believe is pertinent here, such as links to external references, examples in the wild, and so forth.
+Add any other information you believe is pertinent here, such as links to external references, examples in the wild, a way to contact you privately if need be, and so forth.

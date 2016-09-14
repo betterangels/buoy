@@ -7,7 +7,7 @@
  * * Plugin Name: Buoy (a Better Angels crisis response system)
  * * Plugin URI: https://betterangels.github.io/buoy/
  * * Description: A community-based crisis response system. <strong>Like this plugin? Please <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=TJLPJYXHSRBEE&amp;lc=US&amp;item_name=Better%20Angels&amp;item_number=better-angels&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted" title="Send a donation to the developer of Better Angels Buoy">donate</a>. &hearts; Thank you!</strong>
- * * Version: 0.3.1
+ * * Version: 0.3.2
  * * Author: Better Angels <BetterAngels@RiseUp.net>
  * * Author URI: https://betterangels.github.io/
  * * License: GPL-3
@@ -159,11 +159,6 @@ class WP_Buoy_Plugin {
 
         require_once 'includes/class-buoy-settings.php';
         WP_Buoy_Settings::get_instance()->activate($network_wide);
-
-        // TODO: Remove this after enough migrations.
-        require_once 'includes/class-buoy-user-settings.php';
-        require_once 'includes/class-buoy-team.php';
-        self::migrateDefaultTeamSettings();
     }
 
     /**
@@ -264,30 +259,6 @@ class WP_Buoy_Plugin {
     <p><a href="<?php print admin_url('plugin-install.php?tab=plugin-information&plugin=rest-api&TB_iframe=true&width=600&height=550')?>"><?php esc_html_e('Click here to install the REST API plugin.', 'buoy');?></a></p>
 </div>
 <?php
-    }
-
-    /**
-     * Updates old "default team" settings.
-     *
-     * This automatically moves the new "default team" internal data
-     * to the right places. Should be safe to remove after a few updates.
-     *
-     * @since 0.1.3
-     *
-     * @ignore This is purely a migration function, do not include in API docs.
-     */
-    public static function migrateDefaultTeamSettings () {
-        foreach (get_users() as $usr) {
-            $usropt = new WP_Buoy_User_Settings($usr);
-            $old_default = $usropt->get('default_team');
-            if ($old_default) {
-                $team = new WP_Buoy_Team($old_default);
-                $team->set_default();
-                $usropt
-                    ->delete('default_team')
-                    ->save();
-            }
-        }
     }
 
     /**
