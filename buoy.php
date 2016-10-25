@@ -380,7 +380,7 @@ class WP_Buoy_Plugin {
         print '<meta name="apple-mobile-web-app-title" content="' . esc_attr('Buoy', 'buoy') . '" />';
         print '<link rel="apple-touch-icon" href="' . plugins_url('img/apple-touch-icon-152x152.png', __FILE__) . '" />';
         // TODO: This isn't showing up, figure out why.
-        //print '<link rel="apple-touch-startup-image" href="' . plugins_url('img/apple-touch-startup.png', __FILE__) . '">';
+        print '<link rel="apple-touch-startup-image" href="' . plugins_url('img/apple-touch-startup.png', __FILE__) . '">';
     }
 
     /**
