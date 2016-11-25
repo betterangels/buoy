@@ -9,7 +9,7 @@ Buoy is a crisis response platform that connects families, friends, and teams du
 
 Buoy is a free tool designed to quickly alert and communicate with a prescribed group of people when assistance is needed.
 
-Buoy allows users to create customized networks of trusted friends and allies and to plan responses for emergency situations. In the case of an emergency, the user's Response Team can be alerted with one touch. The alert creates a real-time map of each team member's location, a live chat to coordinate a response, and live photo, audio, and video streaming capabilities.
+Buoy allows users to create customized networks of trusted friends and allies and to plan responses for emergency situations. In the case of an emergency, the user's Response Team can be alerted with one touch. The alert creates a real-time map of each team member's location, a live chat, video streaming, audio, and photo sharing capabilities, which members can use to coordinate a response.
 
 <img src="https://ps.w.org/buoy/assets/screenshot-10.png?rev=1397119" alt="" align="right" width="300" style="margin: 10px 10px 10px 0" />
 
