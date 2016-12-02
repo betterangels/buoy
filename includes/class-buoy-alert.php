@@ -79,6 +79,26 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
     private $chat_room_name;
 
     /**
+     * List of all the HTML Document Object Model hooks (IDs, class names)
+     * touched by this module.
+     *
+     * @var string[]
+     */
+    private static $dom_hooks = array(
+        'menu_id' => '#wp-admin-bar-buoy-alerts-menu',
+        'page_activate_alert' => '.dashboard_page_buoy_activate_alert',
+        'map_container' => '#buoy-map-container',
+        'upload_media_button' => '#upload-media-btn',
+        'incident_media_group' => '#incident-media-group',
+        'incident_media_group_item' => '#incident-media-group ul.dropdown-menu li',
+        'vidchat_button' => '#buoy-videochat-btn',
+        'chat_room_container' => '#alert-chat-room-container',
+        'safety_info_modal' => '#safety-information-modal',
+        'incident_response_form' => '#incident-response-form',
+        'page_chat' => '.dashboard_page_buoy_chat', // TODO: This maybe should be in the chat room's own class?
+    );
+
+    /**
      * Constructor.
      *
      * Retrieves an alert post as a WP_Buoy_Alert object, or an empty,
@@ -1041,7 +1061,10 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             array('jquery'),
             $plugin_data['Version']
         );
-        wp_localize_script(self::$prefix.'-script', self::$prefix.'_vars', self::localizeScript());
+        // Localize it.
+        wp_localize_script(self::$prefix.'-script', self::$prefix.'_vars', self::localizeUiText());
+        wp_localize_script(self::$prefix.'-script', self::$prefix.'_dom_hooks', self::$dom_hooks);
+
         wp_enqueue_script(self::$prefix.'-script');
 
         wp_enqueue_script(
@@ -1190,7 +1213,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      *
      * @return string[] An array of translated strings suitable for wp_localize_script().
      */
-    public static function localizeScript () {
+    public static function localizeUiText () {
         $locale_parts = explode('_', get_locale());
         return array(
             'ietf_language_tag' => array_shift($locale_parts),

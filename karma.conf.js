@@ -17,7 +17,7 @@ module.exports = function(config) {
     files: [
       'bower_components/*/dist/**/*.js',
       'buoy.js',
-      'spec/**/*.js'
+      'tests/**/*.js'
     ],
 
 
