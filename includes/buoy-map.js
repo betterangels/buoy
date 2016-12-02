@@ -183,7 +183,7 @@ var BUOY_MAP = (function () {
         } else {
             latlng = {'lat': 0, 'lng': 0};
         }
-        map = new L.Map(document.getElementById('buoy-map'))
+        map = new L.Map(jQuery(buoy_dom_hooks.incident_map))
             .setView(latlng, 10);
         map.attributionControl.setPrefix('');
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -205,8 +205,8 @@ var BUOY_MAP = (function () {
             map_markers.incident = marker;
         }
 
-        if (jQuery('#buoy-map-container').data('responder-info')) {
-            jQuery.each(jQuery('#buoy-map-container').data('responder-info'), function (i, v) {
+        if (jQuery(buoy_dom_hooks.map_container).data('responder-info')) {
+            jQuery.each(jQuery(buoy_dom_hooks.map_container).data('responder-info'), function (i, v) {
                 if (v.geo) {
                     var responder_geo = [
                         parseFloat(v.geo.latitude),
@@ -251,7 +251,7 @@ var BUOY_MAP = (function () {
             var my_marker = L.marker(my_geo, {
                 'title': buoy_vars.i18n_my_location,
                 'icon': gravatarIcon({
-                    'iconUrl': jQuery('#buoy-map-container').data('my-avatar-url')
+                    'iconUrl': jQuery(buoy_dom_hooks.map_container).data('my-avatar-url')
                 })
             }).addTo(map);
             marker_bounds.extend(my_geo);
@@ -263,20 +263,20 @@ var BUOY_MAP = (function () {
      * Attaches user interface handlers.
      */
     var attachHandlers = function () {
-        jQuery('#toggle-incident-map-btn').on('click', toggleMap);
-        jQuery('#fit-map-to-markers-btn').on('click', fitToMarkers);
-        jQuery('#go-to-my-location').on('click', panToUserLocation);
+        jQuery(buoy_dom_hooks.toggle_map_button).on('click', toggleMap);
+        jQuery(buoy_dom_hooks.fit_map_button).on('click', fitToMarkers);
+        jQuery(buoy_dom_hooks.my_location_button).on('click', panToUserLocation);
 
         // TODO: This should probably be moved to somewhere else...?
-        if (jQuery('.dashboard_page_buoy_review_alert #buoy-map').length) {
+        if (jQuery(buoy_dom_hooks.page_review_alert + ' ' + buoy_dom_hooks.incident_map).length) {
             addMarkerForCurrentLocation();
         }
 
         // Start tracking current location.
         // TODO: This should probably also be moved to somewhere else...?
         var emergency_location = {
-            'lat': parseFloat(jQuery('#buoy-map-container').data('incident-latitude')),
-            'lng': parseFloat(jQuery('#buoy-map-container').data('incident-longitude'))
+            'lat': parseFloat(jQuery(buoy_dom_hooks.map_container).data('incident-latitude')),
+            'lng': parseFloat(jQuery(buoy_dom_hooks.map_container).data('incident-longitude'))
         };
         if (isNaN(emergency_location.lat) || isNaN(emergency_location.lng)) {
             navigator.geolocation.getCurrentPosition(initMap, initMap, {'timeout': 5000});
@@ -290,7 +290,7 @@ var BUOY_MAP = (function () {
             initMap(loc, true);
         }
 
-        if (jQuery('.dashboard_page_buoy_chat').length) {
+        if (jQuery(buoy_dom_hooks.page_chat).length) {
             // TODO: Clear the watcher when failing to get position?
             //       Then what? Keep trying? Show a dialog asking the user to
             //       turn on location services?
@@ -304,7 +304,7 @@ var BUOY_MAP = (function () {
      * Toggles map visibility.
      */
     var toggleMap = function () {
-        var map_container = jQuery('#buoy-map-container');
+        var map_container = jQuery(buoy_dom_hooks.map_container);
         if (map_container.is(':visible')) {
             map_container.slideUp();
         } else {
@@ -326,8 +326,8 @@ var BUOY_MAP = (function () {
      */
     var fitToMarkers = function (e) {
         e.preventDefault();
-        if (jQuery('#buoy-map-container').is(':hidden')) {
-            jQuery('#toggle-incident-map-btn').click();
+        if (jQuery(buoy_dom_hooks.map_container).is(':hidden')) {
+            jQuery(buoy_dom_hooks.toggle_map_button).click();
         }
         map.fitBounds(marker_bounds);
     };
@@ -337,8 +337,8 @@ var BUOY_MAP = (function () {
      */
     var panToUserLocation = function (e) {
         e.preventDefault();
-        if (jQuery('#buoy-map-container').is(':hidden')) {
-            jQuery('#toggle-incident-map-btn').click();
+        if (jQuery(buoy_dom_hooks.map_container).is(':hidden')) {
+            jQuery(buoy_dom_hooks.toggle_map_button).click();
         }
         // Pan map view.
         map.setView(

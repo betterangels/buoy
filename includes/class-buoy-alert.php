@@ -85,17 +85,22 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @var string[]
      */
     private static $dom_hooks = array(
-        'menu_id' => '#wp-admin-bar-buoy-alerts-menu',
-        'page_activate_alert' => '.dashboard_page_buoy_activate_alert',
-        'map_container' => '#buoy-map-container',
-        'upload_media_button' => '#upload-media-btn',
+        'chat_room_container' => '#alert-chat-room-container',
+        'fit_map_button' => '#fit-map-to-markers-btn',
+        'incident_map' => '#buoy-map',
         'incident_media_group' => '#incident-media-group',
         'incident_media_group_item' => '#incident-media-group ul.dropdown-menu li',
-        'vidchat_button' => '#buoy-videochat-btn',
-        'chat_room_container' => '#alert-chat-room-container',
-        'safety_info_modal' => '#safety-information-modal',
         'incident_response_form' => '#incident-response-form',
+        'map_container' => '#buoy-map-container',
+        'menu_id' => '#wp-admin-bar-buoy-alerts-menu',
+        'my_location_button' => '#go-to-my-location',
+        'page_activate_alert' => '.dashboard_page_buoy_activate_alert',
         'page_chat' => '.dashboard_page_buoy_chat', // TODO: This maybe should be in the chat room's own class?
+        'page_review_alert' => '.dashboard_page_buoy_review_alert',
+        'safety_info_modal' => '#safety-information-modal',
+        'toggle_map_button' => '#toggle-incident-map-btn',
+        'upload_media_button' => '#upload-media-btn',
+        'vidchat_button' => '#buoy-videochat-btn',
     );
 
     /**
