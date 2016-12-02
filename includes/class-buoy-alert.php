@@ -85,7 +85,19 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @var string[]
      */
     private static $dom_hooks = array(
+        'custom_alert_button' => '#custom-message-alert-btn',
+        'timed_alert_button' => '#schedule-future-alert-btn',
+        'activate_alert_form' => '#activate-alert-form',
         'chat_room_container' => '#alert-chat-room-container',
+        'emergency_message_modal' => '#emergency-message-modal',
+        'activate_button_submit' => '#activate-btn-submit',
+        'crisis_message' => '#crisis-message',
+        'scheduled_crisis_message' => '#scheduled-crisis-message',
+        'scheduled_alert_modal' => '#scheduled-alert-modal',
+        'submitting_alert_modal' => '#submitting-alert-modal',
+        'choose_teams_panel' => '#choose-teams-panel',
+        'scheduled_datetime_tz' => '#scheduled-datetime-tz',
+        'scheduled_alerts_menu_links' => '#wp-admin-bar-buoy_my_scheduled_alerts a',
         'fit_map_button' => '#fit-map-to-markers-btn',
         'incident_map' => '#buoy-map',
         'incident_media_group' => '#incident-media-group',

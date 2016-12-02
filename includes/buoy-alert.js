@@ -23,20 +23,20 @@ var BUOY_ALERT = (function () {
      * Attaches event listeners to the Panic buttons.
      */
     var attachHandlers = function () {
-        jQuery('#custom-message-alert-btn').on('click', handleCustomMessageButton);
-        jQuery('#schedule-future-alert-btn').on('click', handleFutureAlertButton);
+        jQuery(buoy_dom_hooks.custom_alert_button).on('click', handleCustomMessageButton);
+        jQuery(buoy_dom_hooks.timed_alert_button).on('click', handleFutureAlertButton);
 
-        jQuery('#activate-alert-form').on('submit', handleSubmit);
-        jQuery('#emergency-message-modal button.btn-success').on('click', handleCustomMessageSubmit);
+        jQuery(buoy_dom_hooks.activate_alert_form).on('submit', handleSubmit);
+        jQuery(buoy_dom_hooks.emergency_message_modal + ' button.btn-success').on('click', handleCustomMessageSubmit);
 
-        jQuery('#emergency-message-modal').on('shown.bs.modal', function () {
-            jQuery('#crisis-message').focus();
+        jQuery(buoy_dom_hooks.emergency_message_modal).on('shown.bs.modal', function () {
+            jQuery(buoy_dom_hooks.crisis_message).focus();
         })
 
-        jQuery('#scheduled-alert-modal button.btn-success').on('click', handleFutureAlertSubmit);
+        jQuery(buoy_dom_hooks.scheduled_alert_modal + ' button.btn-success').on('click', handleFutureAlertSubmit);
 
-        if (jQuery('#scheduled-datetime-tz').length) {
-            jQuery('#scheduled-datetime-tz').datetimepicker({
+        if (jQuery(buoy_dom_hooks.scheduled_datetime_tz).length) {
+            jQuery(buoy_dom_hooks.scheduled_datetime_tz).datetimepicker({
                 'lazyInit': true,
                 'lang': buoy_vars.ietf_language_tag,
                 'minDate': 0, // today is the earliest allowable date
@@ -45,7 +45,7 @@ var BUOY_ALERT = (function () {
             });
         }
 
-        jQuery('#wp-admin-bar-buoy_my_scheduled_alerts a').each(function () {
+        jQuery(buoy_dom_hooks.scheduled_alerts_menu_links).each(function () {
             jQuery(this).on('click', unscheduleAlert);
         });
 
@@ -58,7 +58,7 @@ var BUOY_ALERT = (function () {
      */
     var handleSubmit = function (e) {
         e.preventDefault();
-        jQuery(this).find('#activate-btn-submit').prop('disabled', true);
+        jQuery(this).find(buoy_dom_hooks.activate_button_submit).prop('disabled', true);
         showSubmittingAlertModal();
         activateAlert();
     };
@@ -79,9 +79,9 @@ var BUOY_ALERT = (function () {
         jQuery(this).html(buoy_vars.i18n_scheduling_alert);
         showSubmittingAlertModal();
         scheduleAlert(function () {
-            jQuery('#scheduled-alert-modal button.btn-success').prop('disabled', false);
-            jQuery('#scheduled-alert-modal button.btn-success').html(buoy_vars.i18n_schedule_alert);
-            jQuery('#submitting-alert-modal').modal('hide');
+            jQuery(buoy_dom_hooks.scheduled_alert_modal + ' button.btn-success').prop('disabled', false);
+            jQuery(buoy_dom_hooks.scheduled_alert_modal + ' button.btn-success').html(buoy_vars.i18n_schedule_alert);
+            jQuery(buoy_dom_hooks.submitting_alert_modal).modal('hide');
         });
     };
 
@@ -89,7 +89,7 @@ var BUOY_ALERT = (function () {
      * Displays the "Detecting your location and sending alert" modal.
      */
     var showSubmittingAlertModal = function () {
-        jQuery('#submitting-alert-modal').modal({
+        jQuery(buoy_dom_hooks.submitting_alert_modal).modal({
             'show': true,
             'backdrop': 'static'
         });
@@ -99,18 +99,18 @@ var BUOY_ALERT = (function () {
      * Handles user input clicking the custom message alert button.
      */
     var handleCustomMessageButton = function () {
-        jQuery('#choose-teams-panel').removeClass('hidden');
-        jQuery('#emergency-message-modal .modal-body').append(jQuery('#choose-teams-panel').detach());
-        jQuery('#emergency-message-modal').modal('show');
+        jQuery(buoy_dom_hooks.choose_teams_panel).removeClass('hidden');
+        jQuery(buoy_dom_hooks.emergency_message_modal + ' .modal-body').append(jQuery(buoy_dom_hooks.choose_teams_panel).detach());
+        jQuery(buoy_dom_hooks.emergency_message_modal).modal('show');
     };
 
     /**
      * Handles user input clicking the future alert button.
      */
     var handleFutureAlertButton = function () {
-        jQuery('#choose-teams-panel').removeClass('hidden');
-        jQuery('#scheduled-alert-modal .modal-body').append(jQuery('#choose-teams-panel').detach());
-        jQuery('#scheduled-alert-modal').modal('show');
+        jQuery(buoy_dom_hooks.choose_teams_panel).removeClass('hidden');
+        jQuery(buoy_dom_hooks.scheduled_alert_modal + ' .modal-body').append(jQuery(buoy_dom_hooks.choose_teams_panel).detach());
+        jQuery(buoy_dom_hooks.scheduled_alert_modal).modal('show');
     };
 
     /**
@@ -140,16 +140,16 @@ var BUOY_ALERT = (function () {
     var postAlert = function (position) {
         if (submit_alert_timer_id) { clearTimeout(submit_alert_timer_id); }
         var data = {
-            'action': jQuery('#activate-alert-form input[name="action"]').val(),
+            'action': jQuery(buoy_dom_hooks.activate_alert_form + ' input[name="action"]').val(),
             'buoy_nonce': jQuery('#buoy_nonce').val()
         };
         if (position && position.coords) {
             data.pos = position.coords;
         }
-        if (jQuery('#crisis-message').val()) {
-            data.msg = jQuery('#crisis-message').val();
+        if (jQuery(buoy_dom_hooks.crisis_message).val()) {
+            data.msg = jQuery(buoy_dom_hooks.crisis_message).val();
         }
-        var teams = jQuery('#choose-teams-panel :checked').map(function () {
+        var teams = jQuery(buoy_dom_hooks.choose_teams_panel + ' :checked').map(function () {
             return this.value;
         }).get();
         if (teams.length) {
@@ -173,10 +173,10 @@ var BUOY_ALERT = (function () {
      */
     var scheduleAlert = function (callback) {
         var data = {
-            'action': jQuery('#activate-alert-form input[name="action"]').val(),
-            'msg': jQuery('#scheduled-crisis-message').val(),
-            'scheduled-datetime-utc': new Date(jQuery('#scheduled-datetime-tz').val()).toUTCString(),
-            'buoy_teams': jQuery('#choose-teams-panel :checked').map(function () {
+            'action': jQuery(buoy_dom_hooks.activate_alert_form + ' input[name="action"]').val(),
+            'msg': jQuery(buoy_dom_hooks.scheduled_crisis_message).val(),
+            'scheduled-datetime-utc': new Date(jQuery(buoy_dom_hooks.scheduled_datetime_tz).val()).toUTCString(),
+            'buoy_teams': jQuery(buoy_dom_hooks.choose_teams_panel + ' :checked').map(function () {
                 return this.value;
             }).get(),
             'buoy_nonce': jQuery('#buoy_nonce').val()
@@ -191,12 +191,12 @@ var BUOY_ALERT = (function () {
                             .insertBefore('#' + response.data[k].code);
                     }
                 } else {
-                    jQuery('#scheduled-alert-modal').find('.has-error').removeClass('has-error');
-                    jQuery('#scheduled-alert-modal').find('[aria-invalid]').removeAttr('aria-invalid');
-                    jQuery('#scheduled-alert-modal').find('div.alert[role="alert"]').remove();
-                    jQuery('#scheduled-alert-modal .modal-body > :first-child')
+                    jQuery(buoy_dom_hooks.scheduled_alert_modal).find('.has-error').removeClass('has-error');
+                    jQuery(buoy_dom_hooks.scheduled_alert_modal).find('[aria-invalid]').removeAttr('aria-invalid');
+                    jQuery(buoy_dom_hooks.scheduled_alert_modal).find('div.alert[role="alert"]').remove();
+                    jQuery(buoy_dom_hooks.scheduled_alert_modal + ' .modal-body > :first-child')
                         .before('<div class="alert alert-success" role="alert"><p>' + response.data.message + '</p></div>');
-                    jQuery('#scheduled-alert-modal input, #scheduled-alert-modal textarea').val('');
+                    jQuery(buoy_dom_hooks.scheduled_alert_modal + ' input, ' + buoy_dom_hooks.scheduled_alert_modal + ' textarea').val('');
                 }
                 callback();
             },
@@ -215,7 +215,7 @@ var BUOY_ALERT = (function () {
                 if (response.success) {
                     a_el.remove();
                     if (0 === BUOY.countIncidentMenuItems()) {
-                        jQuery('#wp-admin-bar-buoy-alert-menu').remove();
+                        jQuery(buoy_dom_hooks.menu_id).remove();
                     }
                 }
             },
