@@ -1,4 +1,4 @@
-'use strinct';
+'use strict';
 
 describe("BUOY main class", function() {
     it("counts number of menu items", function() {
