@@ -25,11 +25,11 @@
 
 .dashboard_page_buoy_activate_alert #custom-message-alert-btn,
 .dashboard_page_buoy_activate_alert #schedule-future-alert-btn,
-.dashboard_page_buoy_activate_alert #activate-btn-submit {
+.dashboard_page_buoy_activate_alert #immediate-alert-button {
     background: #d43f3a;
     margin: 10px 0;
 }
-.dashboard_page_buoy_activate_alert #activate-btn-submit {
+.dashboard_page_buoy_activate_alert #immediate-alert-button {
     width: calc(100% - 10px);
 }
 .dashboard_page_buoy_activate_alert.js #modal-features {
@@ -47,10 +47,10 @@
 .dashboard_page_buoy_activate_alert #modal-features img {
     width: 40px; /* width of smallest img, they're SVG, so this is ok */
 }
-.dashboard_page_buoy_activate_alert #activate-btn-submit {
+.dashboard_page_buoy_activate_alert #immediate-alert-button {
     height: 75%;
 }
-.dashboard_page_buoy_activate_alert #activate-btn-submit img,
+.dashboard_page_buoy_activate_alert #immediate-alert-button img,
 .dashboard_page_buoy_activate_alert #custom-message-alert-btn img,
 .dashboard_page_buoy_activate_alert #schedule-future-alert-btn img {
     height: 100%;

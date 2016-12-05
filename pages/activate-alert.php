@@ -16,7 +16,7 @@
             <img src="<?php print esc_attr(plugins_url('../img/chat-bubble-1.svg', __FILE__));?>" alt="<?php esc_attr_e('Send emergency message', 'buoy')?>" />
         </button>
     </div>
-    <button id="activate-btn-submit" class="btn">
+    <button id="immediate-alert-button" class="btn">
         <img src="<?php print esc_attr(plugins_url('../img/life-ring.svg', __FILE__));?>" alt="<?php esc_attr_e('Activate alert', 'buoy')?>" />
     </button>
     <div id="choose-teams-panel" class="hidden">

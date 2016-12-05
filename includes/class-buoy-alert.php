@@ -90,7 +90,6 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         'activate_alert_form' => '#activate-alert-form',
         'chat_room_container' => '#alert-chat-room-container',
         'emergency_message_modal' => '#emergency-message-modal',
-        'activate_button_submit' => '#activate-btn-submit',
         'crisis_message' => '#crisis-message',
         'scheduled_crisis_message' => '#scheduled-crisis-message',
         'scheduled_alert_modal' => '#scheduled-alert-modal',
@@ -1075,7 +1074,11 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         wp_register_script(
             self::$prefix.'-script',
             plugins_url(self::$prefix.'.js', dirname(__FILE__)),
-            array('jquery'),
+            array(
+                'jquery',
+                'underscore',
+                'backbone',
+            ),
             $plugin_data['Version']
         );
         // Localize it.
@@ -1086,16 +1089,21 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
 
         wp_enqueue_script(
             self::$prefix.'-alert',
-            plugins_url(self::$prefix.'-alert.js', __FILE__),
+            plugins_url('alert.js', __FILE__),
             array(self::$prefix.'-script'),
             $plugin_data['Version']
         );
+
         wp_enqueue_script(
             self::$prefix.'-map',
             plugins_url(self::$prefix.'-map.js', __FILE__),
-            array(self::$prefix.'-script', 'leaflet'),
+            array(
+                self::$prefix.'-script',
+                'leaflet'
+            ),
             $plugin_data['Version']
         );
+
     }
 
     /**

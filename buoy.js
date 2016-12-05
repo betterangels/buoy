@@ -1,23 +1,45 @@
 /**
- * Buoy initializer.
+ * Buoy main "app" file.
+ *
+ * This file contains the Buoy front-end JavaScript "root" code; all
+ * other Buoy JavaScripts are dependent on this file, so this file
+ * must be present and loaded before any other dependent files.
+ *
+ * In this file, we create a global `BUOY` object using the (classic)
+ * {@link http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html|JavaScript Module Pattern}
+ * and return a simple interface to interact with {@link http://BackboneJS.org|Backbone}
+ * library components (`Models`, `Views`, and `Collections`), alon with
+ * some helper functions.
  *
  * @license GPL-3.0
  */
 
-// Determine where "in Buoy" we are, register appropriate handlers.
-jQuery(document).ready(function () {
-    BUOY.init();
-});
-
-// Respond to the "Install iOS" event (triggered by a simulated install button).
-jQuery(document).on('install.ios', function () {
-    BUOY.installWebApp();
-});
-
 /**
- * The main Buoy "module" initializes the page behavior.
+ * The main Buoy "module" is our single global variable for all Buoy
+ * front-end behavior and values. It contains all our front-end code.
  */
 var BUOY = (function () {
+
+    /**
+     * Buoy's data model (using `Backbone.Model`).
+     *
+     * @var {object}
+     */
+    Models = {};
+
+    /**
+     * Buoy's view code (using `Backbone.View`).
+     *
+     * @var {object}
+     */
+    Views = {};
+
+    /**
+     * Buoy's model collections (using `Backbone.Collection`).
+     *
+     * @var {object}
+     */
+    Collections = {};
 
     /**
      * Initializer.
@@ -29,10 +51,6 @@ var BUOY = (function () {
             jQuery('body').append(jQuery('.modal').detach());
         }
 
-        if (jQuery(buoy_dom_hooks.page_activate_alert).length) {
-            BUOY_ALERT.attachHandlers();
-        }
-
         if (jQuery(buoy_dom_hooks.map_container).length) {
             BUOY_MAP.attachHandlers();
         }
@@ -41,6 +59,8 @@ var BUOY = (function () {
 
     /**
      * Presents a simulated "install" interface to mobile browsers.
+     *
+     * @todo Extend this to work on non-iOS devices; Firefox, Chrom, etc?
      */
     var installWebApp = function () {
         jQuery('body').append('<button id="install-webapp-btn"></button>');
@@ -78,13 +98,27 @@ var BUOY = (function () {
     return {
         'init': init,
         'installWebApp': installWebApp,
-        'countIncidentMenuItems': countIncidentMenuItems
+        'countIncidentMenuItems': countIncidentMenuItems,
+        'Models': Models,
+        'Views': Views,
+        'Collections': Collections
     };
 
 })();
 
+jQuery(document).ready(function () {
+    BUOY.init();
+});
+
+// Respond to the "Install iOS" event (triggered by a simulated install button).
+jQuery(document).on('install.ios', function () {
+    BUOY.installWebApp();
+});
+
+// TODO: EVERYTHING BELOW THIS LINE NEEDS TO BE REFACTORED INTO A `Backbone.View`.
+
 // Upload media for incident
-// TODO: Refactor this stuff.
+// TODO: Refactor this stuff; should end up in a Backbone.View somewhere up in our Buoy module.
 jQuery(document).ready(function () {
     jQuery(buoy_dom_hooks.upload_media_button).on('click', function (e) {
         e.preventDefault();

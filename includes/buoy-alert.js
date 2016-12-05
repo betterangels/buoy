@@ -52,18 +52,6 @@ var BUOY_ALERT = (function () {
     };
     
     /**
-     * Handles the alert submission form (a new alert).
-     *
-     * @param {Event} e
-     */
-    var handleSubmit = function (e) {
-        e.preventDefault();
-        jQuery(this).find(buoy_dom_hooks.activate_button_submit).prop('disabled', true);
-        showSubmittingAlertModal();
-        activateAlert();
-    };
-
-    /**
      * Handles user input pressing the "Send" button on a custom message alert.
      */
     var handleCustomMessageSubmit = function () {
@@ -86,16 +74,6 @@ var BUOY_ALERT = (function () {
     };
 
     /**
-     * Displays the "Detecting your location and sending alert" modal.
-     */
-    var showSubmittingAlertModal = function () {
-        jQuery(buoy_dom_hooks.submitting_alert_modal).modal({
-            'show': true,
-            'backdrop': 'static'
-        });
-    };
-
-    /**
      * Handles user input clicking the custom message alert button.
      */
     var handleCustomMessageButton = function () {
@@ -111,59 +89,6 @@ var BUOY_ALERT = (function () {
         jQuery(buoy_dom_hooks.choose_teams_panel).removeClass('hidden');
         jQuery(buoy_dom_hooks.scheduled_alert_modal + ' .modal-body').append(jQuery(buoy_dom_hooks.choose_teams_panel).detach());
         jQuery(buoy_dom_hooks.scheduled_alert_modal).modal('show');
-    };
-
-    /**
-     * Activates an alert.
-     */
-    var activateAlert = function () {
-        // Always post an alert even if we fail to get geolocation.
-        navigator.geolocation.getCurrentPosition(postAlert, postAlert, {
-            'timeout': 5000 // wait max of 5 seconds to get a location
-        });
-        // In Firefox, if the user clicks "Not now" when asked to give
-        // geolocation permissions, the above timeout never gets called.
-        // See the debate at
-        // https://bugzilla.mozilla.org/show_bug.cgi?id=675533
-        // Until this debate is resolved, we need to manually detect this
-        // timeout ourselves.
-        submit_alert_timer_id = setTimeout(postAlert, 6000);
-    };
-
-    /**
-     * Sends an HTTP POST with alert data.
-     *
-     * @see {@link https://developer.mozilla.org/en-US/docs/Web/API/Position}
-     *
-     * @param {Position}
-     */
-    var postAlert = function (position) {
-        if (submit_alert_timer_id) { clearTimeout(submit_alert_timer_id); }
-        var data = {
-            'action': jQuery(buoy_dom_hooks.activate_alert_form + ' input[name="action"]').val(),
-            'buoy_nonce': jQuery('#buoy_nonce').val()
-        };
-        if (position && position.coords) {
-            data.pos = position.coords;
-        }
-        if (jQuery(buoy_dom_hooks.crisis_message).val()) {
-            data.msg = jQuery(buoy_dom_hooks.crisis_message).val();
-        }
-        var teams = jQuery(buoy_dom_hooks.choose_teams_panel + ' :checked').map(function () {
-            return this.value;
-        }).get();
-        if (teams.length) {
-            data.buoy_teams = teams;
-        }
-        jQuery.post(ajaxurl, data,
-            function (response) {
-                if (response.success) {
-                    // decode the HTML-encoded stuff WP sends
-                    window.location.href = jQuery('<div/>').html(response.data).text();
-                }
-            },
-            'json'
-        );
     };
 
     /**
