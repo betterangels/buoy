@@ -31,12 +31,6 @@ header h1 { margin-top: 0; }
             <div id="new-comments-notice" class="updated notice is-dismissible">
                 <p><a href="#page-footer"><strong><?php esc_html_e('View new messages.', 'buoy');?></strong></a></p>
             </div>
-            <div class="notice error is-dismissible">
-                <p><?php print sprintf(
-                    esc_html__('Reconnecting&hellip;. (%1$sClick here to reconnect manually%2$s).', 'buoy'),
-                    '<a href="'.esc_url($_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']).'">', '</a>'
-                );?></p>
-            </div>
             <ul class="media-list">
                 <?php $this->list_comments();?>
             </ul>

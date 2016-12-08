@@ -84,26 +84,25 @@ var BUOY_CHAT_ROOM = (function () {
      * @param {string} url
      */
     var connectSource = function (url) {
-        url += '?action=buoy_chat_event_stream&post_id=' + getPostId();
         var es = new EventSource(url + '&offset=' + getCommentCount());
         es.addEventListener('updated', function (e) {
             appendComments(JSON.parse(e.data));
             showNewCommentsNotice();
         });
-        // Manually restart the connection when commanded to do so.
-        // This is necessary to support Firefox, which has a bug that
-        // prevents it from auto-reconnecting upon server disconnect.
-        es.addEventListener('RESTART', function (e) {
-            es.close()
-            connectSource(url + '&offset=' + getCommentCount());
-        });
         // TODO: Fancier error handling?
         es.onerror = function (e) {
-            jQuery('.notice.error').show();
+            es.close()
+            connectSource(getEventSourceUrl());
         };
-        es.onopen = function (e) {
-            jQuery('.notice.error').hide();
-        };
+    };
+
+    /**
+     * Constructs the chat room's `event-stream` endpoint URL.
+     *
+     * @return {string}
+     */
+    var getEventSourceUrl = function () {
+        return ajaxurl + '?action=buoy_chat_event_stream&post_id=' + getPostId();
     };
 
     /**
@@ -187,7 +186,7 @@ var BUOY_CHAT_ROOM = (function () {
         resetCommentForm();
 
         if (window.EventSource) {
-            connectSource(ajaxurl);
+            connectSource(getEventSourceUrl());
         } else {
             setInterval(pollForNewComments, 5000);
         }

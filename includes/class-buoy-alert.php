@@ -964,7 +964,6 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
 
             // Prevent server exhaustion by killing this thread eventually.
             if ((time() - $start_time) > (1 * MINUTE_IN_SECONDS)) {
-                print self::eventStreamMessage('', 'RESTART');
                 break;
             }
             sleep(1);
