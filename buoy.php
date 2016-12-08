@@ -107,13 +107,24 @@ class WP_Buoy_Plugin {
      * @return void
      */
     public static function initialize () {
-        // Make sure the WP REST API plugin is installed.
-        // We can remove this if block once that plugin is merged
-        // into WP Core.
-        require_once ABSPATH.'wp-admin/includes/plugin.php';
-        if (is_plugin_inactive('rest-api/plugin.php')) {
-            if (is_wp_error(activate_plugin('rest-api/plugin.php'))) {
-                self::install_plugin_dependency('rest-api');
+        // WordPress versions prior to 4.7 did not fully merge the
+        // WP REST API, on which we (partially) rely. In version 4.7,
+        // however, the REST API's important parts for our use case,
+        // the so-called "Content API" did indeed land in core. This
+        // means we no longer need to force-install it ourselves.
+        //
+        // See https://codex.wordpress.org/Version_4.7 highlights.
+        //
+        // For now, make sure the WP REST API plugin is installed and
+        // activated for users still running older WordPress versions.
+        // We can remove this check once enough Buoys update to v4.7.
+        global $wp_version;
+        if (version_compare('4.7', $wp_version) === 1) {
+            require_once ABSPATH.'wp-admin/includes/plugin.php';
+            if (is_plugin_inactive('rest-api/plugin.php')) {
+                if (is_wp_error(activate_plugin('rest-api/plugin.php'))) {
+                    self::install_plugin_dependency('rest-api');
+                }
             }
         }
 
@@ -194,15 +205,6 @@ class WP_Buoy_Plugin {
                 __('Buoy requires at least WordPress version %1$s. You have WordPress version %2$s.', 'buoy'),
                 $min_wp_version, $wp_version
             ));
-        }
-
-        // It turns out WordPress 4.5 did not include the WP REST API
-        // in core. :( SADNESS! We need it so let's make sure we have
-        // it installed. If we don't, let's install it automatically.
-        if (is_plugin_inactive('rest-api/plugin.php')) {
-            if (is_wp_error(activate_plugin('rest-api/plugin.php'))) {
-                self::install_plugin_dependency('rest-api');
-            }
         }
     }
 
