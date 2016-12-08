@@ -36,7 +36,6 @@
     },
     "minimum-stability": "stable",
     "suggest": {
-        "wpackagist-plugin/wp-pgp-encrypted-emails": "Offers additional security and privacy enhancements for email-based communication.",
-        "wpackagist-plugin/admin-language-per-user": "Enables end-user customization of the interface language."
+        "wpackagist-plugin/wp-pgp-encrypted-emails": "Offers additional security and privacy enhancements for email-based communication."
     }
 }
