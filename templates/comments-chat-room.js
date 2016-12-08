@@ -62,7 +62,7 @@ var BUOY_CHAT_ROOM = (function () {
      */
     var pollForNewComments = function () {
         var url = api_base + '/comments&post=' + getPostId() + '&offset=' + getCommentCount()
-            + '&_wpnonce=' + wpApiSettings.nonce;
+            + '&_wpnonce=' + wpApiSettings.nonce + '&order=asc';
         jQuery.get(url, function (response) {
             if (response.length) {
                 appendComments(response);
