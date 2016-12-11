@@ -85,25 +85,13 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @var string[]
      */
     private static $dom_hooks = array(
-        'custom_alert_button' => '#custom-message-alert-btn',
-        'timed_alert_button' => '#schedule-future-alert-btn',
-        'activate_alert_form' => '#activate-alert-form',
         'chat_room_container' => '#alert-chat-room-container',
-        'emergency_message_modal' => '#emergency-message-modal',
-        'crisis_message' => '#crisis-message',
-        'scheduled_crisis_message' => '#scheduled-crisis-message',
-        'scheduled_alert_modal' => '#scheduled-alert-modal',
-        'submitting_alert_modal' => '#submitting-alert-modal',
-        'choose_teams_panel' => '#choose-teams-panel',
-        'scheduled_datetime_tz' => '#scheduled-datetime-tz',
-        'scheduled_alerts_menu_links' => '#wp-admin-bar-buoy_my_scheduled_alerts a',
         'fit_map_button' => '#fit-map-to-markers-btn',
         'incident_map' => '#buoy-map',
         'incident_media_group' => '#incident-media-group',
         'incident_media_group_item' => '#incident-media-group ul.dropdown-menu li',
         'incident_response_form' => '#incident-response-form',
         'map_container' => '#buoy-map-container',
-        'menu_id' => '#wp-admin-bar-buoy-alerts-menu',
         'my_location_button' => '#go-to-my-location',
         'page_activate_alert' => '.dashboard_page_buoy_activate_alert',
         'page_chat' => '.dashboard_page_buoy_chat', // TODO: This maybe should be in the chat room's own class?
@@ -1320,7 +1308,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             $when_utc = strtotime(stripslashes_deep($_POST['scheduled-datetime-utc']));
             if (!$when_utc) {
                 $err->add(
-                    'scheduled-datetime-utc',
+                    'scheduled-datetime-tz',
                     __('Buoy could not understand the date and time you entered.', 'buoy')
                 );
             } else {

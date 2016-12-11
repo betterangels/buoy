@@ -8,11 +8,11 @@
 
     <div id="modal-features" class="hide-if-no-js">
         <?php if ($options->get('future_alerts')) : ?>
-        <button id="schedule-future-alert-btn" class="btn" type="button">
+        <button id="timed-alert-button" class="btn" type="button">
             <img src="<?php print esc_attr(plugins_url('../img/stock_alarm.svg', __FILE__));?>" alt="<?php esc_attr_e('Schedule timed alert', 'buoy');?>" />
         </button>
         <?php endif; ?>
-        <button id="custom-message-alert-btn" class="btn" type="button">
+        <button id="contextual-alert-button" class="btn" type="button">
             <img src="<?php print esc_attr(plugins_url('../img/chat-bubble-1.svg', __FILE__));?>" alt="<?php esc_attr_e('Send emergency message', 'buoy')?>" />
         </button>
     </div>
@@ -24,12 +24,12 @@
     </div>
 </form>
 
-<div id="emergency-message-modal" class="modal" role="dialog" aria-labelledby="emergency-message-modal-label">
+<div id="contextual-alert-modal" class="modal" role="dialog" aria-labelledby="contextual-alert-modal-label">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="<?php esc_attr_e('Close', 'buoy');?>"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="emergency-message-modal-label"><?php esc_html_e('Message to my team', 'buoy');?></h4>
+                <h4 class="modal-title" id="contextual-alert-modal-label"><?php esc_html_e('Message to my team', 'buoy');?></h4>
             </div>
             <div class="modal-body">
                 <div class="form-group">
@@ -42,12 +42,12 @@
         </div><!-- .modal-content -->
     </div><!-- .modal-dialog -->
 </div><!-- .modal -->
-<div id="scheduled-alert-modal" class="modal" role="dialog" aria-labelledby="scheduled-alert-modal-label">
+<div id="timed-alert-modal" class="modal" role="dialog" aria-labelledby="timed-alert-modal-label">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" aria-label="<?php esc_attr_e('Close', 'buoy');?>"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="scheduled-alert-modal-label"><?php esc_html_e('Schedule a timed alert', 'buoy');?></h4>
+                <h4 class="modal-title" id="timed-alert-modal-label"><?php esc_html_e('Schedule a timed alert', 'buoy');?></h4>
             </div>
             <div class="modal-body">
                 <div class="form-group">

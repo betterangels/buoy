@@ -92,7 +92,7 @@ var BUOY = (function () {
      * @return {number}
      */
     var countIncidentMenuItems = function () {
-        return jQuery(buoy_dom_hooks.menu_id).length;
+        return jQuery('#wp-admin-bar-buoy-alerts-menu').length;
     };
 
     return {

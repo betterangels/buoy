@@ -23,8 +23,8 @@
     padding-bottom: 0;
 }
 
-.dashboard_page_buoy_activate_alert #custom-message-alert-btn,
-.dashboard_page_buoy_activate_alert #schedule-future-alert-btn,
+.dashboard_page_buoy_activate_alert #contextual-alert-button,
+.dashboard_page_buoy_activate_alert #timed-alert-button,
 .dashboard_page_buoy_activate_alert #immediate-alert-button {
     background: #d43f3a;
     margin: 10px 0;
@@ -51,8 +51,8 @@
     height: 75%;
 }
 .dashboard_page_buoy_activate_alert #immediate-alert-button img,
-.dashboard_page_buoy_activate_alert #custom-message-alert-btn img,
-.dashboard_page_buoy_activate_alert #schedule-future-alert-btn img {
+.dashboard_page_buoy_activate_alert #contextual-alert-button img,
+.dashboard_page_buoy_activate_alert #timed-alert-button img {
     height: 100%;
     max-height: calc(100% - 32px);
     max-width: 100%;
