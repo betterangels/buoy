@@ -1047,7 +1047,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         wp_enqueue_script(
             self::$prefix.'-alert',
             plugins_url(self::$prefix.'-alert.js', __FILE__),
-            array(self::$prefix.'-script'),
+            array(self::$prefix.'-script', 'jquery', 'underscore', 'backbone'),
             $plugin_data['Version']
         );
         wp_enqueue_script(
