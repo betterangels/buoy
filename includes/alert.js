@@ -207,13 +207,6 @@
     };
 
     /**
-     * Hide the Choose Teams Panel.
-     */
-    BUOY.Views.ChooseTeamsPanel.prototype.hide = function () {
-        this.$el.addClass('hidden');
-    };
-
-    /**
      * Handles the alert submission form (a new alert).
      *
      * @param {Event} e
@@ -363,7 +356,7 @@
         jQuery.post(this.$el.attr('href'), data, function (response) {
             if (response.success) {
                 item.$el.remove();
-                if (0 === BUOY.countIncidentMenuItems()) {
+                if (0 === jQuery('#wp-admin-bar-buoy-alerts-menu a').length) {
                     jQuery('#wp-admin-bar-buoy-alerts-menu').remove();
                 }
             }

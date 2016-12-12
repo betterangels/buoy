@@ -86,19 +86,9 @@ var BUOY = (function () {
         });
     };
 
-    /**
-     * Helper to get the number of Buoy Alerts shown in the admin bar.
-     *
-     * @return {number}
-     */
-    var countIncidentMenuItems = function () {
-        return jQuery('#wp-admin-bar-buoy-alerts-menu').length;
-    };
-
     return {
         'init': init,
         'installWebApp': installWebApp,
-        'countIncidentMenuItems': countIncidentMenuItems,
         'Models': Models,
         'Views': Views,
         'Collections': Collections
