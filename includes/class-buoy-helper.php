@@ -28,13 +28,19 @@ class WP_Buoy_Helper {
      */
     public static function checkLocalPluginStatus () {
         $slugs = array(
-            'admin-language-per-user/admin-language-per-user.php',
-            'wp-pgp-encrypted-emails/wp-pgp-encrypted-emails.php'
+            'wp-pgp-encrypted-emails/wp-pgp-encrypted-emails.php',
         );
 
         global $wp_version;
+
         if (version_compare('4.5', $wp_version) > 0) {
             $slugs[] = 'rest-api/plugin.php';
+        }
+
+        // Suggest the following plugins if we are running WordPress
+        // versions earlier than 4.7.
+        if (version_compare('4.7', $wp_version) === 1) {
+            $slugs[] = 'admin-language-per-user/admin-language-per-user.php';
         }
 
         $plugins  = get_plugins();

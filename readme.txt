@@ -3,7 +3,7 @@ Contributors: meitar
 Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TJLPJYXHSRBEE&lc=US&item_name=Better%20Angels%20Buoy&item_number=Better%20Angels%20Buoy&currency_code=USD&bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted
 Tags: community, emergency response, activism
 Requires at least: 4.6
-Tested up to: 4.6
+Tested up to: 4.7
 Stable tag: 0.3.2
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
