@@ -24,6 +24,7 @@
   },
   "homepage": "https://meitar.github.io/better-angels/",
   "devDependencies": {
+    "backbone": "^1.3.3",
     "jasmine-core": "^2.4.1",
     "karma": "^0.13.19",
     "karma-firefox-launcher": "^0.1.7",

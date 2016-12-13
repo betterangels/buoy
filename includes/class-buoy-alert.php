@@ -79,6 +79,30 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
     private $chat_room_name;
 
     /**
+     * List of all the HTML Document Object Model hooks (IDs, class names)
+     * touched by this module.
+     *
+     * @var string[]
+     */
+    private static $dom_hooks = array(
+        'chat_room_container' => '#alert-chat-room-container',
+        'fit_map_button' => '#fit-map-to-markers-btn',
+        'incident_map' => '#buoy-map',
+        'incident_media_group' => '#incident-media-group',
+        'incident_media_group_item' => '#incident-media-group ul.dropdown-menu li',
+        'incident_response_form' => '#incident-response-form',
+        'map_container' => '#buoy-map-container',
+        'my_location_button' => '#go-to-my-location',
+        'page_activate_alert' => '.dashboard_page_buoy_activate_alert',
+        'page_chat' => '.dashboard_page_buoy_chat', // TODO: This maybe should be in the chat room's own class?
+        'page_review_alert' => '.dashboard_page_buoy_review_alert',
+        'safety_info_modal' => '#safety-information-modal',
+        'toggle_map_button' => '#toggle-incident-map-btn',
+        'upload_media_button' => '#upload-media-btn',
+        'vidchat_button' => '#buoy-videochat-btn',
+    );
+
+    /**
      * Constructor.
      *
      * Retrieves an alert post as a WP_Buoy_Alert object, or an empty,
@@ -1038,24 +1062,36 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         wp_register_script(
             self::$prefix.'-script',
             plugins_url(self::$prefix.'.js', dirname(__FILE__)),
-            array('jquery'),
+            array(
+                'jquery',
+                'underscore',
+                'backbone',
+            ),
             $plugin_data['Version']
         );
-        wp_localize_script(self::$prefix.'-script', self::$prefix.'_vars', self::localizeScript());
+        // Localize it.
+        wp_localize_script(self::$prefix.'-script', self::$prefix.'_vars', self::localizeUiText());
+        wp_localize_script(self::$prefix.'-script', self::$prefix.'_dom_hooks', self::$dom_hooks);
+
         wp_enqueue_script(self::$prefix.'-script');
 
         wp_enqueue_script(
             self::$prefix.'-alert',
-            plugins_url(self::$prefix.'-alert.js', __FILE__),
-            array(self::$prefix.'-script', 'jquery', 'underscore', 'backbone'),
+            plugins_url('alert.js', __FILE__),
+            array(self::$prefix.'-script'),
             $plugin_data['Version']
         );
+
         wp_enqueue_script(
             self::$prefix.'-map',
             plugins_url(self::$prefix.'-map.js', __FILE__),
-            array(self::$prefix.'-script', 'leaflet'),
+            array(
+                self::$prefix.'-script',
+                'leaflet'
+            ),
             $plugin_data['Version']
         );
+
     }
 
     /**
@@ -1190,7 +1226,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      *
      * @return string[] An array of translated strings suitable for wp_localize_script().
      */
-    public static function localizeScript () {
+    public static function localizeUiText () {
         $locale_parts = explode('_', get_locale());
         return array(
             'ietf_language_tag' => array_shift($locale_parts),
@@ -1272,7 +1308,7 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
             $when_utc = strtotime(stripslashes_deep($_POST['scheduled-datetime-utc']));
             if (!$when_utc) {
                 $err->add(
-                    'scheduled-datetime-utc',
+                    'scheduled-datetime-tz',
                     __('Buoy could not understand the date and time you entered.', 'buoy')
                 );
             } else {

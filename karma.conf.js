@@ -16,8 +16,11 @@ module.exports = function(config) {
     // list of files / patterns to load in the browser
     files: [
       'bower_components/*/dist/**/*.js',
+      'node_modules/underscore/underscore.js',
+      'node_modules/backbone/backbone.js',
       'buoy.js',
-      'spec/**/*.js'
+      'includes/alert.js',
+      'tests/**/*.js'
     ],
 
 
