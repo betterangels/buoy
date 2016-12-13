@@ -3,7 +3,7 @@ title: About Buoy
 weight: 10
 ---
 
-<img src="http://i.imgur.com/cADD79P.png" alt="Buoy: Tell your friends where you are and what you need." align="right" width="300" />
+<img src="https://i.imgur.com/cADD79P.png" alt="Buoy: Tell your friends where you are and what you need." align="right" width="300" />
 
 Buoy is a crisis response platform that connects families, friends, and teams during emergency situations. 
 
