@@ -11,13 +11,13 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.6.1/css/font-awesome.min.css">
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
-    <link rel='stylesheet' id='theme-base-css' href='{{ "/public/themes/flat-bootstrap/theme-base.css" | prepend: site.github.url }}' type='text/css' media='all' />
-    <link rel='stylesheet' id='theme-flat-css' href='{{ "/public/themes/flat-bootstrap/theme-flat.css" | prepend: site.github.url }}' type='text/css' media='all' />
-    <link rel='stylesheet' id='flat-bootstrap-css' href='{{ "/public/themes/link/style.css" | prepend: site.github.url }}' type='text/css' media='all' />
-    <link rel='stylesheet' href='{{ "/public/css/styles.css" | prepend: site.github.url }}' type='text/css' media='all' />
+    <link rel='stylesheet' id='theme-base-css' href='{{ "/public/themes/flat-bootstrap/theme-base.css" | prepend: site.github.url | replace_first: "http://", "//" }}' type='text/css' media='all' />
+    <link rel='stylesheet' id='theme-flat-css' href='{{ "/public/themes/flat-bootstrap/theme-flat.css" | prepend: site.github.url | replace_first: "http://", "//" }}' type='text/css' media='all' />
+    <link rel='stylesheet' id='flat-bootstrap-css' href='{{ "/public/themes/link/style.css" | prepend: site.github.url | replace_first: "http://", "//" }}' type='text/css' media='all' />
+    <link rel='stylesheet' href='{{ "/public/css/styles.css" | prepend: site.github.url | replace_first: "http://", "//" }}' type='text/css' media='all' />
 
-    <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.github.url }}">
-    <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml" | prepend: site.github.url }}" />
+    <link rel="canonical" href="{{ page.url | replace:'index.html','' | prepend: site.github.url | replace_first: "http://", "//" }}">
+    <link rel="alternate" type="application/rss+xml" title="{{ site.title }}" href="{{ "/feed.xml" | prepend: site.github.url | replace_first: "http://", "//" }}" />
 
     <script
         src="https://code.jquery.com/jquery-1.12.3.min.js"
@@ -30,9 +30,9 @@
 
     <meta property="og:site_name" content="{{ site.title }}" />
     <meta property="og:description" content="{{ site.description | strip_newlines }}" />
-    <meta property="og:url" content="{{ page.url | prepend: site.github.url }}" />
+    <meta property="og:url" content="{{ page.url | prepend: site.github.url | replace_first: "http://", "//" }}" />
     <meta property="og:title" content="{% if page.title %}{{ page.title }}{% else %}{{ site.title }}{% endif %}" />
-    <meta property="og:image" content="{{ "/public/img/buoy-demo-header-1600x900.png" | prepend: site.github.url }}" />
+    <meta property="og:image" content="{{ "/public/img/buoy-demo-header-1600x900.png" | prepend: site.github.url | replace_first: "http://", "//" }}" />
     <meta property="og:image:width" content="1600" />
     <meta property="og:image:height" content="900" />
 
@@ -41,6 +41,6 @@
     <meta name="twitter:creator" content="@{{ site.data.team.organizations.betterangels.twitter }}">
     <meta name="twitter:title" content="{{ site.title }}">
     <meta name="twitter:description" content="{{ site.description | strip_newlines }}">
-    <meta name="twitter:image" content="{{ "/public/img/buoy-demo-header-1600x900.png" | prepend: site.github.url }}">
+    <meta name="twitter:image" content="{{ "/public/img/buoy-demo-header-1600x900.png" | prepend: site.github.url | replace_first: "http://", "//" }}">
     <meta name="twitter:image:alt" content="{{ site.tagline }}" />
 </head>
