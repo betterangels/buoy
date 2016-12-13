@@ -17,15 +17,15 @@ Buoy is still work in progress, and you can help us make it more awesome. Suppor
 
 ### Code
 
-This is a great time to contribute code to Buoy, no matter what level of programming experience you have. Our lead developer, [Maymay](https://maymay.net/), is a self-taught "jack of all languages" and a fabulous mentor. They enjoy working together with new programmers, helping them improve their skills, and empowering them to write code that changes the world.
-
-Right now, we're working on a new Buoy version&mdash;v0.2.0&mdash;which moves Buoy fully into the realm of free/libre software, replacing Google Maps with OpenStreetMap for real-time location tracking, and dramatically improving performance of the built-in incident chat by integrating Jitsi Meet. We would love to hear how you like it!
+This is a great time to contribute code to Buoy, no matter what level of programming experience you have. Our lead developer, [Maymay](https://maymay.net/), is a self-taught "jack of all languages" and [a fabulous mentor](https://github.com/betterangels/buoy/issues/201#issuecomment-266619470). They enjoy working together with new programmers, helping them improve their skills, and empowering them to write code that changes the world.
 
 To get started, check out:
 
 * the [Buoy Wiki]({{ site.github.wiki_url }}) on GitHub
 * the [Buoy README](https://github.com/{{ site.github.repository_nwo }}#readme)
 * some [good first issues]({{ site.github.issues_url }}?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22) in our Github issue tracker
+
+Or just say "hi" and introduce yourself in [our public chat room]({{ site.github.repository_nwo | prepend: "https://gitter.im/" }}).
 
 If you have any questions, don’t hesitate to [get in touch]({{ "/contact/" | prepend: site.github.url }}).
 

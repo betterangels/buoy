@@ -23,6 +23,10 @@ These are some early impressions from people we have worked with to test, transl
 
 # Media
 
+## [A World Without Police: A Web App That Builds Autonomy](http://aworldwithoutpolice.org/2016/12/06/buoy-a-web-app-that-builds-autonomy/)
+
+> Buoy is a mobile web app designed to help communities exercise collective power and build autonomy, outside state structures like the 911 call system. We urge others to test it out, give feedback, and help the project grow.
+
 ## [Interview on FLOSS Weekly ep. 385: Buoy](https://twit.tv/shows/floss-weekly/episodes/385?autostart=false)
 
 > Buoy is a free and open source, decentralized tool designed to quickly connect users with trusted friends, family members, advocates, and other allies in times of need. Buoy is a community-based crisis response system for any emergency in which someone needs help but might not want to – or can’t – call 911.
