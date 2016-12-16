@@ -1174,11 +1174,11 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
         // Enqueue BootstrapCSS/JS framework.
         wp_enqueue_style(
             'bootstrap-css',
-            'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css'
+            'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'
         );
         wp_enqueue_script(
             'bootstrap-js',
-            'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js',
+            'https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js',
             array(),
             null,
             true
@@ -1205,8 +1205,8 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
     public static function addIntegrityAttribute ($html, $handle) {
         $integrities = array(
             // sha*-$hash => handle
-            'sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7' => 'bootstrap-css',
-            'sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS' => 'bootstrap-js'
+            'sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u' => 'bootstrap-css',
+            'sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa' => 'bootstrap-js'
         );
         if ($integrity = array_search($handle, $integrities)) {
             $sri_att = ' crossorigin="anonymous" integrity="'.$integrity.'"';

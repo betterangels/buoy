@@ -1,15 +1,9 @@
 /**
- * Buoy main "app" file.
+ * Buoy main module.
  *
- * This file contains the Buoy front-end JavaScript "root" code; all
- * other Buoy JavaScripts are dependent on this file, so this file
- * must be present and loaded before any other dependent files.
+ * @file The Buoy global. All other Buoy JavaScripts depend on this module.
  *
- * In this file, we create a global `BUOY` object using the (classic)
- * {@link http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html|JavaScript Module Pattern}
- * and return a simple interface to interact with {@link http://BackboneJS.org|Backbone}
- * library components (`Models`, `Views`, and `Collections`), alon with
- * some helper functions.
+ * @copyright Copyright (c) 2015-2016 by Meitar "maymay" Moscovitz
  *
  * @license GPL-3.0
  */
@@ -17,6 +11,12 @@
 /**
  * The main Buoy "module" is our single global variable for all Buoy
  * front-end behavior and values. It contains all our front-end code.
+ *
+ * We create a global `BUOY` object using the (classic)
+ * {@link http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html|JavaScript Module Pattern}
+ * and return a simple interface to interact with
+ * {@link http://BackboneJS.org|Backbone} library components
+ * (`Models`, `Views`, and `Collections`).
  */
 var BUOY = (function () {
 
@@ -45,16 +45,9 @@ var BUOY = (function () {
      * Initializer.
      */
     var init = function () {
-        // Note: This works around GitHub issue #47.
-        // Could be removed after WebKit and/or Bootstrap fixes this in their libs.
-        if (jQuery(buoy_dom_hooks.page_chat + ' ' + buoy_dom_hooks.page_activate_alert).length) {
-            jQuery('body').append(jQuery('.modal').detach());
-        }
-
         if (jQuery(buoy_dom_hooks.map_container).length) {
             BUOY_MAP.attachHandlers();
         }
-
     };
 
     /**
@@ -96,7 +89,22 @@ var BUOY = (function () {
 
 })();
 
+// ------- //
+// RUNTIME //
+// ------- //
 jQuery(document).ready(function () {
+    // TODO: Bug hunting! See below.
+    // We seem to be hitting a major bug where Bootstrap Modals
+    // are shown underneath their associated backdrop, making the
+    // modal's content itself unclickable. This also makes it
+    // impossible for a user to dismiss the modal. The workaround
+    // is to make sure that the modals themselves are always the
+    // very last element(s) in the `<body>` element. So, let's just
+    // make sure that's done immediately, before anything else!
+    if (jQuery('body[class*="dashboard_page_buoy_"]').length) {
+        jQuery('body').append(jQuery('.modal').detach());
+    }
+
     BUOY.init();
 });
 

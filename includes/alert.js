@@ -1,5 +1,5 @@
 /**
- * Buoy Alert
+ * Buoy Alert module.
  *
  * @file All of Buoy's client-side alert-handling JavaScript.
  *
@@ -364,7 +364,7 @@
     };
 
     // ------- //
-    // RUNTIME //  
+    // RUNTIME //
     // ------- //
     // Once the HTML DOM is ready, we can actually instantiate our Views.
     jQuery(document).ready(function () {
