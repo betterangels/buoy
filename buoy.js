@@ -45,16 +45,9 @@ var BUOY = (function () {
      * Initializer.
      */
     var init = function () {
-        // Note: This works around GitHub issue #47.
-        // Could be removed after WebKit and/or Bootstrap fixes this in their libs.
-        if (jQuery(buoy_dom_hooks.page_chat + ' ' + buoy_dom_hooks.page_activate_alert).length) {
-            jQuery('body').append(jQuery('.modal').detach());
-        }
-
         if (jQuery(buoy_dom_hooks.map_container).length) {
             BUOY_MAP.attachHandlers();
         }
-
     };
 
     /**
@@ -100,6 +93,18 @@ var BUOY = (function () {
 // RUNTIME //
 // ------- //
 jQuery(document).ready(function () {
+    // TODO: Bug hunting! See below.
+    // We seem to be hitting a major bug where Bootstrap Modals
+    // are shown underneath their associated backdrop, making the
+    // modal's content itself unclickable. This also makes it
+    // impossible for a user to dismiss the modal. The workaround
+    // is to make sure that the modals themselves are always the
+    // very last element(s) in the `<body>` element. So, let's just
+    // make sure that's done immediately, before anything else!
+    if (jQuery('body[class*="dashboard_page_buoy_"]').length) {
+        jQuery('body').append(jQuery('.modal').detach());
+    }
+
     BUOY.init();
 });
 
