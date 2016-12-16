@@ -1,15 +1,9 @@
 /**
- * Buoy main "app" file.
+ * Buoy main module.
  *
- * This file contains the Buoy front-end JavaScript "root" code; all
- * other Buoy JavaScripts are dependent on this file, so this file
- * must be present and loaded before any other dependent files.
+ * @file The Buoy global. All other Buoy JavaScripts depend on this module.
  *
- * In this file, we create a global `BUOY` object using the (classic)
- * {@link http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html|JavaScript Module Pattern}
- * and return a simple interface to interact with {@link http://BackboneJS.org|Backbone}
- * library components (`Models`, `Views`, and `Collections`), alon with
- * some helper functions.
+ * @copyright Copyright (c) 2015-2016 by Meitar "maymay" Moscovitz
  *
  * @license GPL-3.0
  */
@@ -17,6 +11,12 @@
 /**
  * The main Buoy "module" is our single global variable for all Buoy
  * front-end behavior and values. It contains all our front-end code.
+ *
+ * We create a global `BUOY` object using the (classic)
+ * {@link http://www.adequatelygood.com/JavaScript-Module-Pattern-In-Depth.html|JavaScript Module Pattern}
+ * and return a simple interface to interact with
+ * {@link http://BackboneJS.org|Backbone} library components
+ * (`Models`, `Views`, and `Collections`).
  */
 var BUOY = (function () {
 
@@ -96,6 +96,9 @@ var BUOY = (function () {
 
 })();
 
+// ------- //
+// RUNTIME //
+// ------- //
 jQuery(document).ready(function () {
     BUOY.init();
 });
