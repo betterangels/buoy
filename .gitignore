@@ -28,6 +28,9 @@ bower_components/
 # tools place their libraries (called "modules" in Node lingo).
 node_modules/
 
+# When `npm` vomits, it logs its errors. We shold never commit those.
+npm-debug.log
+
 # The _site folder is where we publish the promo site for this
 # project by using Jekyll, a static site generator.
 _site/
