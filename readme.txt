@@ -4,11 +4,11 @@ Donate link: https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=TJLPJ
 Tags: community, emergency response, activism
 Requires at least: 4.6
 Tested up to: 4.7
-Stable tag: 0.3.2
+Stable tag: 0.3.3
 License: GPL-3
 License URI: https://www.gnu.org/licenses/gpl-3.0.html
 
-A community-based crisis response system. Buoy is a private, enhanced, cop-free alternative to 9-1-1.
+A community-based crisis response system. Buoy is a private, enhanced, cop-free alternative to 112 or 911.
 
 == Description ==
 
@@ -36,7 +36,7 @@ The people you select as your emergency contacts ("response team") will get a no
 
 == Installation ==
 
-Buoy can be installed automatically from the WordPress plugin repository by searching for "Buoy" in the "Add new plugin" screen of your WordPres admin site and clicking the "Install now" button.
+Buoy can be installed automatically from the WordPress plugin repository by searching for "Buoy" in the "Add new plugin" screen of your WordPress admin site and clicking the "Install now" button.
 
 Buoy can also be installed manually by following these instructions:
 
@@ -112,6 +112,12 @@ For instance:
 13. The alerter and all current responders become aware of new responders as they are added to the chat room and the map. As people involved in the incident move in the physical world, the map shown to each of the other people also updates in near real time. Clicking on any of the user icons on the map reveals one-click access to both turn-by-turn directions to their location and one-click access to call them from your phone, Facetime, Skype, or other default calling app.
 
 == Change log ==
+
+= 0.3.3 =
+
+* Bugfixes: Various bugs with the built-in chat system have been fixed.
+* Localization: Improved translations for Spanish dialects.
+* Compatibility with WordPress 4.7.
 
 = 0.3.2 =
 
