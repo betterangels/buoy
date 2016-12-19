@@ -7,7 +7,7 @@
  * * Plugin Name: Buoy (a Better Angels crisis response system)
  * * Plugin URI: https://betterangels.github.io/buoy/
  * * Description: A community-based crisis response system. <strong>Like this plugin? Please <a href="https://www.paypal.com/cgi-bin/webscr?cmd=_donations&amp;business=TJLPJYXHSRBEE&amp;lc=US&amp;item_name=Better%20Angels&amp;item_number=better-angels&amp;currency_code=USD&amp;bn=PP%2dDonationsBF%3abtn_donate_SM%2egif%3aNonHosted" title="Send a donation to the developer of Better Angels Buoy">donate</a>. &hearts; Thank you!</strong>
- * * Version: 0.3.2
+ * * Version: 0.3.3
  * * Author: Better Angels <BetterAngels@RiseUp.net>
  * * Author URI: https://betterangels.github.io/
  * * License: GPL-3
