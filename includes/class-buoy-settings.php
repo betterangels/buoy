@@ -1,9 +1,9 @@
 <?php
 /**
- * Buoy Alert.
+ * Buoy Settings.
  *
- * A Buoy Alert may also be referred to as an "incident" depending on
- * context.
+ * Settings for the Buoy plugin are managed by a singleton defined in
+ * this file.
  *
  * @package WordPress\Plugin\WP_Buoy_Plugin\Settings
  *
@@ -62,7 +62,7 @@ class WP_Buoy_Settings {
             'alert_ttl_multiplier' => DAY_IN_SECONDS,
             'safety_info' => file_get_contents(plugin_dir_path(__FILE__) . 'default-safety-information.html'),
             'chat_system' => 'post_comments',
-            'future_alerts' => (function_exists('posix_getpwuid')) ? true : false,
+            'future_alerts' => false,
             'delete_old_incident_media' => false,
             'debug' => false
         );
@@ -407,18 +407,24 @@ class WP_Buoy_Settings {
      * @return void
      */
     public static function configureCron () {
-        // Don't do anything if we're not a POSIX system.
-        if (!function_exists('posix_getpwuid')) {
-            return;
-        }
         require_once plugin_dir_path(__FILE__) . 'crontab-manager.php';
 
-        $C = new Buoy_Crontab_Manager();
+        $options = self::get_instance();
+        try {
+            $C = new Buoy_Crontab_Manager();
+        } catch (RuntimeException $e) {
+            error_log(
+                __('Error instantiating Buoy Crontab Manager.', 'buoy')
+                . PHP_EOL . $e->getMessage()
+            );
+            $options->delete('future_alerts')->save();
+            return;
+        }
+
         $path_to_wp_cron = ABSPATH . 'wp-cron.php';
         $os_cronjob_comment = '# Buoy WordPress Plugin Cronjob';
         $job = '*/5 * * * * php ' . $path_to_wp_cron . ' >/dev/null 2>&1 ' . $os_cronjob_comment;
 
-        $options = self::get_instance();
         if ($options->get('future_alerts')) {
             if (!$C->jobExists($path_to_wp_cron)) {
                 try {
@@ -474,9 +480,7 @@ class WP_Buoy_Settings {
                     $safe_input[$k] = sanitize_text_field($v);
                     break;
                 case 'future_alerts':
-                    if (function_exists('posix_getpwuid')) {
-                        $safe_input[$k] = intval($v);
-                    }
+                    $safe_input[$k] = intval($v);
                     break;
                 case 'alert_ttl_multiplier':
                 case 'delete_old_incident_media':

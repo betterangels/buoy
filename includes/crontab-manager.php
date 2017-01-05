@@ -11,6 +11,8 @@
 
 if (!defined('ABSPATH')) { exit; } // Disallow direct HTTP access.
 
+require_once dirname(__FILE__).'/class-buoy-error-codes.php';
+
 /**
  * A simple helper class to manage crontab files.
  *
@@ -29,6 +31,8 @@ class Buoy_Crontab_Manager {
      * Constructor.
      *
      * @return void
+     *
+     * @throws RuntimeException
      */
     public function __construct () {
         if ($this->crontabExists()) {
@@ -65,9 +69,18 @@ class Buoy_Crontab_Manager {
      * Checks whether a crontab file exists.
      *
      * @return bool
+     *
+     * @throws RuntimeException
      */
     private function crontabExists () {
-        system('crontab -l >/dev/null 2>&1', $ret_val);
+        // suppress error/warning output
+        @system('crontab -l >/dev/null 2>&1', $ret_val);
+        if (!isset($ret_val) || !function_exists('posix_getpwuid')) {
+            throw new RuntimeException(
+                'Cannot determine presence or absence of cron (or POSIX system).',
+                Buoy_Error_Codes::ENOSYS
+            );
+        }
         return (0 === $ret_val) ? true : false;
     }
 

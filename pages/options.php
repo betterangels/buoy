@@ -26,7 +26,6 @@
                 );?>
             </td>
         </tr>
-<?php if (function_exists('posix_getpwuid')) : ?>
         <tr>
             <th>
                 <label for="<?php esc_attr_e(WP_Buoy_Plugin::$prefix);?>_future_alerts">
@@ -34,6 +33,7 @@
                 </label>
             </th>
             <td>
+<?php try { new Buoy_Crontab_Manager(); // only show if automatable ?>
                 <input type="checkbox"
                     id="<?php print esc_attr(WP_Buoy_Plugin::$prefix);?>_future_alerts"
                     name="<?php print esc_attr(WP_Buoy_Plugin::$prefix);?>_settings[future_alerts]"
@@ -41,9 +41,13 @@
                     value="1"
                     />
                 <span class="description"><?php esc_html_e('When checked, users will be able to schedule alerts to be sent some time in the future. This is sometimes known as a "safe call," a way of alerting a response team to a potentially dangerous situation if the alerter is unreachable.', 'buoy');?></span>
+<?php } catch (RuntimeException $e) { ?>
+                <div class="error notice">
+                    <p><?php esc_html_e('Timed Alerts are disabled because your system does not provide a safe means to implement them.', 'buoy');?></p>
+                </div>
+<?php } ?>
             </td>
         </tr>
-<?php endif; ?>
         <tr>
             <th>
                 <label for="<?php esc_attr_e(WP_Buoy_Plugin::$prefix);?>_alert_ttl_num"><?php esc_html_e('Alert time to live', 'buoy');?></label>
