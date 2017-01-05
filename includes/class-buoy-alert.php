@@ -444,22 +444,23 @@ class WP_Buoy_Alert extends WP_Buoy_Plugin {
      * @return string
      */
     private function get_random_seed () {
-        $preferred_functions = array(
-            // sorted in order of preference, strongest functions 1st
-            'random_bytes', 'openssl_random_pseudo_bytes'
-        );
         $length = MB_IN_BYTES * mt_rand(1, 4);
-        foreach ($preferred_functions as $func) {
-            if (function_exists($func)) {
-                $seed = $func($length);
-                break;
-            } else {
-                static::debug_log(sprintf(
-                    __('WARNING! Your system does not have %s available to generate alert hashes.', 'buoy'),
-                    $func.'()'
-                ));
+
+        // Try getting seed from CSPRNG functions.
+        if (function_exists('random_bytes')) {
+            try {
+                $seed = random_bytes($length);
+            } catch (Exception $e) {
+                // do nothing
             }
         }
+
+        // Try getting seed from less-secure OpenSSL passthru.
+        if (!isset($seed) && function_exists('openssl_random_pseudo_bytes')) {
+            $seed = openssl_random_pseudo_bytes($length);
+        }
+
+        // If we still don't have a seed, use shitty PHP functions.
         return (isset($seed)) ? $seed : mt_rand().microtime().getmypid().uniqid('', true);
     }
 
