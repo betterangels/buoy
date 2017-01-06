@@ -26,8 +26,12 @@ foreach ($posts as $post) {
     wp_delete_post($post->ID, true);
 }
 
+// Ensure system's crontab file is cleaned, too.
+$options = WP_Buoy_Settings::get_instance();
+$options->delete('future_alerts')->save(); // turn off the option
+WP_Buoy_Settings::configureCron();         // reconfigure system cron
 // Delete plugin options.
-delete_option(WP_Buoy_Settings::get_instance()->get_meta_key());
+delete_option($options->get_meta_key());
 
 foreach (get_users() as $usr) {
     // Delete all custom user profile data.
