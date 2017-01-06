@@ -6,36 +6,30 @@ organizations:
         homepage: 'https://betterangels.github.io/'
         avatar_url: 'https://avatars.githubusercontent.com/u/18254254'
         twitter: BetterAngelsCR
-        facebook: BetterAngelsCollective
-        tumblr: BetterAngelsCollective
         diaspora: 'https://diaspora.permutationsofchaos.com/u/betterangelscollective'
         email: BetterAngels@RiseUp.net
 people:
-    unquietpirate:
-        name: R. Foxtale
+    pseudonymous_1:
+        name: Nohbor Doorsnos Tates
         organization: betterangels
         title: User Experience Lead, Community Manager
         role: >
-            Rebecca brings a background in domestic violence victim advocacy and two decades of community-based political organizing to the team. Fun Fact: Rebecca spent several seasons working at a research station in Antarctica!
-        github: unquietpirate
-        twitter: imnocowboy
-        avatar_url: 'https://avatars.githubusercontent.com/u/4370462'
-    pnppl:
-        name: pnppl
+            Nohbor brings a background in domestic violence victim advocacy and two decades of community-based political organizing to the team. Fun Fact: Nohbor spent several rotations working on the International Space Station!
+        avatar_url: 'https://pbs.twimg.com/media/C1H3wT7XUAAWB4P.jpg'
+    pseudonymous_2:
+        name: Ahlkop Sarbad
+        organization: betterangels
+        title: Lead Developer
+        role: >
+            Ahlkop has contributed core code to numerous free software projects and hosts anti-surveillance trainings called Cryptoparties. In their former life, they were a capitalist but got woke before "woke" was A Thing and now helps equip insurrectionary anarchists preparing for The Cyber.
+        avatar_url: 'https://pbs.twimg.com/media/C0oYPw9UcAAkIFY.jpg'
+    pseudonymous_3:
+        name: Burnahl Prizens
         organization: betterangels
         title: Social Media Manager
-        github: pnppl
-        avatar_url: 'https://avatars.githubusercontent.com/u/9787286'
-    nitishnarula:
-        name: Nitish Narula
+        avatar_url: 'https://pbs.twimg.com/media/Cz5z1KKWIAADVfF.jpg'
+    pseudonymous_4:
+        name: Klass Wahr
         organization: betterangels
-        title: Creative Technologist and Developer
-        github: nitishnarula
-        avatar_url: 'https://avatars.githubusercontent.com/u/10969049'
-    corvinity:
-        name: Corvinity
-        organization: betterangels
-        title: Videurgist
-        twitter: corvinity
-        homepage: 'http://www.videurgy.com/'
-        avatar_url: 'https://cloud.githubusercontent.com/assets/4370462/14662239/78a92dba-0671-11e6-99d5-762ffb50bebd.jpg'
+        title: Translation Team Lead
+        avatar_url: 'https://33.media.tumblr.com/tumblr_lry1898Dvb1qg38ico1_500.jpg'
