@@ -11,6 +11,8 @@
 
 if (!defined('ABSPATH')) { exit; } // Disallow direct HTTP access.
 
+require_once plugin_dir_path(__FILE__) . 'class-buoy-sms-email-bridge.php';
+
 /**
  * Manages user-specific settings for a given user.
  */
