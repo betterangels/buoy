@@ -6,8 +6,6 @@ weight: 20
 # Social media
 
 * @{% include icon-twitter.html username=org.twitter %}
-* [Facebook](https://www.facebook.com/{{ org.facebook }})
-* [Tumblr](https://{{ org.tumblr }}.tumblr.com/)
 * {% include icon-diaspora.html profile_url=org.diaspora %}[Diaspora]({{ org.diaspora }})
 
 # Email
